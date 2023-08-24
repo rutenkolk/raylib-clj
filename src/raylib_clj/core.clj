@@ -8,6 +8,7 @@
    [coffi.mem :as mem]
    [coffi.ffi :as cffi]
    [coffi.layout :as layout]
+   [camel-snake-kebab.core :as csk]
    ))
 
 (defmacro def- [name & decls]
@@ -643,43 +644,100 @@
 
 (cffi/load-library "raylib.dll")
 
-(cffi/defcfn InitWindow InitWindow [::mem/int ::mem/int ::mem/c-string] ::mem/void)
+(cffi/defcfn init-window
+  "[width height title]"
+  InitWindow [::mem/int ::mem/int ::mem/c-string] ::mem/void)
 
 (comment
-  (InitWindow 800 800 "henlo from clojure??")
+  (init-window 800 800 "henlo from clojure??")
 
   )
 
+(def old-types->new-types
+  {:int8   ::mem/byte
+   :int16  ::mem/short
+   :int32  ::mem/int
+   :uint8  ::mem/byte
+   :uint16 ::mem/short
+   :uint32 ::mem/int
+   :void   ::mem/void
+   })
 
-(comment
+(defn type-converter [old]
+  (if (old-types->new-types old)
+    (old-types->new-types old)
+    (keyword "raylib-clj.core" (name old))
+    )
+  )
 
-  (ffi/define-library!
-   native-part-1
-   '{:InitWindow
-     {:rettype :void
-      :argtypes [[width :int32]
-                 [height :int32]
-                 [title :pointer]]}
+(defn coffify [fn-name-old signature]
+  (let [fn-name-new (symbol (csk/->kebab-case (name fn-name-old)))
+        rettype (type-converter (:rettype signature))
+        argtypes (vec (map type-converter (:argtypes signature)))
+        ]
+    `(cffi/defcfn ~fn-name-new
+       ~(str "[" (clojure.string/join argtypes " ")  "]" " -> " (name rettype))
+       ~(name fn-name-old)
+       ~argtypes
+       ~rettype
+       )
+    )
+  )
 
-     :WindowShouldClose
-     {:rettype :int8
-      :argtypes []}
+(coffi.ffi/defcfn
+  window-should-close
+  "[] -> bool"
+  "WindowShouldClose"
+  []
+  :coffi.mem/byte)
 
-     :CloseWindow
-     {:rettype :void
-      :argtypes []}
+(coffi.ffi/defcfn
+  close-window
+  "[] -> void"
+  "CloseWindow"
+  []
+  :coffi.mem/void)
 
-     :IsWindowReady
-     {:rettype :int8
-      :argtypes []}
+(coffi.ffi/defcfn
+  is-window-ready
+  "[] -> bool"
+  "IsWindowReady"
+  []
+  :coffi.mem/byte)
 
-     :IsWindowFullscreen
-     {:rettype :int8
-      :argtypes []}
+(coffi.ffi/defcfn
+  is-window-fullscreen
+  "[ ] -> bool"
+  "IsWindowFullscreen"
+  []
+  :coffi.mem/byte)
 
-     :IsWindowHidden {:rettype :int8 :argtypes []}
-     :IsWindowMinimized {:rettype :int8 :argtypes []}
-     :IsWindowMaximized {:rettype :int8 :argtypes []}
+(coffi.ffi/defcfn
+  is-window-hidden
+  "[ ] -> bool"
+  "IsWindowHidden"
+  []
+  :coffi.mem/byte)
+
+(coffi.ffi/defcfn
+  is-window-minimized
+  "[ ] -> bool"
+  "IsWindowMinimized"
+  []
+  :coffi.mem/byte)
+
+(coffi.ffi/defcfn
+  is-window-maximized
+  "[ ] -> bool"
+  "IsWindowMaximized"
+  []
+  :coffi.mem/byte)
+
+(comment (ffi/define-library! native-part-1 '{;
+     (coffify
+
+      )
+
      :IsWindowFocused {:rettype :int8 :argtypes []}
      :IsWindowResized {:rettype :int8 :argtypes []}
      :IsWindowState {:rettype :int8 :argtypes [[flag :int32]]}

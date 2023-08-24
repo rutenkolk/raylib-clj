@@ -7,6 +7,7 @@
                  [cnuernber/dtype-next "10.002"]
                  ;[net.java.dev.jna/jna "5.13.0"]
                  [org.suskalo/coffi "0.6.409"]
+                 [camel-snake-kebab "0.4.3"]
                  ]
   :main ^:skip-aot raylib-clj.core
   :target-path "target/%s"
