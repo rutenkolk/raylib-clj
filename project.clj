@@ -5,14 +5,25 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [cnuernber/dtype-next "10.002"]
-                 [net.java.dev.jna/jna "5.13.0"]
+                 ;[net.java.dev.jna/jna "5.13.0"]
+                 [org.suskalo/coffi "0.6.409"]
                  ]
   :main ^:skip-aot raylib-clj.core
   :target-path "target/%s"
+  :jvm-opts ["-Dclojure.compiler.direct-linking=true"
+             "--enable-preview"
+             ;"--add-modules=jdk.incubator.foreign"
+             "--enable-native-access=ALL-UNNAMED"
+             "-Dforeign.restricted=permit"
+             "--add-opens" "java.base/java.lang=ALL-UNNAMED"
+             ]
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
-                                  "--add-modules" "jdk.incubator.foreign" "-Dforeign.restricted=permit" "--add-opens" "java.base/java.lang=ALL-UNNAMED"
                                   "--enable-preview"
+                                  ;"--add-modules=jdk.incubator.foreign"
+                                  "--enable-native-access=ALL-UNNAMED"
+                                  "-Dforeign.restricted=permit"
+                                  "--add-opens" "java.base/java.lang=ALL-UNNAMED"
                                   ]}})
 
 

@@ -4,7 +4,10 @@
    [tech.v3.datatype :as dtype]
    [tech.v3.datatype.ffi :as ffi]
    [tech.v3.datatype.ffi.size-t :as ffi.size-t]
-   [tech.v3.datatype.struct :as dt-struct]))
+   [tech.v3.datatype.struct :as dt-struct]
+   [coffi.mem :as mem]
+   [coffi.ffi :as cffi]
+   ))
 
 (defmacro def- [name & decls]
   (list* `def (with-meta name (assoc (meta name) :private true)) decls))
