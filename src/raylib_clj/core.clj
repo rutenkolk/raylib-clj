@@ -7,6 +7,7 @@
    [tech.v3.datatype.struct :as dt-struct]
    [coffi.mem :as mem]
    [coffi.ffi :as cffi]
+   [coffi.layout :as layout]
    ))
 
 (defmacro def- [name & decls]
@@ -38,25 +39,12 @@
 
 (defmacro define-datatype! [type-name members]
   `(mem/defalias ~(keyword "raylib-clj.core" (name type-name))
-    [::mem/struct ~members]))
+     (layout/with-c-layout
+       [::mem/struct ~members])))
 
-(mem/defalias ::vec2
-  [::mem/struct
-   [(f32 :x)
-    (f32 :y)]])
-
-(mem/defalias ::vec3
-  [::mem/struct
-   [[:x ::mem/float]
-    [:y ::mem/float]
-    [:z ::mem/float]]])
-
-(mem/defalias ::vec4
-  [::mem/struct
-   [[:x ::mem/float]
-    [:y ::mem/float]
-    [:z ::mem/float]
-    [:w ::mem/float]]])
+(define-datatype! :vec2 [(f32 :x) (f32 :y)])
+(define-datatype! :vec3 [(f32 :x) (f32 :y) (f32 :z)])
+(define-datatype! :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
 
 ;alias quaternion as vec4?
 
@@ -82,38 +70,39 @@
 
 (define-datatype! :render-texture
   [(ui32 :id)
-   {:name :texture :datatype :texture}
-   {:name :depth :datatype :texture}])
+   [:texture ::texture]
+   [:depth ::texture]
+   ])
 
 ;alias render-texture-2d as render-texture?
 
 (define-datatype! :n-patch-info
-  [{:name :source :datatype :rectangle}
+  [[:source ::rectangle]
    (i32 :left) (i32 :top) (i32 :right) (i32 :bottom) (i32 :layout)])
 
 (define-datatype! :glyph-info
   [(i32 :value) (i32 :offset-x) (i32 :offset-y) (i32 :advance-x)
-   {:name :image :datatype :image}])
+   [:image ::image]])
 
 (define-datatype! :font
   [(i32 :base-size) (i32 :glyph-count) (i32 :glyph-padding)
-   {:name :texture :datatype :texture}
+   [:texture ::texture]
    (ptr :rectangles) ;pointer to rectangle
    (ptr :glyphs) ;pointer to glyph
    ])
 
 (define-datatype! :camera-3d
-  [{:name :position :datatype :vec3}
-   {:name :target :datatype :vec3}
-   {:name :up :datatype :vec3}
+  [[:position ::vec3]
+   [:target ::vec3]
+   [:up ::vec3]
    (f32 :fovy)
    (i32 :projection)])
 
 ;typedef :camera-3d Camera;    // :camera-3d type fallback, defaults to Camera3D
 
 (define-datatype! :camera-2d
-  [{:name :position :datatype :vec2}
-   {:name :target :datatype :vec2}
+  [[:position ::vec2]
+   [:target ::vec2]
    (f32 :rotation)
    (f32 :zoom)])
 
@@ -139,26 +128,26 @@
    (ptr :locs)])
 
 (define-datatype! :material-map
-  [{:name :texture :datatype :texture}
-   {:name :color :datatype :color}
+  [[:texture ::texture]
+   [:color ::color]
    (f32 :value)])
 
 (define-datatype! :material
-  [{:name :shader :datatype :shader}
+  [[:shader ::shader]
    (ptr :maps)
-   {:name :params :datatype :float32 :n-elems 4}])
+   [:params [::mem/array ::mem/float 4]]])
 
 (define-datatype! :transform
-  [{:name :translation :datatype :vec3}
-   {:name :rotation :datatype :vec4}
-   {:name :scale :datatype :vec3}])
+  [[:translation ::vec3]
+   [:rotation ::vec4]
+   [:scale ::vec3]])
 
 (define-datatype! :bone-info
-  [{:name :name :datatype :int8 :n-elems 32}
+  [[:name [::mem/array ::mem/char 32]]
    (i32 :parent)])
 
 (define-datatype! :model
-  [{:name :transform :datatype :mat4}
+  [[:transform ::mat4]
    (i32 :mesh-count)
    (i32 :material-count)
    (ptr :meshes)
@@ -173,21 +162,21 @@
    (i32 :frame-count)
    (ptr :bones)
    (ptr :frame-poses) ;type: Transform**
-   {:name :name :datatype :uint8 :n-elems 32}])
+   [:name [::mem/array ::mem/char 32]]])
 
 (define-datatype! :ray
-  [{:name :position :datatype :vec3}
-   {:name :direction :datatype :vec3}])
+  [[:position ::vec3]
+   [:direction ::vec3]])
 
 (define-datatype! :ray-collision
   [(bool :hit)
    (f32 :distance)
-   {:name :po:int32 :datatype :vec3}
-   {:name :normal :datatype :vec3}])
+   [:point ::vec3]
+   [:normal ::vec3]])
 
 (define-datatype! :bounding-box
-  [{:name :min :datatype :vec3}
-   {:name :max :datatype :vec3}])
+  [[:min ::vec3]
+   [:max ::vec3]])
 
 (define-datatype! :wave
   [(ui32 :frame-count)
@@ -209,11 +198,11 @@
    (ui32 :channels)])
 
 (define-datatype! :sound
-  [{:name :stream :datatype :audio-stream}
+  [[:stream ::audio-stream]
    (ui32 :frame-count)])
 
 (define-datatype! :music
-  [{:name :stream :datatype :audio-stream}
+  [[:stream ::audio-stream]
    (ui32 :frame-count)
    (bool :looping)
    (i32 :context-type)
@@ -227,18 +216,18 @@
    (f32 :vertical-screen-center)
    (f32 :lens-separation-distance)
    (f32 :interpupillary-distance)
-   {:name :lens-distortion-values :datatype :float32 :n-elems 4}
-   {:name :chromatic-aberration-correction-values :datatype :float32 :n-elems 4}])
+   [:lens-distortion-values [::mem/array ::mem/float 4]]
+   [:chromatic-aberration-correction-values [::mem/array ::mem/float 4]]])
 
 (define-datatype! :vr-stereo-config
-  [{:name :projection :datatype :mat4 :n-elems 2}
-   {:name :view-offset :datatype :mat4 :n-elems 2}
-   {:name :left-lens-center :datatype :float32 :n-elems 2}
-   {:name :right-lens-center :datatype :float32 :n-elems 2}
-   {:name :left-screen-center :datatype :float32 :n-elems 2}
-   {:name :right-screen-center :datatype :float32 :n-elems 2}
-   {:name :scale :datatype :float32 :n-elems 2}
-   {:name :scale-in :datatype :float32 :n-elems 2}])
+  [[:projection [::mem/array ::mat4 2]]
+   [:view-offset [::mem/array ::mat4 2]]
+   [:left-lens-center [::mem/array ::mem/float 2]]
+   [:right-lens-center [::mem/array ::mem/float 2]]
+   [:left-screen-center [::mem/array ::mem/float 2]]
+   [:right-screen-center [::mem/array ::mem/float 2]]
+   [:scale [::mem/array ::mem/float 2]]
+   [:scale-in [::mem/array ::mem/float 2]]])
 
 (define-datatype! :file-path-list
   [(ui32 :capacity)
