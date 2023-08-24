@@ -7,4 +7,4 @@ experimental raylib bindings for clojure
 
 eventually just a thing on clojars?
 
-idk what will become of this, so ¯\_(ツ)_/¯
+idk what will become of this, so ¯\\_(ツ)_/¯
