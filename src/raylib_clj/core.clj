@@ -220,14 +220,14 @@
    [:chromatic-aberration-correction-values [::mem/array ::mem/float 4]]])
 
 (define-datatype! :vr-stereo-config
-  [[:projection [::mem/array ::mat4 2]]
-   [:view-offset [::mem/array ::mat4 2]]
-   [:left-lens-center [::mem/array ::mem/float 2]]
-   [:right-lens-center [::mem/array ::mem/float 2]]
-   [:left-screen-center [::mem/array ::mem/float 2]]
+  [[:projection          [::mem/array ::mat4 2]]
+   [:view-offset         [::mem/array ::mat4 2]]
+   [:left-lens-center    [::mem/array ::mem/float 2]]
+   [:right-lens-center   [::mem/array ::mem/float 2]]
+   [:left-screen-center  [::mem/array ::mem/float 2]]
    [:right-screen-center [::mem/array ::mem/float 2]]
-   [:scale [::mem/array ::mem/float 2]]
-   [:scale-in [::mem/array ::mem/float 2]]])
+   [:scale               [::mem/array ::mem/float 2]]
+   [:scale-in            [::mem/array ::mem/float 2]]])
 
 (define-datatype! :file-path-list
   [(ui32 :capacity)
@@ -637,661 +637,678 @@
 (defconst NPATCH_THREE_PATCH_HORIZONTAL 2)
 ;} NPatchLayout;
 
-(ffi/define-library!
-  native-part-1
-  '{:InitWindow
-    {:rettype :void
-     :argtypes [[width :int32]
-                [height :int32]
-                [title :pointer]]}
+(cffi/defcfn strlen
+  "Given a string, measures its length in bytes."
+  strlen [::mem/c-string] ::mem/long)
 
-    :WindowShouldClose
-    {:rettype :int8
-     :argtypes []}
+(cffi/load-library "raylib.dll")
 
-    :CloseWindow
-    {:rettype :void
-     :argtypes []}
+(cffi/defcfn InitWindow InitWindow [::mem/int ::mem/int ::mem/c-string] ::mem/void)
 
-    :IsWindowReady
-    {:rettype :int8
-     :argtypes []}
+(comment
+  (InitWindow 800 800 "henlo from clojure??")
 
-    :IsWindowFullscreen
-    {:rettype :int8
-     :argtypes []}
+  )
 
-    :IsWindowHidden {:rettype :int8 :argtypes []}
-    :IsWindowMinimized {:rettype :int8 :argtypes []}
-    :IsWindowMaximized {:rettype :int8 :argtypes []}
-    :IsWindowFocused {:rettype :int8 :argtypes []}
-    :IsWindowResized {:rettype :int8 :argtypes []}
-    :IsWindowState {:rettype :int8 :argtypes [[flag :int32]]}
-    :SetWindowState {:rettype :void :argtypes [[flags :int32]]}
-    :ClearWindowState {:rettype :void :argtypes [[flags :int32]]}
-    :ToggleFullscreen {:rettype :void :argtypes []}
-    :ToggleBorderlessWindowed {:rettype :void :argtypes []}
-    :MaximizeWindow {:rettype :void :argtypes []}
-    :MinimizeWindow {:rettype :void :argtypes []}
-    :RestoreWindow {:rettype :void :argtypes []}
-    :SetWindowIcon {:rettype :void :argtypes [[image :image]]}
-    :SetWindowIcons {:rettype :void :argtypes [[images :pointer] [count :int32]]}
-    :SetWindowTitle {:rettype :void :argtypes [[title :ptr]]}
-    :SetWindowPosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
-    :SetWindowMonitor {:rettype :void :argtypes [[monitor :int32]]}
-    :SetWindowMinSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
-    :SetWindowSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
-    :SetWindowOpacity {:rettype :void :argtypes [[opacity :float32]]}
-    :SetWindowFocused {:rettype :void :argtypes []}
-    :GetWindowHandle {:rettype :pointer :argtypes []}
-    :GetScreenWidth {:rettype :int32 :argtypes []}
-    :GetScreenHeight {:rettype :int32 :argtypes []}
-    :GetRenderWidth {:rettype :int32 :argtypes []}
-    :GetRenderHeight {:rettype :int32 :argtypes []}
-    :GetMonitorCount {:rettype :int32 :argtypes []}
-    :GetCurrentMonitor {:rettype :int32 :argtypes []}
-    :GetMonitorPosition {:rettype :vec2 :argtypes [[monitor :int32]]}
-    :GetMonitorWidth {:rettype :int32 :argtypes [[monitor :int32]]}
-    :GetMonitorHeight {:rettype :int32 :argtypes [[monitor :int32]]}
-    :GetMonitorPhysicalWidth {:rettype :nt32 :argtypes [[monitor :int32]]}
-    :GetMonitorPhysicalHeight {:rettype :int32 :argtypes [[monitor :int32]]}
-    :GetMonitorRefreshRate {:rettype :int32 :argtypes [[monitor :int32]]}
-    :GetWindowPosition {:rettype :vec2 :argtypes []}
-    :GetWindowScaleDPI {:rettype :vec2 :argtypes []}
-    :GetMonitorName {:rettype :pointer :argtypes [[monitor :int32]]}
-    :SetClipboardText {:rettype :void :argtypes [[text :pointer]]}
-    :GetClipboardText {:rettype :pointer :argtypes []}
-    :EnableEventWaiting {:rettype :void :argtypes []}
-    :DisableEventWaiting {:rettype :void :argtypes []}
+
+(comment
+
+  (ffi/define-library!
+   native-part-1
+   '{:InitWindow
+     {:rettype :void
+      :argtypes [[width :int32]
+                 [height :int32]
+                 [title :pointer]]}
+
+     :WindowShouldClose
+     {:rettype :int8
+      :argtypes []}
+
+     :CloseWindow
+     {:rettype :void
+      :argtypes []}
+
+     :IsWindowReady
+     {:rettype :int8
+      :argtypes []}
+
+     :IsWindowFullscreen
+     {:rettype :int8
+      :argtypes []}
+
+     :IsWindowHidden {:rettype :int8 :argtypes []}
+     :IsWindowMinimized {:rettype :int8 :argtypes []}
+     :IsWindowMaximized {:rettype :int8 :argtypes []}
+     :IsWindowFocused {:rettype :int8 :argtypes []}
+     :IsWindowResized {:rettype :int8 :argtypes []}
+     :IsWindowState {:rettype :int8 :argtypes [[flag :int32]]}
+     :SetWindowState {:rettype :void :argtypes [[flags :int32]]}
+     :ClearWindowState {:rettype :void :argtypes [[flags :int32]]}
+     :ToggleFullscreen {:rettype :void :argtypes []}
+     :ToggleBorderlessWindowed {:rettype :void :argtypes []}
+     :MaximizeWindow {:rettype :void :argtypes []}
+     :MinimizeWindow {:rettype :void :argtypes []}
+     :RestoreWindow {:rettype :void :argtypes []}
+     :SetWindowIcon {:rettype :void :argtypes [[image :image]]}
+     :SetWindowIcons {:rettype :void :argtypes [[images :pointer] [count :int32]]}
+     :SetWindowTitle {:rettype :void :argtypes [[title :ptr]]}
+     :SetWindowPosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
+     :SetWindowMonitor {:rettype :void :argtypes [[monitor :int32]]}
+     :SetWindowMinSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
+     :SetWindowSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
+     :SetWindowOpacity {:rettype :void :argtypes [[opacity :float32]]}
+     :SetWindowFocused {:rettype :void :argtypes []}
+     :GetWindowHandle {:rettype :pointer :argtypes []}
+     :GetScreenWidth {:rettype :int32 :argtypes []}
+     :GetScreenHeight {:rettype :int32 :argtypes []}
+     :GetRenderWidth {:rettype :int32 :argtypes []}
+     :GetRenderHeight {:rettype :int32 :argtypes []}
+     :GetMonitorCount {:rettype :int32 :argtypes []}
+     :GetCurrentMonitor {:rettype :int32 :argtypes []}
+     :GetMonitorPosition {:rettype :vec2 :argtypes [[monitor :int32]]}
+     :GetMonitorWidth {:rettype :int32 :argtypes [[monitor :int32]]}
+     :GetMonitorHeight {:rettype :int32 :argtypes [[monitor :int32]]}
+     :GetMonitorPhysicalWidth {:rettype :nt32 :argtypes [[monitor :int32]]}
+     :GetMonitorPhysicalHeight {:rettype :int32 :argtypes [[monitor :int32]]}
+     :GetMonitorRefreshRate {:rettype :int32 :argtypes [[monitor :int32]]}
+     :GetWindowPosition {:rettype :vec2 :argtypes []}
+     :GetWindowScaleDPI {:rettype :vec2 :argtypes []}
+     :GetMonitorName {:rettype :pointer :argtypes [[monitor :int32]]}
+     :SetClipboardText {:rettype :void :argtypes [[text :pointer]]}
+     :GetClipboardText {:rettype :pointer :argtypes []}
+     :EnableEventWaiting {:rettype :void :argtypes []}
+     :DisableEventWaiting {:rettype :void :argtypes []}
                                         ; ;frame control functions
-    ;;// NOTE: Those functions are intended for advance users that want full control over the frame processing
-    ;;// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
-    ;;// To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
-    :SwapScreenBuffer {:rettype :void :argtypes []}
-    :PollInputEvents {:rettype :void :argtypes []}
-    :WaitTime {:rettype :void :argtypes [[seconds :float64]]}
-    ;;-related functions
-    :ShowCursor {:rettype :void :argtypes []}
-    :HideCursor {:rettype :void :argtypes []}
-    :IsCursorHidden {:rettype :int8 :argtypes []}
-    :EnableCursor {:rettype :void :argtypes []}
-    :DisableCursor {:rettype :void :argtypes []}
-    :IsCursorOnScreen {:rettype :int8 :argtypes []}
+     ;;// NOTE: Those functions are intended for advance users that want full control over the frame processing
+     ;;// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
+     ;;// To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
+     :SwapScreenBuffer {:rettype :void :argtypes []}
+     :PollInputEvents {:rettype :void :argtypes []}
+     :WaitTime {:rettype :void :argtypes [[seconds :float64]]}
+     ;;-related functions
+     :ShowCursor {:rettype :void :argtypes []}
+     :HideCursor {:rettype :void :argtypes []}
+     :IsCursorHidden {:rettype :int8 :argtypes []}
+     :EnableCursor {:rettype :void :argtypes []}
+     :DisableCursor {:rettype :void :argtypes []}
+     :IsCursorOnScreen {:rettype :int8 :argtypes []}
                                         ;-related functions
-    :ClearBackground {:rettype :void :argtypes [[color :color]]}
-    :BeginDrawing {:rettype :void :argtypes []}
-    :EndDrawing {:rettype :void :argtypes []}
-    :BeginMode2D {:rettype :void :argtypes [[camera :camera-2d]]}
-    :EndMode2D {:rettype :void :argtypes []}
-    :BeginMode3D {:rettype :void :argtypes [[camera :camera-3d]]}
-    :EndMode3D {:rettype :void :argtypes []}
-    :BeginTextureMode {:rettype :void :argtypes [[target :render-texture]]}
-    :EndTextureMode {:rettype :void :argtypes []}
-    :BeginShaderMode {:rettype :void :argtypes [[shader :shader]]}
-    :EndShaderMode {:rettype :void :argtypes []}
-    :BeginBlendMode {:rettype :void :argtypes [[mode :int32]]}
-    :EndBlendMode {:rettype :void :argtypes []}
-    :BeginScissorMode {:rettype :void :argtypes [[x :int32] [y :int32] [width :int32] [height :int32]]}
-    :EndScissorMode {:rettype :void :argtypes []}
-    :BeginVrStereoMode {:rettype :void :argtypes [[config :vr-stereo-config]]}
-    :EndVrStereoMode {:rettype :void :argtypes []}
-    ;; stereo config functions for VR simulator
-    :LoadVrStereoConfig  {:rettype :vr-stereo-config :argtypes [[device :vr-device-info]]}
-    :UnloadVrStereoConfig {:rettype :void :argtypes [[config :vr-stereo-config]]}
-    ;; management functions
-    ;;// NOTE: :shader functionality is not available on OpenGL 1.1
-    :LoadShader {:rettype :shader :argtypes [[vsFileName :pointer] [fsFileName :pointer]]}
-    :LoadShaderFromMemory {:rettype :shader :argtypes [[vsCode :pointer] [fsCode :pointer]]}
-    :IsShaderReady {:rettype :int8 :argtypes [[shader :shader]]}
-    :GetShaderLocation {:rettype :int32 :argtypes [[shader :shader] [uniformName :pointer]]}
-    :GetShaderLocationAttrib {:rettype :int32 :argtypes [[shader :shader] [attribName :pointer]]}
-    :SetShaderValue {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32]]}
-    :SetShaderValueV {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32] [count :int32]]}
-    :SetShaderValueMatrix {:rettype :mat4 :argtypes [[shader :shader] [locIndex :int32] [mat :mat4]]}
-    :SetShaderValueTexture {:rettype :texture :argtypes [[shader :shader] [locIndex :int32] [texture :texture]]}
-    :UnloadShader {:rettype :shader :argtypes [[shader :shader]]}
-    ;;-space-related functions
+     :ClearBackground {:rettype :void :argtypes [[color :color]]}
+     :BeginDrawing {:rettype :void :argtypes []}
+     :EndDrawing {:rettype :void :argtypes []}
+     :BeginMode2D {:rettype :void :argtypes [[camera :camera-2d]]}
+     :EndMode2D {:rettype :void :argtypes []}
+     :BeginMode3D {:rettype :void :argtypes [[camera :camera-3d]]}
+     :EndMode3D {:rettype :void :argtypes []}
+     :BeginTextureMode {:rettype :void :argtypes [[target :render-texture]]}
+     :EndTextureMode {:rettype :void :argtypes []}
+     :BeginShaderMode {:rettype :void :argtypes [[shader :shader]]}
+     :EndShaderMode {:rettype :void :argtypes []}
+     :BeginBlendMode {:rettype :void :argtypes [[mode :int32]]}
+     :EndBlendMode {:rettype :void :argtypes []}
+     :BeginScissorMode {:rettype :void :argtypes [[x :int32] [y :int32] [width :int32] [height :int32]]}
+     :EndScissorMode {:rettype :void :argtypes []}
+     :BeginVrStereoMode {:rettype :void :argtypes [[config :vr-stereo-config]]}
+     :EndVrStereoMode {:rettype :void :argtypes []}
+     ;; stereo config functions for VR simulator
+     :LoadVrStereoConfig  {:rettype :vr-stereo-config :argtypes [[device :vr-device-info]]}
+     :UnloadVrStereoConfig {:rettype :void :argtypes [[config :vr-stereo-config]]}
+     ;; management functions
+     ;;// NOTE: :shader functionality is not available on OpenGL 1.1
+     :LoadShader {:rettype :shader :argtypes [[vsFileName :pointer] [fsFileName :pointer]]}
+     :LoadShaderFromMemory {:rettype :shader :argtypes [[vsCode :pointer] [fsCode :pointer]]}
+     :IsShaderReady {:rettype :int8 :argtypes [[shader :shader]]}
+     :GetShaderLocation {:rettype :int32 :argtypes [[shader :shader] [uniformName :pointer]]}
+     :GetShaderLocationAttrib {:rettype :int32 :argtypes [[shader :shader] [attribName :pointer]]}
+     :SetShaderValue {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32]]}
+     :SetShaderValueV {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32] [count :int32]]}
+     :SetShaderValueMatrix {:rettype :mat4 :argtypes [[shader :shader] [locIndex :int32] [mat :mat4]]}
+     :SetShaderValueTexture {:rettype :texture :argtypes [[shader :shader] [locIndex :int32] [texture :texture]]}
+     :UnloadShader {:rettype :shader :argtypes [[shader :shader]]}
+     ;;-space-related functions
 
-    :GetMouseRay {:rettype :ray :argtypes [[mousePosition :vec2] [camera :camera-3d]]}
-    :GetCameraMatrix {:rettype :mat4 :argtypes [[camera :camera-3d]]}
-    :GetCameraMatrix2D {:rettype :mat4 :argtypes [[camera :camera-2d]]}
-    :GetWorldToScreen {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d]]}
-    :GetScreenToWorld2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
-    :GetWorldToScreenEx {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d] [width :int32] [height :int32]]}
-    :GetWorldToScreen2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
-    ;;-related functions
+     :GetMouseRay {:rettype :ray :argtypes [[mousePosition :vec2] [camera :camera-3d]]}
+     :GetCameraMatrix {:rettype :mat4 :argtypes [[camera :camera-3d]]}
+     :GetCameraMatrix2D {:rettype :mat4 :argtypes [[camera :camera-2d]]}
+     :GetWorldToScreen {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d]]}
+     :GetScreenToWorld2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
+     :GetWorldToScreenEx {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d] [width :int32] [height :int32]]}
+     :GetWorldToScreen2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
+     ;;-related functions
 
-    :SetTargetFPS {:rettype :void :argtypes [[fps :int32]]}
-    :GetFPS {:rettype :int32 :argtypes []}
-    :GetFrameTime {:rettype :float :argtypes []}
-    :GetTime {:rettype :double :argtypes []}
-    ;;. functions
+     :SetTargetFPS {:rettype :void :argtypes [[fps :int32]]}
+     :GetFPS {:rettype :int32 :argtypes []}
+     :GetFrameTime {:rettype :float :argtypes []}
+     :GetTime {:rettype :double :argtypes []}
+     ;;. functions
 
-    :GetRandomValue {:rettype :int32 :argtypes [[min :int32] [max :int32]]}
-    :SetRandomSeed {:rettype :void :argtypes [[seed :int32]]}
-    :TakeScreenshot {:rettype :void :argtypes [[fileName :pointer]]}
-    :SetConfigFlags {:rettype :void :argtypes [[flags :int32]]}
+     :GetRandomValue {:rettype :int32 :argtypes [[min :int32] [max :int32]]}
+     :SetRandomSeed {:rettype :void :argtypes [[seed :int32]]}
+     :TakeScreenshot {:rettype :void :argtypes [[fileName :pointer]]}
+     :SetConfigFlags {:rettype :void :argtypes [[flags :int32]]}
                                         ;TODO: what to do here???
                                         ;:void TraceLog {:rettype :LAPI :argtypes [:int32 logLevel, :pointer text, ...]} 
-    :SetTraceLogLevel {:rettype :void :argtypes [[logLevel :int32]]}
-    :MemAlloc {:rettype :pointer :argtypes [[size :int32]]}
-    :MemRealloc {:rettype :pointer :argtypes [[ptr :pointer] [size :int32]]}
-    :MemFree {:rettype :void :argtypes [[ptr :pointer]]}
-    :OpenURL {:rettype :void :argtypes [[url :pointer]]}
-    ;; custom callbacks
-    ;;// WARNING: Callbacks setup is intended for advance users
+     :SetTraceLogLevel {:rettype :void :argtypes [[logLevel :int32]]}
+     :MemAlloc {:rettype :pointer :argtypes [[size :int32]]}
+     :MemRealloc {:rettype :pointer :argtypes [[ptr :pointer] [size :int32]]}
+     :MemFree {:rettype :void :argtypes [[ptr :pointer]]}
+     :OpenURL {:rettype :void :argtypes [[url :pointer]]}
+     ;; custom callbacks
+     ;;// WARNING: Callbacks setup is intended for advance users
                                         ;TODO: what are those types?
                                         ;    :SetTraceLogCallback {:rettype :void :argtypes [TraceLogCallback callback]}
                                         ;    :SetLoadFileDataCallback {:rettype :void :argtypes [LoadFileDataCallback callback]}
                                         ;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
                                         ;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
                                         ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
-    ;; management functions
-    :LoadFileData {:rettype :pointer :argtypes [[fileName :pointer] [bytesRead :pointer]]}
-    :UnloadFileData {:rettype :void :argtypes [[data :pointer]]}
-    :SaveFileData {:rettype :int8 :argtypes [[fileName :pointer] [data :pointer] [bytesToWrite :int32]]}
-    :ExportDataAsCode {:rettype :int8 :argtypes [[data :pointer] [size :int32] [fileName :pointer]]}
-    :LoadFileText {:rettype :pointer :argtypes [[fileName :pointer]]}
-    :UnloadFileText {:rettype :void :argtypes [[text :pointer]]}
-    :SaveFileText {:rettype :int8 :argtypes [[fileName :pointer] [text :pointer]]}
-    :FileExists {:rettype :int8 :argtypes [[fileName :pointer]]}
-    :DirectoryExists {:rettype :int8 :argtypes [[dirPath :pointer]]}
-    :IsFileExtension {:rettype :int8 :argtypes [[fileName :pointer] [ext :pointer]]}
-    :GetFileLength {:rettype :int32 :argtypes [[fileName :pointer]]}
-    :GetFileExtension {:rettype :pointer :argtypes [[fileName :pointer]]}
-    :GetFileName {:rettype :pointer :argtypes [[filePath :pointer]]}
-    :GetFileNameWithoutExt {:rettype :pointer :argtypes [[filePath :pointer]]}
-    :GetDirectoryPath {:rettype :pointer :argtypes [[filePath :pointer]]}
-    :GetPrevDirectoryPath {:rettype :pointer :argtypes [[dirPath :pointer]]}
-    :GetWorkingDirectory {:rettype :pointer :argtypes []}
-    :GetApplicationDirectory {:rettype :pointer :argtypes []}
-    :ChangeDirectory {:rettype :int8 :argtypes [[dir :pointer]]}
-    :IsPathFile {:rettype :int8 :argtypes [[path :pointer]]}
-    :LoadDirectoryFiles {:rettype :file-path-list :argtypes [[dirPath :pointer]]}
-    :LoadDirectoryFilesEx {:rettype :file-path-list :argtypes [[basePath :pointer] [filter :pointer] [scanSubdirs :int8]]}
-    :UnloadDirectoryFiles {:rettype :void :argtypes [[files :file-path-list]]}
-    :IsFileDropped {:rettype :int8 :argtypes []}
-    :PathList {:rettype :file-path-list :argtypes []}
-    :UnloadDroppedFiles {:rettype :void :argtypes [[files :file-path-list]]}
-    :GetFileModTime {:rettype :long :argtypes [[fileName :pointer]]}
-    ;;/Encoding functionality
-    :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
-    :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
-    :EncodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [outputSize :pointer]]}
-    :DecodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [outputSize :pointer]]}
-    ;;   Input Handling Functions  {:rettype :;// :rettype }[Module: core]
-    ;;//------------------------------------------------------------------------------------
-    ;;
-    ;;// Input-related functions: keyboard
-    :IsKeyPressed {:rettype :int8 :argtypes [[key :int32]]}
-    :IsKeyDown {:rettype :int8 :argtypes [[key :int32]]}
-    :IsKeyReleased {:rettype :int8 :argtypes [[key :int32]]}
-    :IsKeyUp {:rettype :int8 :argtypes [[key :int32]]}
-    :SetExitKey {:rettype :void :argtypes [[key :int32]]}
-    :GetKeyPressed {:rettype :int32 :argtypes []}
-    :GetCharPressed {:rettype :int32 :argtypes []}
-    ;;-related functions: gamepads
-    :IsGamepadAvailable {:rettype :int8 :argtypes [[gamepad :int32]]}
-    :GetGamepadName {:rettype :pointer :argtypes [[gamepad :int32]]}
-    :IsGamepadButtonPressed {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-    :IsGamepadButtonDown {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-    :IsGamepadButtonReleased {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-    :IsGamepadButtonUp {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-    :GetGamepadButtonPressed {:rettype :int32 :argtypes []}
-    :GetGamepadAxisCount {:rettype :int32 :argtypes [[gamepad :int32]]}
-    :GetGamepadAxisMovement {:rettype :float :argtypes [[gamepad :int32] [axis :int32]]}
-    :SetGamepadMappings {:rettype :int32 :argtypes [[mappings :pointer]]}
-    ;;
-    ;;// Input-related functions: mouse
-    :IsMouseButtonPressed {:rettype :int8 :argtypes [[button :int32]]}
-    :IsMouseButtonDown {:rettype :int8 :argtypes [[button :int32]]}
-    :IsMouseButtonReleased {:rettype :int8 :argtypes [[button :int32]]}
-    :IsMouseButtonUp {:rettype :int8 :argtypes [[button :int32]]}
-    :GetMouseX {:rettype :int32 :argtypes []}
-    :GetMouseY {:rettype :int32 :argtypes []}
-    :GetMousePosition {:rettype :vec2 :argtypes []}
-    :GetMouseDelta {:rettype :vec2 :argtypes []}
-    :SetMousePosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
-    :SetMouseOffset {:rettype :void :argtypes [[offsetX :int32] [offsetY :int32]]}
-    :SetMouseScale {:rettype :void :argtypes [[scaleX :float32] [scaleY :float32]]}
-    :GetMouseWheelMove {:rettype :float :argtypes []}
-    :GetMouseWheelMoveV {:rettype :vec2 :argtypes []}
-    :SetMouseCursor {:rettype :void :argtypes [[cursor :int32]]}
+     ;; management functions
+     :LoadFileData {:rettype :pointer :argtypes [[fileName :pointer] [bytesRead :pointer]]}
+     :UnloadFileData {:rettype :void :argtypes [[data :pointer]]}
+     :SaveFileData {:rettype :int8 :argtypes [[fileName :pointer] [data :pointer] [bytesToWrite :int32]]}
+     :ExportDataAsCode {:rettype :int8 :argtypes [[data :pointer] [size :int32] [fileName :pointer]]}
+     :LoadFileText {:rettype :pointer :argtypes [[fileName :pointer]]}
+     :UnloadFileText {:rettype :void :argtypes [[text :pointer]]}
+     :SaveFileText {:rettype :int8 :argtypes [[fileName :pointer] [text :pointer]]}
+     :FileExists {:rettype :int8 :argtypes [[fileName :pointer]]}
+     :DirectoryExists {:rettype :int8 :argtypes [[dirPath :pointer]]}
+     :IsFileExtension {:rettype :int8 :argtypes [[fileName :pointer] [ext :pointer]]}
+     :GetFileLength {:rettype :int32 :argtypes [[fileName :pointer]]}
+     :GetFileExtension {:rettype :pointer :argtypes [[fileName :pointer]]}
+     :GetFileName {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetFileNameWithoutExt {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetDirectoryPath {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetPrevDirectoryPath {:rettype :pointer :argtypes [[dirPath :pointer]]}
+     :GetWorkingDirectory {:rettype :pointer :argtypes []}
+     :GetApplicationDirectory {:rettype :pointer :argtypes []}
+     :ChangeDirectory {:rettype :int8 :argtypes [[dir :pointer]]}
+     :IsPathFile {:rettype :int8 :argtypes [[path :pointer]]}
+     :LoadDirectoryFiles {:rettype :file-path-list :argtypes [[dirPath :pointer]]}
+     :LoadDirectoryFilesEx {:rettype :file-path-list :argtypes [[basePath :pointer] [filter :pointer] [scanSubdirs :int8]]}
+     :UnloadDirectoryFiles {:rettype :void :argtypes [[files :file-path-list]]}
+     :IsFileDropped {:rettype :int8 :argtypes []}
+     :PathList {:rettype :file-path-list :argtypes []}
+     :UnloadDroppedFiles {:rettype :void :argtypes [[files :file-path-list]]}
+     :GetFileModTime {:rettype :long :argtypes [[fileName :pointer]]}
+     ;;/Encoding functionality
+     :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
+     :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
+     :EncodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [outputSize :pointer]]}
+     :DecodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [outputSize :pointer]]}
+     ;;   Input Handling Functions  {:rettype :;// :rettype }[Module: core]
+     ;;//------------------------------------------------------------------------------------
+     ;;
+     ;;// Input-related functions: keyboard
+     :IsKeyPressed {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyDown {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyReleased {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyUp {:rettype :int8 :argtypes [[key :int32]]}
+     :SetExitKey {:rettype :void :argtypes [[key :int32]]}
+     :GetKeyPressed {:rettype :int32 :argtypes []}
+     :GetCharPressed {:rettype :int32 :argtypes []}
+     ;;-related functions: gamepads
+     :IsGamepadAvailable {:rettype :int8 :argtypes [[gamepad :int32]]}
+     :GetGamepadName {:rettype :pointer :argtypes [[gamepad :int32]]}
+     :IsGamepadButtonPressed {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonDown {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonReleased {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonUp {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :GetGamepadButtonPressed {:rettype :int32 :argtypes []}
+     :GetGamepadAxisCount {:rettype :int32 :argtypes [[gamepad :int32]]}
+     :GetGamepadAxisMovement {:rettype :float :argtypes [[gamepad :int32] [axis :int32]]}
+     :SetGamepadMappings {:rettype :int32 :argtypes [[mappings :pointer]]}
+     ;;
+     ;;// Input-related functions: mouse
+     :IsMouseButtonPressed {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonDown {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonReleased {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonUp {:rettype :int8 :argtypes [[button :int32]]}
+     :GetMouseX {:rettype :int32 :argtypes []}
+     :GetMouseY {:rettype :int32 :argtypes []}
+     :GetMousePosition {:rettype :vec2 :argtypes []}
+     :GetMouseDelta {:rettype :vec2 :argtypes []}
+     :SetMousePosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
+     :SetMouseOffset {:rettype :void :argtypes [[offsetX :int32] [offsetY :int32]]}
+     :SetMouseScale {:rettype :void :argtypes [[scaleX :float32] [scaleY :float32]]}
+     :GetMouseWheelMove {:rettype :float :argtypes []}
+     :GetMouseWheelMoveV {:rettype :vec2 :argtypes []}
+     :SetMouseCursor {:rettype :void :argtypes [[cursor :int32]]}
 
-    :GetTouchX {:rettype :int32 :argtypes []}
-    :GetTouchY {:rettype :int32 :argtypes []}
-    :GetTouchPosition {:rettype :vec2 :argtypes [[index :int32]]}
-    :GetTouchPointId {:rettype :int32 :argtypes [[index :int32]]}
-    :GetTouchPointCount {:rettype :int32 :argtypes []}
+     :GetTouchX {:rettype :int32 :argtypes []}
+     :GetTouchY {:rettype :int32 :argtypes []}
+     :GetTouchPosition {:rettype :vec2 :argtypes [[index :int32]]}
+     :GetTouchPointId {:rettype :int32 :argtypes [[index :int32]]}
+     :GetTouchPointCount {:rettype :int32 :argtypes []}
                                         ;Gestures and Touch Handling Functions  {:rettype :;// :rettype }[Module: rgestures]
-    ;;//------------------------------------------------------------------------------------
-    :SetGesturesEnabled {:rettype :void :argtypes [[flags :int32]]}
-    :IsGestureDetected {:rettype :int8 :argtypes [[gesture :int32]]}
-    :GetGestureDetected {:rettype :int32 :argtypes []}
-    :GetGestureHoldDuration {:rettype :float :argtypes []}
-    :GetGestureDragVector {:rettype :vec2 :argtypes []}
-    :GetGestureDragAngle {:rettype :float :argtypes []}
-    :GetGesturePinchVector {:rettype :vec2 :argtypes []}
-    :GetGesturePinchAngle {:rettype :float :argtypes []}
+     ;;//------------------------------------------------------------------------------------
+     :SetGesturesEnabled {:rettype :void :argtypes [[flags :int32]]}
+     :IsGestureDetected {:rettype :int8 :argtypes [[gesture :int32]]}
+     :GetGestureDetected {:rettype :int32 :argtypes []}
+     :GetGestureHoldDuration {:rettype :float :argtypes []}
+     :GetGestureDragVector {:rettype :vec2 :argtypes []}
+     :GetGestureDragAngle {:rettype :float :argtypes []}
+     :GetGesturePinchVector {:rettype :vec2 :argtypes []}
+     :GetGesturePinchAngle {:rettype :float :argtypes []}
                                         ;:camera-3d System Functions  {:rettype :;// :rettype }[Module: rcamera]
-    ;;//------------------------------------------------------------------------------------
-    :UpdateCamera3D {:rettype :void :argtypes [[camera-3d :pointer] [mode :int32]]}
-    :UpdateCameraPro {:rettype :void :argtypes [[camera-3d :pointer] [movement :vec3] [rotation :vec3] [zoom :float32]]}
+     ;;//------------------------------------------------------------------------------------
+     :UpdateCamera3D {:rettype :void :argtypes [[camera-3d :pointer] [mode :int32]]}
+     :UpdateCameraPro {:rettype :void :argtypes [[camera-3d :pointer] [movement :vec3] [rotation :vec3] [zoom :float32]]}
                                         ;Basic Shapes Drawing Functions  {:rettype :;// :rettype }[Module: shapes]
-    ;;//------------------------------------------------------------------------------------
-    ;;// Set texture and rectangle to be used on shapes drawing
-    ;;// NOTE: It can be useful when using basic shapes and one single font,
-    ;;// defining a font char white rectangle would allow drawing everything in a single draw call
-    :SetShapesTexture {:rettype :void :argtypes [[texture :texture] [source  :rectangle]]}
+     ;;//------------------------------------------------------------------------------------
+     ;;// Set texture and rectangle to be used on shapes drawing
+     ;;// NOTE: It can be useful when using basic shapes and one single font,
+     ;;// defining a font char white rectangle would allow drawing everything in a single draw call
+     :SetShapesTexture {:rettype :void :argtypes [[texture :texture] [source  :rectangle]]}
 
 
-    :DrawPixel {:rettype :void :argtypes [[posX :int32] [posY :int32] [color :color]]}
-    :DrawPixelV {:rettype :void :argtypes [[position :vec2] [color  :color]]}
-    :DrawLine {:rettype :void :argtypes [[startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color  :color]]}
-    :DrawLineV {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [color  :color]]}
-    :DrawLineEx {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
-    :DrawLineBezier {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
-    :DrawLineBezierQuad {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [controlPos :vec2] [thick :float32] [color  :color]]}
-    :DrawLineBezierCubic {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [startControlPos :vec2] [endControlPos :vec2] [thick :float32] [color  :color]]}
-    :DrawLineBSpline {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
-    :DrawLineCatmullRom {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
-    :DrawLineStrip {:rettype :void :argtypes [[points :points] [pointCount :int32] [color  :color]]}
-    :DrawCircle {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
-    :DrawCircleSector {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-    :DrawCircleSectorLines {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-    :DrawCircleGradient {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color1 :color] [color2  :color]]}
-    :DrawCircleV {:rettype :void :argtypes [[center :vec2] [radius :float32] [color  :color]]}
-    :DrawCircleLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
-    :DrawEllipse {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
-    :DrawEllipseLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
-    :DrawRing {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-    :DrawRingLines {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-    :DrawRectangle {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
-    :DrawRectangleV {:rettype :void :argtypes [[position :vec2] [size :vec2] [color  :color]]}
-    :DrawRectangleRec {:rettype :void :argtypes [[rec :rectangle] [color  :color]]}
-    :DrawRectanglePro {:rettype :void :argtypes [[rec :rectangle] [origin :vec2] [rotation :float32] [color  :color]]}
-    :DrawRectangleGradientV {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
-    :DrawRectangleGradientH {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
-    :DrawRectangleGradientEx {:rettype :void :argtypes [[rec :rectangle] [col1 :color] [col2 :color] [col3 :color] [col4  :color]]}
-    :DrawRectangleLines {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
-    :DrawRectangleLinesEx {:rettype :void :argtypes [[rec :rectangle] [lineThick :float32] [color  :color]]}
-    :DrawRectangleRounded {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [color  :color]]}
-    :DrawRectangleRoundedLines {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [lineThick :float32] [color  :color]]}
-    :DrawTriangle {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
-    :DrawTriangleLines {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
-    :DrawTriangleFan {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
-    :DrawTriangleStrip {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
-    :DrawPoly {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
-    :DrawPolyLines {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
-    :DrawPolyLinesEx {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [lineThick :float32] [color  :color]]}
-    ;; shapes collision detection functions
-    :CheckCollisionRecs {:rettype :int8 :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
-    :CheckCollisionCircles {:rettype :int8 :argtypes [[center1 :vec2] [radius1 :float32] [center2 :vec2] [radius2 :float32]]}
-    :CheckCollisionCircleRec {:rettype :int8 :argtypes [[center :vec2] [radius :float32] [rec :rectangle]]}
-    :CheckCollisionPointRec {:rettype :int8 :argtypes [[point :vec2] [rec :rectangle]]}
-    :CheckCollisionPointCircle {:rettype :int8 :argtypes [[point :vec2] [center :vec2] [radius :float32]]}
-    :CheckCollisionPointTriangle {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [p3 :vec2]]}
-    :CheckCollisionPointPoly {:rettype :int8 :argtypes [[point :vec2] [points :point] [pointCount :int32]]}
-    :CheckCollisionLines {:rettype :int8 :argtypes [[startPos1 :vec2] [endPos1 :vec2] [startPos2 :vec2] [endPos2 :vec2] [collisionPoint :pointer]]}
-    :CheckCollisionPointLine {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [threshold :int32]]}
-    :GetCollisionRec {:rettype :rectangle :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
- ;   :texture Loading and Drawing Functions  {:rettype :;// :rettype }[Module: textures]
-    ;;//------------------------------------------------------------------------------------
-    ;;
-    ;;// :image loading functions
-    ;;// NOTE: These functions do not require GPU access
-    :LoadImage {:rettype :image :argtypes [[fileName :pointer]]}
-    :LoadImageRaw {:rettype :image :argtypes [[fileName :pointer] [width :int32] [height :int32] [format :int32] [headerSize :int32]]}
-    :LoadImageAnim {:rettype :image :argtypes [[fileName :pointer] [frames :pointer]]}
-    :LoadImageFromMemory {:rettype :image :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
-    :LoadImageFromTexture {:rettype :image :argtypes [[texture :texture]]}
-    :LoadImageFromScreen {:rettype :image :argtypes []}
-    :IsImageReady {:rettype :int8 :argtypes [[image :image]]}
-    :UnloadImage {:rettype :void :argtypes [[image :image]]}
-    :ExportImage {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
-    :ExportImageToMemory {:rettype :pointer :argtypes [[image :image] [fileType :pointer] [fileSize :pointer]]}
-    :ExportImageAsCode {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
-    ;; generation functions
-    :GenImageColor {:rettype :image :argtypes [[width :int32] [height :int32] [color :color]]}
-    :GenImageGradientLinear {:rettype :image :argtypes [[width :int32] [height :int32] [direction :int32] [start :color] [end :color]]}
-    :GenImageGradientRadial {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
-    :GenImageGradientSquare {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
-    :GenImageChecked {:rettype :image :argtypes [[width :int32] [height :int32] [checksX :int32] [checksY :int32] [col1 :color] [col2 :color]]}
-    :GenImageWhiteNoise {:rettype :image :argtypes [[width :int32] [height :int32] [factor :float32]]}
-    :GenImagePerlinNoise {:rettype :image :argtypes [[width :int32] [height :int32] [offsetX :int32] [offsetY :int32] [scale :float32]]}
-    :GenImageCellular {:rettype :image :argtypes [[width :int32] [height :int32] [tileSize :int32]]}
-    :GenImageText {:rettype :image :argtypes [[width :int32] [height :int32] [text :pointer]]}
+     :DrawPixel {:rettype :void :argtypes [[posX :int32] [posY :int32] [color :color]]}
+     :DrawPixelV {:rettype :void :argtypes [[position :vec2] [color  :color]]}
+     :DrawLine {:rettype :void :argtypes [[startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color  :color]]}
+     :DrawLineV {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [color  :color]]}
+     :DrawLineEx {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
+     :DrawLineBezier {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
+     :DrawLineBezierQuad {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [controlPos :vec2] [thick :float32] [color  :color]]}
+     :DrawLineBezierCubic {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [startControlPos :vec2] [endControlPos :vec2] [thick :float32] [color  :color]]}
+     :DrawLineBSpline {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
+     :DrawLineCatmullRom {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
+     :DrawLineStrip {:rettype :void :argtypes [[points :points] [pointCount :int32] [color  :color]]}
+     :DrawCircle {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
+     :DrawCircleSector {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
+     :DrawCircleSectorLines {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
+     :DrawCircleGradient {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color1 :color] [color2  :color]]}
+     :DrawCircleV {:rettype :void :argtypes [[center :vec2] [radius :float32] [color  :color]]}
+     :DrawCircleLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
+     :DrawEllipse {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
+     :DrawEllipseLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
+     :DrawRing {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
+     :DrawRingLines {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
+     :DrawRectangle {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
+     :DrawRectangleV {:rettype :void :argtypes [[position :vec2] [size :vec2] [color  :color]]}
+     :DrawRectangleRec {:rettype :void :argtypes [[rec :rectangle] [color  :color]]}
+     :DrawRectanglePro {:rettype :void :argtypes [[rec :rectangle] [origin :vec2] [rotation :float32] [color  :color]]}
+     :DrawRectangleGradientV {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
+     :DrawRectangleGradientH {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
+     :DrawRectangleGradientEx {:rettype :void :argtypes [[rec :rectangle] [col1 :color] [col2 :color] [col3 :color] [col4  :color]]}
+     :DrawRectangleLines {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
+     :DrawRectangleLinesEx {:rettype :void :argtypes [[rec :rectangle] [lineThick :float32] [color  :color]]}
+     :DrawRectangleRounded {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [color  :color]]}
+     :DrawRectangleRoundedLines {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [lineThick :float32] [color  :color]]}
+     :DrawTriangle {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
+     :DrawTriangleLines {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
+     :DrawTriangleFan {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
+     :DrawTriangleStrip {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
+     :DrawPoly {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
+     :DrawPolyLines {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
+     :DrawPolyLinesEx {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [lineThick :float32] [color  :color]]}
+     ;; shapes collision detection functions
+     :CheckCollisionRecs {:rettype :int8 :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
+     :CheckCollisionCircles {:rettype :int8 :argtypes [[center1 :vec2] [radius1 :float32] [center2 :vec2] [radius2 :float32]]}
+     :CheckCollisionCircleRec {:rettype :int8 :argtypes [[center :vec2] [radius :float32] [rec :rectangle]]}
+     :CheckCollisionPointRec {:rettype :int8 :argtypes [[point :vec2] [rec :rectangle]]}
+     :CheckCollisionPointCircle {:rettype :int8 :argtypes [[point :vec2] [center :vec2] [radius :float32]]}
+     :CheckCollisionPointTriangle {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [p3 :vec2]]}
+     :CheckCollisionPointPoly {:rettype :int8 :argtypes [[point :vec2] [points :point] [pointCount :int32]]}
+     :CheckCollisionLines {:rettype :int8 :argtypes [[startPos1 :vec2] [endPos1 :vec2] [startPos2 :vec2] [endPos2 :vec2] [collisionPoint :pointer]]}
+     :CheckCollisionPointLine {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [threshold :int32]]}
+     :GetCollisionRec {:rettype :rectangle :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
+                                        ;   :texture Loading and Drawing Functions  {:rettype :;// :rettype }[Module: textures]
+     ;;//------------------------------------------------------------------------------------
+     ;;
+     ;;// :image loading functions
+     ;;// NOTE: These functions do not require GPU access
+     :LoadImage {:rettype :image :argtypes [[fileName :pointer]]}
+     :LoadImageRaw {:rettype :image :argtypes [[fileName :pointer] [width :int32] [height :int32] [format :int32] [headerSize :int32]]}
+     :LoadImageAnim {:rettype :image :argtypes [[fileName :pointer] [frames :pointer]]}
+     :LoadImageFromMemory {:rettype :image :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
+     :LoadImageFromTexture {:rettype :image :argtypes [[texture :texture]]}
+     :LoadImageFromScreen {:rettype :image :argtypes []}
+     :IsImageReady {:rettype :int8 :argtypes [[image :image]]}
+     :UnloadImage {:rettype :void :argtypes [[image :image]]}
+     :ExportImage {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
+     :ExportImageToMemory {:rettype :pointer :argtypes [[image :image] [fileType :pointer] [fileSize :pointer]]}
+     :ExportImageAsCode {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
+     ;; generation functions
+     :GenImageColor {:rettype :image :argtypes [[width :int32] [height :int32] [color :color]]}
+     :GenImageGradientLinear {:rettype :image :argtypes [[width :int32] [height :int32] [direction :int32] [start :color] [end :color]]}
+     :GenImageGradientRadial {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
+     :GenImageGradientSquare {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
+     :GenImageChecked {:rettype :image :argtypes [[width :int32] [height :int32] [checksX :int32] [checksY :int32] [col1 :color] [col2 :color]]}
+     :GenImageWhiteNoise {:rettype :image :argtypes [[width :int32] [height :int32] [factor :float32]]}
+     :GenImagePerlinNoise {:rettype :image :argtypes [[width :int32] [height :int32] [offsetX :int32] [offsetY :int32] [scale :float32]]}
+     :GenImageCellular {:rettype :image :argtypes [[width :int32] [height :int32] [tileSize :int32]]}
+     :GenImageText {:rettype :image :argtypes [[width :int32] [height :int32] [text :pointer]]}
 
-    :ImageCopy {:rettype :image :argtypes [[image :image]]}
-    :ImageFromImage {:rettype :image :argtypes [[image :image] [rec :rectangle]]}
-    :ImageText {:rettype :image :argtypes [[text :pointer] [fontSize :int32] [color :color]]}
-    :ImageTextEx {:rettype :image :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32] [tint :color]]}
-    :ImageFormat {:rettype :void :argtypes [[image :pointer] [newFormat :int32]]}
-    :ImageToPOT {:rettype :void :argtypes [[image :pointer] [fill :color]]}
-    :ImageCrop {:rettype :void :argtypes [[image :pointer] [crop :rectangle]]}
-    :ImageAlphaCrop {:rettype :void :argtypes [[image :pointer] [threshold :float32]]}
-    :ImageAlphaClear {:rettype :void :argtypes [[image :pointer] [color :color] [threshold :float32]]}
-    :ImageAlphaMask {:rettype :void :argtypes [[image :pointer] [alphaMask :image]]}
-    :ImageAlphaPremultiply {:rettype :void :argtypes [[image :pointer]]}
-    :ImageBlurGaussian {:rettype :void :argtypes [[image :pointer] [blurSize :int32]]}
-    :ImageResize {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
-    :ImageResizeNN {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
-    :ImageResizeCanvas {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32] [offsetX :int32] [offsetY :int32] [fill :color]]}
-    :ImageMipmaps {:rettype :void :argtypes [[image :pointer]]}
-    :ImageDither {:rettype :void :argtypes [[image :pointer] [rBpp :int32] [gBpp :int32] [bBpp :int32] [aBpp :int32]]}
-    :ImageFlipVertical {:rettype :void :argtypes [[image :pointer]]}
-    :ImageFlipHorizontal {:rettype :void :argtypes [[image :pointer]]}
-    :ImageRotate {:rettype :void :argtypes [[image :pointer] [degrees :int32]]}
-    :ImageRotateCW {:rettype :void :argtypes [[image :pointer]]}
-    :ImageRotateCCW {:rettype :void :argtypes [[image :pointer]]}
-    :ImageColorTint {:rettype :void :argtypes [[image :pointer] [color :color]]}
-    :ImageColorInvert {:rettype :void :argtypes [[image :pointer]]}
-    :ImageColorGrayscale {:rettype :void :argtypes [[image :pointer]]}
-    :ImageColorContrast {:rettype :void :argtypes [[image :pointer] [contrast :float32]]}
-    :ImageColorBrightness {:rettype :void :argtypes [[image :pointer] [brightness :int32]]}
-    :ImageColorReplace {:rettype :void :argtypes [[image :pointer] [color :color] [replace :color]]}
-    :LoadImageColors {:rettype :pointer :argtypes [[image :image]]}
-    :LoadImagePalette {:rettype :pointer :argtypes [[image :image] [maxPaletteSize :int32] [colorCount :pointer]]}
-    :UnloadImageColors {:rettype :void :argtypes [[colors :pointer]]}
-    :UnloadImagePalette {:rettype :void :argtypes [[colors :pointer]]}
-    :GetImageAlphaBorder {:rettype :rectangle :argtypes [[image :image] [threshold :float32]]}
-    :GetImageColors {:rettype :color :argtypes [[image :image] [x :int32] [y :int32]]}
-    ;; drawing functions
-    ;;// NOTE: :image software-rendering functions (CPU)
-    :ImageClearBackground {:rettype :void :argtypes [[image :pointer] [color :color]]}
-    :ImageDrawPixel {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [color :color]]}
-    :ImageDrawPixelV {:rettype :void :argtypes [[image :pointer] [position :vec2] [color :color]]}
-    :ImageDrawLine {:rettype :void :argtypes [[image :pointer] [startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color :color]]}
-    :ImageDrawLineV {:rettype :void :argtypes [[image :pointer] [start :vec2] [end :vec2] [color :color]]}
-    :ImageDrawCircle {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
-    :ImageDrawCircleV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
-    :ImageDrawCircleLines {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
-    :ImageDrawCircleLinesV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
-    :ImageDrawRectangle {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [width :int32] [height :int32] [color :color]]}
-    :ImageDrawRectangleV {:rettype :void :argtypes [[image :pointer] [position :vec2] [size :vec2] [color :color]]}
-    :ImageDrawRectangleRec {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [color :color]]}
-    :ImageDrawRectangleLines {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [thick :int32] [color :color]]}
-    :ImageDraw {:rettype :void :argtypes [[image :pointer] [src :image] [srcRec :rectangle] [dstRec :rectangle] [tint :color]]}
-    :ImageDrawText {:rettype :void :argtypes [[image :pointer] [text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
-    :ImageDrawTextEx {:rettype :void :argtypes [[image :pointer] [font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
-    ;; loading functions
-    ;;// NOTE: These functions require GPU access
-    :LoadTexture {:rettype :texture :argtypes [[fileName :pointer]]}
-    :LoadTextureFrom:image {:rettype :texture :argtypes [[image :image]]}
-    :LoadTextureCubemap {:rettype :texture :argtypes [[image :image] [layout :int32]]}
-    :LoadRenderTexture {:rettype :render-texture :argtypes [[width :int32] [height :int32]]}
-    :IsTextureReady {:rettype :int8 :argtypes [[texture :texture]]}
-    :UnloadTexture {:rettype :void :argtypes [[texture :texture]]}
-    :IsRenderTextureReady {:rettype :int8 :argtypes [[target :render-texture]]}
-    :UnloadRenderTexture {:rettype :void :argtypes [[target :render-texture]]}
-    :UpdateTexture {:rettype :void :argtypes [[texture :texture] [pixels :pointer]]}
-    :UpdateTextureRec {:rettype :void :argtypes [[texture :texture] [rec :rectangle] [pixels :pointer]]}
-    ;; configuration functions
-    :GenTextureMipmaps {:rettype :void :argtypes [[texture :pointer]]}
-    :SetTextureFilter {:rettype :void :argtypes [[texture :texture] [filter :int32]]}
-    :SetTextureWrap {:rettype :void :argtypes [[texture :texture] [wrap :int32]]}
-    ;; drawing functions
-    :DrawTexture {:rettype :void :argtypes [[texture :texture] [posX :int32] [posY :int32] [tint :color]]}
-    :DrawTextureV {:rettype :void :argtypes [[texture :texture] [position :vec2] [tint :color]]}
-    :DrawTextureEx {:rettype :void :argtypes [[texture :texture] [position :vec2] [rotation :float32] [scale :float32] [tint :color]]}
-    :DrawTextureRec {:rettype :void :argtypes [[texture :texture] [source :rectangle] [position :vec2] [tint :color]]}
-    :DrawTexturePro {:rettype :void :argtypes [[texture :texture] [source :rectangle] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
-    :DrawTextureNPatch {:rettype :void :argtypes [[texture :texture] [nPatchInfo :n-patch-info] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
+     :ImageCopy {:rettype :image :argtypes [[image :image]]}
+     :ImageFromImage {:rettype :image :argtypes [[image :image] [rec :rectangle]]}
+     :ImageText {:rettype :image :argtypes [[text :pointer] [fontSize :int32] [color :color]]}
+     :ImageTextEx {:rettype :image :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32] [tint :color]]}
+     :ImageFormat {:rettype :void :argtypes [[image :pointer] [newFormat :int32]]}
+     :ImageToPOT {:rettype :void :argtypes [[image :pointer] [fill :color]]}
+     :ImageCrop {:rettype :void :argtypes [[image :pointer] [crop :rectangle]]}
+     :ImageAlphaCrop {:rettype :void :argtypes [[image :pointer] [threshold :float32]]}
+     :ImageAlphaClear {:rettype :void :argtypes [[image :pointer] [color :color] [threshold :float32]]}
+     :ImageAlphaMask {:rettype :void :argtypes [[image :pointer] [alphaMask :image]]}
+     :ImageAlphaPremultiply {:rettype :void :argtypes [[image :pointer]]}
+     :ImageBlurGaussian {:rettype :void :argtypes [[image :pointer] [blurSize :int32]]}
+     :ImageResize {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
+     :ImageResizeNN {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
+     :ImageResizeCanvas {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32] [offsetX :int32] [offsetY :int32] [fill :color]]}
+     :ImageMipmaps {:rettype :void :argtypes [[image :pointer]]}
+     :ImageDither {:rettype :void :argtypes [[image :pointer] [rBpp :int32] [gBpp :int32] [bBpp :int32] [aBpp :int32]]}
+     :ImageFlipVertical {:rettype :void :argtypes [[image :pointer]]}
+     :ImageFlipHorizontal {:rettype :void :argtypes [[image :pointer]]}
+     :ImageRotate {:rettype :void :argtypes [[image :pointer] [degrees :int32]]}
+     :ImageRotateCW {:rettype :void :argtypes [[image :pointer]]}
+     :ImageRotateCCW {:rettype :void :argtypes [[image :pointer]]}
+     :ImageColorTint {:rettype :void :argtypes [[image :pointer] [color :color]]}
+     :ImageColorInvert {:rettype :void :argtypes [[image :pointer]]}
+     :ImageColorGrayscale {:rettype :void :argtypes [[image :pointer]]}
+     :ImageColorContrast {:rettype :void :argtypes [[image :pointer] [contrast :float32]]}
+     :ImageColorBrightness {:rettype :void :argtypes [[image :pointer] [brightness :int32]]}
+     :ImageColorReplace {:rettype :void :argtypes [[image :pointer] [color :color] [replace :color]]}
+     :LoadImageColors {:rettype :pointer :argtypes [[image :image]]}
+     :LoadImagePalette {:rettype :pointer :argtypes [[image :image] [maxPaletteSize :int32] [colorCount :pointer]]}
+     :UnloadImageColors {:rettype :void :argtypes [[colors :pointer]]}
+     :UnloadImagePalette {:rettype :void :argtypes [[colors :pointer]]}
+     :GetImageAlphaBorder {:rettype :rectangle :argtypes [[image :image] [threshold :float32]]}
+     :GetImageColors {:rettype :color :argtypes [[image :image] [x :int32] [y :int32]]}
+     ;; drawing functions
+     ;;// NOTE: :image software-rendering functions (CPU)
+     :ImageClearBackground {:rettype :void :argtypes [[image :pointer] [color :color]]}
+     :ImageDrawPixel {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [color :color]]}
+     :ImageDrawPixelV {:rettype :void :argtypes [[image :pointer] [position :vec2] [color :color]]}
+     :ImageDrawLine {:rettype :void :argtypes [[image :pointer] [startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color :color]]}
+     :ImageDrawLineV {:rettype :void :argtypes [[image :pointer] [start :vec2] [end :vec2] [color :color]]}
+     :ImageDrawCircle {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
+     :ImageDrawCircleV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
+     :ImageDrawCircleLines {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
+     :ImageDrawCircleLinesV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
+     :ImageDrawRectangle {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [width :int32] [height :int32] [color :color]]}
+     :ImageDrawRectangleV {:rettype :void :argtypes [[image :pointer] [position :vec2] [size :vec2] [color :color]]}
+     :ImageDrawRectangleRec {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [color :color]]}
+     :ImageDrawRectangleLines {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [thick :int32] [color :color]]}
+     :ImageDraw {:rettype :void :argtypes [[image :pointer] [src :image] [srcRec :rectangle] [dstRec :rectangle] [tint :color]]}
+     :ImageDrawText {:rettype :void :argtypes [[image :pointer] [text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
+     :ImageDrawTextEx {:rettype :void :argtypes [[image :pointer] [font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
+     ;; loading functions
+     ;;// NOTE: These functions require GPU access
+     :LoadTexture {:rettype :texture :argtypes [[fileName :pointer]]}
+     :LoadTextureFrom:image {:rettype :texture :argtypes [[image :image]]}
+     :LoadTextureCubemap {:rettype :texture :argtypes [[image :image] [layout :int32]]}
+     :LoadRenderTexture {:rettype :render-texture :argtypes [[width :int32] [height :int32]]}
+     :IsTextureReady {:rettype :int8 :argtypes [[texture :texture]]}
+     :UnloadTexture {:rettype :void :argtypes [[texture :texture]]}
+     :IsRenderTextureReady {:rettype :int8 :argtypes [[target :render-texture]]}
+     :UnloadRenderTexture {:rettype :void :argtypes [[target :render-texture]]}
+     :UpdateTexture {:rettype :void :argtypes [[texture :texture] [pixels :pointer]]}
+     :UpdateTextureRec {:rettype :void :argtypes [[texture :texture] [rec :rectangle] [pixels :pointer]]}
+     ;; configuration functions
+     :GenTextureMipmaps {:rettype :void :argtypes [[texture :pointer]]}
+     :SetTextureFilter {:rettype :void :argtypes [[texture :texture] [filter :int32]]}
+     :SetTextureWrap {:rettype :void :argtypes [[texture :texture] [wrap :int32]]}
+     ;; drawing functions
+     :DrawTexture {:rettype :void :argtypes [[texture :texture] [posX :int32] [posY :int32] [tint :color]]}
+     :DrawTextureV {:rettype :void :argtypes [[texture :texture] [position :vec2] [tint :color]]}
+     :DrawTextureEx {:rettype :void :argtypes [[texture :texture] [position :vec2] [rotation :float32] [scale :float32] [tint :color]]}
+     :DrawTextureRec {:rettype :void :argtypes [[texture :texture] [source :rectangle] [position :vec2] [tint :color]]}
+     :DrawTexturePro {:rettype :void :argtypes [[texture :texture] [source :rectangle] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
+     :DrawTextureNPatch {:rettype :void :argtypes [[texture :texture] [nPatchInfo :n-patch-info] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
 
-    :Fade {:rettype :color :argtypes [[color :color] [alpha :float32]]}
-    :ColorToInt {:rettype :int32 :argtypes [[color :color]]}
-    :ColorNormalize {:rettype :vec4 :argtypes [[color :color]]}
-    :ColorFromNormalized {:rettype :color :argtypes [[normalized :vec4]]}
-    :ColorToHSV {:rettype :vec3 :argtypes [[color :color]]}
-    :ColorFromHSV {:rettype :color :argtypes [[hue :float32] [saturation :float32] [value :float32]]}
-    :ColorTint {:rettype :color :argtypes [[color :color] [tint :color]]}
-    :ColorBrightness {:rettype :color :argtypes [[color :color] [factor :float32]]}
-    :ColorContrast {:rettype :color :argtypes [[color :color] [contrast :float32]]}
-    :ColorAlpha {:rettype :color :argtypes [[color :color] [alpha :float32]]}
-    :ColorAlphaBlend {:rettype :color :argtypes [[dst :color] [src :color] [tint :color]]}
-    :GetColor {:rettype :color :argtypes [[hexValue :int32]]}
-    :GetPixelColor {:rettype :color :argtypes [[srcPtr :pointer] [format :int32]]}
-    :SetPixelColor {:rettype :void :argtypes [[dstPtr :pointer] [color :color] [format :int32]]}
-    :GetPixelDataSize {:rettype :int32 :argtypes [[width :int32] [height :int32] [format :int32]]}
-    ;:font Loading and Text Drawing Functions  {:rettype :;// :argtypes }[Module: text]
-    ;;//------------------------------------------------------------------------------------
-    ;;
-    ;;// :font loading/unloading functions
-    :GetFontDefault {:rettype :font :argtypes []}
-    :LoadFont {:rettype :font :argtypes [[fileName :pointer]]}
-    :LoadFontEx {:rettype :font :argtypes [[fileName :pointer] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
-    :LoadFontFrom:image {:rettype :font :argtypes [[image :image] [key :color] [firstChar :int32]]}
-    :LoadFontFromMemory {:rettype :font :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
-    :IsFontReady {:rettype :int8 :argtypes [[font :font]]}
-    :LoadFontData {:rettype :point :argtypes [[fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32] [type :int32]]}
-    :GenImageFontAtlas {:rettype :image :argtypes [[chars :pointer] [recs :pointer] [glyphCount :int32] [fontSize :int32] [padding :int32] [packMethod :int32]]}
-    :UnloadFontData {:rettype :void :argtypes [[chars :pointer] [glyphCount :int32]]}
-    :UnloadFont {:rettype :void :argtypes [[font :font]]}
-    :ExportFontAsCode {:rettype :int8 :argtypes [[font :font] [fileName :pointer]]}
+     :Fade {:rettype :color :argtypes [[color :color] [alpha :float32]]}
+     :ColorToInt {:rettype :int32 :argtypes [[color :color]]}
+     :ColorNormalize {:rettype :vec4 :argtypes [[color :color]]}
+     :ColorFromNormalized {:rettype :color :argtypes [[normalized :vec4]]}
+     :ColorToHSV {:rettype :vec3 :argtypes [[color :color]]}
+     :ColorFromHSV {:rettype :color :argtypes [[hue :float32] [saturation :float32] [value :float32]]}
+     :ColorTint {:rettype :color :argtypes [[color :color] [tint :color]]}
+     :ColorBrightness {:rettype :color :argtypes [[color :color] [factor :float32]]}
+     :ColorContrast {:rettype :color :argtypes [[color :color] [contrast :float32]]}
+     :ColorAlpha {:rettype :color :argtypes [[color :color] [alpha :float32]]}
+     :ColorAlphaBlend {:rettype :color :argtypes [[dst :color] [src :color] [tint :color]]}
+     :GetColor {:rettype :color :argtypes [[hexValue :int32]]}
+     :GetPixelColor {:rettype :color :argtypes [[srcPtr :pointer] [format :int32]]}
+     :SetPixelColor {:rettype :void :argtypes [[dstPtr :pointer] [color :color] [format :int32]]}
+     :GetPixelDataSize {:rettype :int32 :argtypes [[width :int32] [height :int32] [format :int32]]}
+                                        ;:font Loading and Text Drawing Functions  {:rettype :;// :argtypes }[Module: text]
+     ;;//------------------------------------------------------------------------------------
+     ;;
+     ;;// :font loading/unloading functions
+     :GetFontDefault {:rettype :font :argtypes []}
+     :LoadFont {:rettype :font :argtypes [[fileName :pointer]]}
+     :LoadFontEx {:rettype :font :argtypes [[fileName :pointer] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
+     :LoadFontFrom:image {:rettype :font :argtypes [[image :image] [key :color] [firstChar :int32]]}
+     :LoadFontFromMemory {:rettype :font :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
+     :IsFontReady {:rettype :int8 :argtypes [[font :font]]}
+     :LoadFontData {:rettype :point :argtypes [[fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32] [type :int32]]}
+     :GenImageFontAtlas {:rettype :image :argtypes [[chars :pointer] [recs :pointer] [glyphCount :int32] [fontSize :int32] [padding :int32] [packMethod :int32]]}
+     :UnloadFontData {:rettype :void :argtypes [[chars :pointer] [glyphCount :int32]]}
+     :UnloadFont {:rettype :void :argtypes [[font :font]]}
+     :ExportFontAsCode {:rettype :int8 :argtypes [[font :font] [fileName :pointer]]}
 
-    :DrawFPS {:rettype :void :argtypes [[posX :int32] [posY :int32]]}
-    :DrawText {:rettype :void :argtypes [[text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
-    :DrawTextEx {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
-    :DrawTextPro {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [origin :vec2] [rotation :float32] [fontSize :float32] [spacing :float32] [tint :color]]}
-    :DrawTextCodepoint {:rettype :void :argtypes [[font :font] [codepoint :int32] [position :vec2] [fontSize :float32] [tint :color]]}
-    :DrawTextCodepoints {:rettype :void :argtypes [[font :font]  [codepoints :pointer] [count :int32] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
+     :DrawFPS {:rettype :void :argtypes [[posX :int32] [posY :int32]]}
+     :DrawText {:rettype :void :argtypes [[text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
+     :DrawTextEx {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
+     :DrawTextPro {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [origin :vec2] [rotation :float32] [fontSize :float32] [spacing :float32] [tint :color]]}
+     :DrawTextCodepoint {:rettype :void :argtypes [[font :font] [codepoint :int32] [position :vec2] [fontSize :float32] [tint :color]]}
+     :DrawTextCodepoints {:rettype :void :argtypes [[font :font]  [codepoints :pointer] [count :int32] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
 
-    :SetTextLineSpacing {:rettype :void :argtypes [[spacing :int32]]}
-    :MeasureText {:rettype :int32 :argtypes [[text :pointer] [fontSize :int32]]}
-    :MeasureTextEx {:rettype :vec2 :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32]]}
-    :GetGlyphIndex {:rettype :int32 :argtypes [[font :font] [codepoint :int32]]}
-    :GetGlyphInfo {:rettype :glyph-info :argtypes [[font :font] [codepoint :int32]]}
-    :GetGlyphAtlasRec {:rettype :rectangle :argtypes [[font :font] [codepoint :int32]]}
-    ;;
-    ;;// Text codepoints management functions (unicode characters)
-    :LoadUTF8 {:rettype :pointer :argtypes [[codepoints :pointer] [length :int32]]}
-    :UnloadUTF8 {:rettype :void :argtypes [[text :pointer]]}
-    :LoadCodepoints {:rettype :pointer :argtypes [[text :pointer] [count :pointer]]}
-    :UnloadCodepoints {:rettype :void :argtypes [[codepoints :pointer]]}
-    :GetCodepointCount {:rettype :int32 :argtypes [[text :pointer]]}
-    :GetCodepoint {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-    :GetCodepointNext {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-    :GetCodepointPrevious {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-    :CodepointToUTF8 {:rettype :pointer :argtypes [[codepoint :int32] [utf8Size :pointer]]}
-    ;;
-    ;;// Text strings management functions (no UTF-8 strings, only byte chars)
-    ;;// NOTE: Some strings allocate memory internally for returned strings, just be careful!
-    :TextCopy {:rettype :int32 :argtypes [[dst :pointer] [src :pointer]]}
-    :TextIsEqual {:rettype :int8 :argtypes [[text1 :pointer] [text2 :pointer]]}
-    :TextLength {:rettype :int32 :argtypes [[text :pointer]]}
-    ;TODO: what to do here?
-    ;:TextFormat {:rettype :pointer :argtypes [[text :pointer] ...]}
-    :TextSubtext {:rettype :pointer :argtypes [[text :pointer] [position :int32] [length :int32]]}
-    :TextReplace {:rettype :pointer :argtypes [[text :pointer] [replace :pointer] [by :pointer]]}
-    :TextInsert {:rettype :pointer :argtypes [[text :pointer] [insert :pointer] [position :int32]]}
-    :TextJoin {:rettype :pointer :argtypes [[textList :pointer] [count :int32] [delimiter :pointer]]}
-    :TextSplit {:rettype :pointer :argtypes [[text :pointer] [delimiter :int8] [count :pointer]]}
-    :TextAppend {:rettype :void :argtypes [[text :pointer] [append :pointer] [position :pointer]]}
-    :TextFindIndex {:rettype :int32 :argtypes [[text :pointer] [find :pointer]]}
-    :TextToUpper {:rettype :pointer :argtypes [[text :pointer]]}
-    :TextToLower {:rettype :pointer :argtypes [[text :pointer]]}
-    :TextToPascal {:rettype :pointer :argtypes [[text :pointer]]}
-    :TextToInteger {:rettype :int32 :argtypes [[text :pointer]]}
-    ;;// Basic 3d Shapes Drawing Functions (Module: models)
-    ;;//------------------------------------------------------------------------------------
-    ;;
-    ;;// Basic geometric 3D shapes drawing functions
-    :DrawLine3D {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [color :color]]}
-    :DrawPoint3D {:rettype :void :argtypes [[position :vec3] [color :color]]}
-    :DrawCircle3D {:rettype :void :argtypes [[center :vec3] [radius :float32] [rotationAxis :vec3] [rotationAngle :float32] [color :color]]}
-    :DrawTriangle3D {:rettype :void :argtypes [[v1 :vec3] [v2 :vec3] [v3 :vec3] [color :color]]}
-    :DrawTriangleStrip3D {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color :color]]}
-    :DrawCube {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
-    :DrawCubeV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
-    :DrawCubeWires {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
-    :DrawCubeWiresV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
-    :DrawSphere {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [color :color]]}
-    :DrawSphereEx {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
-    :DrawSphereWires {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
-    :DrawCylinder {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
-    :DrawCylinderEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
-    :DrawCylinderWires {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
-    :DrawCylinderWiresEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
-    :DrawCapsule {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
-    :DrawCapsuleWires {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
-    :DrawPlane {:rettype :void :argtypes [[centerPos :vec3] [size :vec2] [color :color]]}
-    :DrawRay {:rettype :void :argtypes [[ray :ray] [color :color]]}
-    :DrawGrid {:rettype :void :argtypes [[slices :int32] [spacing :float32]]}
-    ;;// :model 3d Loading and Drawing Functions (Module: models)
-    ;;//------------------------------------------------------------------------------------
-    ;;
-    ;;// :model management functions
-    :LoadModel {:rettype :model :argtypes [[fileName :pointer]]}
-    :LoadModelFromMesh {:rettype :model :argtypes [[mesh :mesh]]}
-    :IsModelReady {:rettype :int8 :argtypes [[model :model]]}
-    :UnloadModel {:rettype :void :argtypes [[model :model]]}
-    :GetModelBoundingBox {:rettype :bounding-box :argtypes [[model :model]]}
+     :SetTextLineSpacing {:rettype :void :argtypes [[spacing :int32]]}
+     :MeasureText {:rettype :int32 :argtypes [[text :pointer] [fontSize :int32]]}
+     :MeasureTextEx {:rettype :vec2 :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32]]}
+     :GetGlyphIndex {:rettype :int32 :argtypes [[font :font] [codepoint :int32]]}
+     :GetGlyphInfo {:rettype :glyph-info :argtypes [[font :font] [codepoint :int32]]}
+     :GetGlyphAtlasRec {:rettype :rectangle :argtypes [[font :font] [codepoint :int32]]}
+     ;;
+     ;;// Text codepoints management functions (unicode characters)
+     :LoadUTF8 {:rettype :pointer :argtypes [[codepoints :pointer] [length :int32]]}
+     :UnloadUTF8 {:rettype :void :argtypes [[text :pointer]]}
+     :LoadCodepoints {:rettype :pointer :argtypes [[text :pointer] [count :pointer]]}
+     :UnloadCodepoints {:rettype :void :argtypes [[codepoints :pointer]]}
+     :GetCodepointCount {:rettype :int32 :argtypes [[text :pointer]]}
+     :GetCodepoint {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
+     :GetCodepointNext {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
+     :GetCodepointPrevious {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
+     :CodepointToUTF8 {:rettype :pointer :argtypes [[codepoint :int32] [utf8Size :pointer]]}
+     ;;
+     ;;// Text strings management functions (no UTF-8 strings, only byte chars)
+     ;;// NOTE: Some strings allocate memory internally for returned strings, just be careful!
+     :TextCopy {:rettype :int32 :argtypes [[dst :pointer] [src :pointer]]}
+     :TextIsEqual {:rettype :int8 :argtypes [[text1 :pointer] [text2 :pointer]]}
+     :TextLength {:rettype :int32 :argtypes [[text :pointer]]}
+                                        ;TODO: what to do here?
+                                        ;:TextFormat {:rettype :pointer :argtypes [[text :pointer] ...]}
+     :TextSubtext {:rettype :pointer :argtypes [[text :pointer] [position :int32] [length :int32]]}
+     :TextReplace {:rettype :pointer :argtypes [[text :pointer] [replace :pointer] [by :pointer]]}
+     :TextInsert {:rettype :pointer :argtypes [[text :pointer] [insert :pointer] [position :int32]]}
+     :TextJoin {:rettype :pointer :argtypes [[textList :pointer] [count :int32] [delimiter :pointer]]}
+     :TextSplit {:rettype :pointer :argtypes [[text :pointer] [delimiter :int8] [count :pointer]]}
+     :TextAppend {:rettype :void :argtypes [[text :pointer] [append :pointer] [position :pointer]]}
+     :TextFindIndex {:rettype :int32 :argtypes [[text :pointer] [find :pointer]]}
+     :TextToUpper {:rettype :pointer :argtypes [[text :pointer]]}
+     :TextToLower {:rettype :pointer :argtypes [[text :pointer]]}
+     :TextToPascal {:rettype :pointer :argtypes [[text :pointer]]}
+     :TextToInteger {:rettype :int32 :argtypes [[text :pointer]]}
+     ;;// Basic 3d Shapes Drawing Functions (Module: models)
+     ;;//------------------------------------------------------------------------------------
+     ;;
+     ;;// Basic geometric 3D shapes drawing functions
+     :DrawLine3D {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [color :color]]}
+     :DrawPoint3D {:rettype :void :argtypes [[position :vec3] [color :color]]}
+     :DrawCircle3D {:rettype :void :argtypes [[center :vec3] [radius :float32] [rotationAxis :vec3] [rotationAngle :float32] [color :color]]}
+     :DrawTriangle3D {:rettype :void :argtypes [[v1 :vec3] [v2 :vec3] [v3 :vec3] [color :color]]}
+     :DrawTriangleStrip3D {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color :color]]}
+     :DrawCube {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
+     :DrawCubeV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
+     :DrawCubeWires {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
+     :DrawCubeWiresV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
+     :DrawSphere {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [color :color]]}
+     :DrawSphereEx {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
+     :DrawSphereWires {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
+     :DrawCylinder {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
+     :DrawCylinderEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
+     :DrawCylinderWires {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
+     :DrawCylinderWiresEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
+     :DrawCapsule {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
+     :DrawCapsuleWires {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
+     :DrawPlane {:rettype :void :argtypes [[centerPos :vec3] [size :vec2] [color :color]]}
+     :DrawRay {:rettype :void :argtypes [[ray :ray] [color :color]]}
+     :DrawGrid {:rettype :void :argtypes [[slices :int32] [spacing :float32]]}
+     ;;// :model 3d Loading and Drawing Functions (Module: models)
+     ;;//------------------------------------------------------------------------------------
+     ;;
+     ;;// :model management functions
+     :LoadModel {:rettype :model :argtypes [[fileName :pointer]]}
+     :LoadModelFromMesh {:rettype :model :argtypes [[mesh :mesh]]}
+     :IsModelReady {:rettype :int8 :argtypes [[model :model]]}
+     :UnloadModel {:rettype :void :argtypes [[model :model]]}
+     :GetModelBoundingBox {:rettype :bounding-box :argtypes [[model :model]]}
 
-    :DrawModel {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
-    :DrawModelEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
-    :DrawModelWires {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
-    :DrawModelWiresEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
-    :DrawBoundingBox {:rettype :void :argtypes [[box :bounding-box] [color :color]]}
-    :DrawBillboard {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [position :vec3] [size :float32] [tint :color]]}
-    :DrawBillboardRec {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [size :vec2] [tint :color]]}
-    :DrawBillboardPro {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [up :vec3] [size :vec2] [origin :vec2] [rotation :float32] [tint :color]]}
-    ;;
-    ;;// :mesh management functions
-    :UploadMesh {:rettype :void :argtypes [[mesh :pointer] [dynamic :int8]]}
-    :UpdateMeshBuffer {:rettype :void :argtypes [[mesh :mesh] [index :int32] [data :pointer] [dataSize :int32] [offset :int32]]}
-    :UnloadMesh {:rettype :void :argtypes [[mesh :mesh]]}
-    :DrawMesh {:rettype :void :argtypes [[mesh :mesh] [material :material] [transform :mat4]]}
-    :DrawMeshInstanced {:rettype :void :argtypes [[mesh :mesh] [material :material] [transforms :pointer] [instances :int32]]}
-    :ExportMesh {:rettype :int8 :argtypes [[mesh :mesh] [fileName :pointer]]}
-    :GetMeshBoundingBox {:rettype :bounding-box :argtypes [[mesh :mesh]]}
-    :GenMeshTangents {:rettype :void :argtypes [[mesh :pointer]]}
-    ;; generation functions
-    :GenMeshPoly {:rettype :mesh :argtypes [[sides :int32] [radius :float32]]}
-    :GenMeshPlane {:rettype :mesh :argtypes [[width :float32] [length :float32] [resX :int32] [resZ :int32]]}
-    :GenMeshCube {:rettype :mesh :argtypes [[width :float32] [height :float32] [length :float32]]}
-    :GenMeshSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
-    :GenMeshHemiSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
-    :GenMeshCylinder {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
-    :GenMeshCone {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
-    :GenMeshTorus {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
-    :GenMeshKnot {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
-    :GenMeshHeightmap {:rettype :mesh :argtypes [[heightmap :image] [size :vec3]]}
-    :GenMeshCubicmap {:rettype :mesh :argtypes [[cubicmap :image] [cubeSize :vec3]]}
-    ;;
+     :DrawModel {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
+     :DrawModelEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
+     :DrawModelWires {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
+     :DrawModelWiresEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
+     :DrawBoundingBox {:rettype :void :argtypes [[box :bounding-box] [color :color]]}
+     :DrawBillboard {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [position :vec3] [size :float32] [tint :color]]}
+     :DrawBillboardRec {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [size :vec2] [tint :color]]}
+     :DrawBillboardPro {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [up :vec3] [size :vec2] [origin :vec2] [rotation :float32] [tint :color]]}
+     ;;
+     ;;// :mesh management functions
+     :UploadMesh {:rettype :void :argtypes [[mesh :pointer] [dynamic :int8]]}
+     :UpdateMeshBuffer {:rettype :void :argtypes [[mesh :mesh] [index :int32] [data :pointer] [dataSize :int32] [offset :int32]]}
+     :UnloadMesh {:rettype :void :argtypes [[mesh :mesh]]}
+     :DrawMesh {:rettype :void :argtypes [[mesh :mesh] [material :material] [transform :mat4]]}
+     :DrawMeshInstanced {:rettype :void :argtypes [[mesh :mesh] [material :material] [transforms :pointer] [instances :int32]]}
+     :ExportMesh {:rettype :int8 :argtypes [[mesh :mesh] [fileName :pointer]]}
+     :GetMeshBoundingBox {:rettype :bounding-box :argtypes [[mesh :mesh]]}
+     :GenMeshTangents {:rettype :void :argtypes [[mesh :pointer]]}
+     ;; generation functions
+     :GenMeshPoly {:rettype :mesh :argtypes [[sides :int32] [radius :float32]]}
+     :GenMeshPlane {:rettype :mesh :argtypes [[width :float32] [length :float32] [resX :int32] [resZ :int32]]}
+     :GenMeshCube {:rettype :mesh :argtypes [[width :float32] [height :float32] [length :float32]]}
+     :GenMeshSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
+     :GenMeshHemiSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
+     :GenMeshCylinder {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
+     :GenMeshCone {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
+     :GenMeshTorus {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
+     :GenMeshKnot {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
+     :GenMeshHeightmap {:rettype :mesh :argtypes [[heightmap :image] [size :vec3]]}
+     :GenMeshCubicmap {:rettype :mesh :argtypes [[cubicmap :image] [cubeSize :vec3]]}
+     ;;
 
-    }
-    nil ;;no library symbols defined
-  nil ;;no systematic error checking
-  )
+     }
+   nil ;;no library symbols defined
+   nil ;;no systematic error checking
+   ))
 
 
-(ffi/define-library!
-  native-part-2
-  '{
-    ;;// :material loading/unloading functions
-    :LoadMaterials {:rettype :pointer :argtypes [[fileName :pointer] [materialCount :pointer]]}
-    :LoadMaterialDefault {:rettype :material :argtypes []}
-    :IsMaterialReady {:rettype :int8 :argtypes [[material :material]]}
-    :UnloadMaterial {:rettype :void :argtypes [[material :material]]}
-    :SetMaterialTexture {:rettype :void :argtypes [[material :pointer] [mapType :int32] [texture :texture]]}
-    :SetModelMeshMaterial {:rettype :void :argtypes [[model :pointer] [meshId :int32] [materialId :int32]]}
-    ;;
-    ;;// :model animations loading/unloading functions
-    :LoadModelAnimations {:rettype :pointer :argtypes [[fileName :pointer] [animCount :pointer]]}
-    :UpdateModelAnimation {:rettype :void :argtypes [[model :model] [anim :model-animation] [frame :int32]]}
-    :UnloadModelAnimation {:rettype :void :argtypes [[anim :model-animation]]}
-    :UnloadModelAnimations {:rettype :void :argtypes [[animations :pointer] [count :int32]]}
-    :IsModelAnimationValid {:rettype :int8 :argtypes [[model :model] [anim :model-animation]]}
+(comment
+  (ffi/define-library!
+   native-part-2
+   '{
+     ;;// :material loading/unloading functions
+     :LoadMaterials {:rettype :pointer :argtypes [[fileName :pointer] [materialCount :pointer]]}
+     :LoadMaterialDefault {:rettype :material :argtypes []}
+     :IsMaterialReady {:rettype :int8 :argtypes [[material :material]]}
+     :UnloadMaterial {:rettype :void :argtypes [[material :material]]}
+     :SetMaterialTexture {:rettype :void :argtypes [[material :pointer] [mapType :int32] [texture :texture]]}
+     :SetModelMeshMaterial {:rettype :void :argtypes [[model :pointer] [meshId :int32] [materialId :int32]]}
+     ;;
+     ;;// :model animations loading/unloading functions
+     :LoadModelAnimations {:rettype :pointer :argtypes [[fileName :pointer] [animCount :pointer]]}
+     :UpdateModelAnimation {:rettype :void :argtypes [[model :model] [anim :model-animation] [frame :int32]]}
+     :UnloadModelAnimation {:rettype :void :argtypes [[anim :model-animation]]}
+     :UnloadModelAnimations {:rettype :void :argtypes [[animations :pointer] [count :int32]]}
+     :IsModelAnimationValid {:rettype :int8 :argtypes [[model :model] [anim :model-animation]]}
 
-    :CheckCollisionSpheres {:rettype :int8 :argtypes [[center1 :vec3] [radius1 :float32] [center2 :vec3] [radius2 :float32]]}
-    :CheckCollisionBoxes {:rettype :int8 :argtypes [[box1 :bounding-box] [box2 :bounding-box]]}
-    :CheckCollisionBoxSphere {:rettype :int8 :argtypes [[box :bounding-box] [center :vec3] [radius :float32]]}
-    :GetRayCollisionSphere {:rettype :ray-collision :argtypes [[ray :ray] [center :vec3] [radius :float32]]}
-    :GetRayCollisionBox {:rettype :ray-collision :argtypes [[ray :ray] [box :bounding-box]]}
-    :GetRayCollision:mesh {:rettype :ray-collision :argtypes [[ray :ray] [mesh :mesh] [transform :mat4]]}
-    :GetRayCollisionTriangle {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3]]}
-    :GetRayCollisionQuad {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3] [p4 :vec3]]}
-    ;;// Audio Loading and Playing Functions (Module: audio)
-    ;;//------------------------------------------------------------------------------------
-    ;;typedef void (*AudioCallback)(:pointer bufferData, :int32 frames);
-    ;;
-    ;;// Audio device management functions
-    :InitAudioDevice {:rettype :void :argtypes []}
-    :CloseAudioDevice {:rettype :void :argtypes []}
-    :IsAudioDeviceReady {:rettype :int8 :argtypes []}
-    :SetMasterVolume {:rettype :void :argtypes [[volume :float32]]}
+     :CheckCollisionSpheres {:rettype :int8 :argtypes [[center1 :vec3] [radius1 :float32] [center2 :vec3] [radius2 :float32]]}
+     :CheckCollisionBoxes {:rettype :int8 :argtypes [[box1 :bounding-box] [box2 :bounding-box]]}
+     :CheckCollisionBoxSphere {:rettype :int8 :argtypes [[box :bounding-box] [center :vec3] [radius :float32]]}
+     :GetRayCollisionSphere {:rettype :ray-collision :argtypes [[ray :ray] [center :vec3] [radius :float32]]}
+     :GetRayCollisionBox {:rettype :ray-collision :argtypes [[ray :ray] [box :bounding-box]]}
+     :GetRayCollision:mesh {:rettype :ray-collision :argtypes [[ray :ray] [mesh :mesh] [transform :mat4]]}
+     :GetRayCollisionTriangle {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3]]}
+     :GetRayCollisionQuad {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3] [p4 :vec3]]}
+     ;;// Audio Loading and Playing Functions (Module: audio)
+     ;;//------------------------------------------------------------------------------------
+     ;;typedef void (*AudioCallback)(:pointer bufferData, :int32 frames);
+     ;;
+     ;;// Audio device management functions
+     :InitAudioDevice {:rettype :void :argtypes []}
+     :CloseAudioDevice {:rettype :void :argtypes []}
+     :IsAudioDeviceReady {:rettype :int8 :argtypes []}
+     :SetMasterVolume {:rettype :void :argtypes [[volume :float32]]}
 
-    ;;// Wave/:sound loading/unloading functions
-    :LoadWave {:rettype :wave :argtypes [[fileName :pointer]]}
-    :LoadWaveFromMemory {:rettype :wave :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
-    :IsWaveReady {:rettype :int8 :argtypes [[wave :wave]]}
-    :LoadSound {:rettype :sound :argtypes [[fileName :pointer]]}
-    :LoadSoundFromWave {:rettype :sound :argtypes [[wave :wave]]}
-    :LoadSoundAlias {:rettype :sound :argtypes [[source :sound]]}
-    :IsSoundReady {:rettype :int8 :argtypes [[sound :sound]]}
-    :UpdateSound {:rettype :void :argtypes [[sound :sound]  [data :pointer] [sampleCount :int32]]}
-    :UnloadWave {:rettype :void :argtypes [[wave :wave]]}
-    :UnloadSound {:rettype :void :argtypes [[sound :sound]]}
-    :UnloadSoundAlias {:rettype :void :argtypes [[alias :sound]]}
-    :ExportWave {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
-    :ExportWaveAsCode {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
-    ;; management functions
-    :PlaySound {:rettype :void :argtypes [[sound :sound]]}
-    :StopSound {:rettype :void :argtypes [[sound :sound]]}
-    :PauseSound {:rettype :void :argtypes [[sound :sound]]}
-    :ResumeSound {:rettype :void :argtypes [[sound :sound]]}
-    :IsSoundPlaying {:rettype :int8 :argtypes [[sound :sound]]}
-    :SetSoundVolume {:rettype :void :argtypes [[sound :sound] [volume :float32]]}
-    :SetSoundPitch {:rettype :void :argtypes [[sound :sound] [pitch :float32]]}
-    :SetSoundPan {:rettype :void :argtypes [[sound :sound] [pan :float32]]}
-    :WaveCopy {:rettype :wave :argtypes [[wave :wave]]}
-    :WaveCrop {:rettype :void :argtypes [[wave :pointer] [initSample :int32] [finalSample :int32]]}
-    :WaveFormat {:rettype :void :argtypes [[wave :pointer] [sampleRate :int32] [sampleSize :int32] [channels :int32]]}
-    :LoadWaveSamples {:rettype :pointer :argtypes [[wave :wave]]}
-    :UnloadWaveSamples {:rettype :void :argtypes [[samples :pointer]]}
+     ;;// Wave/:sound loading/unloading functions
+     :LoadWave {:rettype :wave :argtypes [[fileName :pointer]]}
+     :LoadWaveFromMemory {:rettype :wave :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
+     :IsWaveReady {:rettype :int8 :argtypes [[wave :wave]]}
+     :LoadSound {:rettype :sound :argtypes [[fileName :pointer]]}
+     :LoadSoundFromWave {:rettype :sound :argtypes [[wave :wave]]}
+     :LoadSoundAlias {:rettype :sound :argtypes [[source :sound]]}
+     :IsSoundReady {:rettype :int8 :argtypes [[sound :sound]]}
+     :UpdateSound {:rettype :void :argtypes [[sound :sound]  [data :pointer] [sampleCount :int32]]}
+     :UnloadWave {:rettype :void :argtypes [[wave :wave]]}
+     :UnloadSound {:rettype :void :argtypes [[sound :sound]]}
+     :UnloadSoundAlias {:rettype :void :argtypes [[alias :sound]]}
+     :ExportWave {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
+     :ExportWaveAsCode {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
+     ;; management functions
+     :PlaySound {:rettype :void :argtypes [[sound :sound]]}
+     :StopSound {:rettype :void :argtypes [[sound :sound]]}
+     :PauseSound {:rettype :void :argtypes [[sound :sound]]}
+     :ResumeSound {:rettype :void :argtypes [[sound :sound]]}
+     :IsSoundPlaying {:rettype :int8 :argtypes [[sound :sound]]}
+     :SetSoundVolume {:rettype :void :argtypes [[sound :sound] [volume :float32]]}
+     :SetSoundPitch {:rettype :void :argtypes [[sound :sound] [pitch :float32]]}
+     :SetSoundPan {:rettype :void :argtypes [[sound :sound] [pan :float32]]}
+     :WaveCopy {:rettype :wave :argtypes [[wave :wave]]}
+     :WaveCrop {:rettype :void :argtypes [[wave :pointer] [initSample :int32] [finalSample :int32]]}
+     :WaveFormat {:rettype :void :argtypes [[wave :pointer] [sampleRate :int32] [sampleSize :int32] [channels :int32]]}
+     :LoadWaveSamples {:rettype :pointer :argtypes [[wave :wave]]}
+     :UnloadWaveSamples {:rettype :void :argtypes [[samples :pointer]]}
 
-    :LoadMusicStream {:rettype :music :argtypes [[fileName :pointer]]}
-    :LoadMusicStreamFromMemory {:rettype :music :argtypes [[fileType :pointer] [data :pointer] [dataSize :int32]]}
-    :IsMusicReady {:rettype :int8 :argtypes [[music :music]]}
-    :UnloadMusicStream {:rettype :void :argtypes [[music :music]]}
-    :PlayMusicStream {:rettype :void :argtypes [[music :music]]}
-    :IsMusicStreamPlaying {:rettype :int8 :argtypes [[music :music]]}
-    :UpdateMusicStream {:rettype :void :argtypes [[music :music]]}
-    :StopMusicStream {:rettype :void :argtypes [[music :music]]}
-    :PauseMusicStream {:rettype :void :argtypes [[music :music]]}
-    :ResumeMusicStream {:rettype :void :argtypes [[music :music]]}
-    :SeekMusicStream {:rettype :void :argtypes [[music :music] [position :float32]]}
-    :SetMusicVolume {:rettype :void :argtypes [[music :music] [volume :float32]]}
-    :SetMusicPitch {:rettype :void :argtypes [[music :music] [pitch :float32]]}
-    :SetMusicPan {:rettype :void :argtypes [[music :music] [pan :float32]]}
-    :GetMusicTimeLength {:rettype :float :argtypes [[music :music]]}
-    :GetMusicTimePlayed {:rettype :float :argtypes [[music :music]]}
-    ;; management functions
-    :LoadAudioStream {:rettype :audio-stream :argtypes [[sampleRate :int32] [sampleSize :int32] [channels :int32]]}
-    :IsAudioStreamReady {:rettype :int8 :argtypes [[stream :audio-stream]]}
-    :UnloadAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-    :UpdateAudioStream {:rettype :void :argtypes [[stream :audio-stream] [data :pointer] [frameCount :int32]]}
-    :IsAudioStreamProcessed {:rettype :int8 :argtypes [[stream :audio-stream]]}
-    :PlayAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-    :PauseAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-    :ResumeAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-    :IsAudioStreamPlaying {:rettype :int8 :argtypes [[stream :audio-stream]]}
-    :StopAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-    :SetAudioStreamVolume {:rettype :void :argtypes [[stream :audio-stream] [volume :float32]]}
-    :SetAudioStreamPitch {:rettype :void :argtypes [[stream :audio-stream] [pitch :float32]]}
-    :SetAudioStreamPan {:rettype :void :argtypes [[stream :audio-stream] [pan :float32]]}
-    :SetAudioStreamBufferSizeDefault {:rettype :void :argtypes [[size :int32]]}
-    ;TODO: how to handle callback?
-    ;:SetAudioStreamCallback {:rettype :void :argtypes [[stream :audio-stream] [callback AudioCallback]]}
-    ;:AttachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
-    ;:DetachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
-    ;:AttachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
-    ;:DetachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
+     :LoadMusicStream {:rettype :music :argtypes [[fileName :pointer]]}
+     :LoadMusicStreamFromMemory {:rettype :music :argtypes [[fileType :pointer] [data :pointer] [dataSize :int32]]}
+     :IsMusicReady {:rettype :int8 :argtypes [[music :music]]}
+     :UnloadMusicStream {:rettype :void :argtypes [[music :music]]}
+     :PlayMusicStream {:rettype :void :argtypes [[music :music]]}
+     :IsMusicStreamPlaying {:rettype :int8 :argtypes [[music :music]]}
+     :UpdateMusicStream {:rettype :void :argtypes [[music :music]]}
+     :StopMusicStream {:rettype :void :argtypes [[music :music]]}
+     :PauseMusicStream {:rettype :void :argtypes [[music :music]]}
+     :ResumeMusicStream {:rettype :void :argtypes [[music :music]]}
+     :SeekMusicStream {:rettype :void :argtypes [[music :music] [position :float32]]}
+     :SetMusicVolume {:rettype :void :argtypes [[music :music] [volume :float32]]}
+     :SetMusicPitch {:rettype :void :argtypes [[music :music] [pitch :float32]]}
+     :SetMusicPan {:rettype :void :argtypes [[music :music] [pan :float32]]}
+     :GetMusicTimeLength {:rettype :float :argtypes [[music :music]]}
+     :GetMusicTimePlayed {:rettype :float :argtypes [[music :music]]}
+     ;; management functions
+     :LoadAudioStream {:rettype :audio-stream :argtypes [[sampleRate :int32] [sampleSize :int32] [channels :int32]]}
+     :IsAudioStreamReady {:rettype :int8 :argtypes [[stream :audio-stream]]}
+     :UnloadAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
+     :UpdateAudioStream {:rettype :void :argtypes [[stream :audio-stream] [data :pointer] [frameCount :int32]]}
+     :IsAudioStreamProcessed {:rettype :int8 :argtypes [[stream :audio-stream]]}
+     :PlayAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
+     :PauseAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
+     :ResumeAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
+     :IsAudioStreamPlaying {:rettype :int8 :argtypes [[stream :audio-stream]]}
+     :StopAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
+     :SetAudioStreamVolume {:rettype :void :argtypes [[stream :audio-stream] [volume :float32]]}
+     :SetAudioStreamPitch {:rettype :void :argtypes [[stream :audio-stream] [pitch :float32]]}
+     :SetAudioStreamPan {:rettype :void :argtypes [[stream :audio-stream] [pan :float32]]}
+     :SetAudioStreamBufferSizeDefault {:rettype :void :argtypes [[size :int32]]}
+                                        ;TODO: how to handle callback?
+                                        ;:SetAudioStreamCallback {:rettype :void :argtypes [[stream :audio-stream] [callback AudioCallback]]}
+                                        ;:AttachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
+                                        ;:DetachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
+                                        ;:AttachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
+                                        ;:DetachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
 
-    }
-  nil
-  nil
-  )
+     }
+   nil
+   nil
+   ))
 
 ;(ffi/set-ffi-impl! :jdk)
 
