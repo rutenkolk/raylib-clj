@@ -15,18 +15,16 @@
 (defmacro defconst [name & decls]
   (list* `def (with-meta name (assoc (meta name) :const true)) decls))
 
-(defn- f32 [name] {:name name :datatype :float32})
-(defn- uchar [name] {:name name :datatype :uint8})
-(defn- i8 [name] {:name name :datatype :int8})
-(defn- i16 [name] {:name name :datatype :int16})
-(defn- i32 [name] {:name name :datatype :int32})
-(defn- ui8 [name] {:name name :datatype :uint8})
-(defn- ui16 [name] {:name name :datatype :uint16})
-(defn- ui32 [name] {:name name :datatype :uint32})
-
-(defn- bool [name] {:name name :datatype :int8})
-
-(defn- pointer [name] {:name name :datatype (ffi.size-t/ptr-t-type)})
+(defn- f32     [name] [name ::mem/float])
+(defn- uchar   [name] [name ::mem/char])
+(defn- i8      [name] [name ::mem/byte])
+(defn- i16     [name] [name ::mem/short])
+(defn- i32     [name] [name ::mem/int])
+(defn- ui8     [name] [name ::mem/byte])
+(defn- ui16    [name] [name ::mem/short])
+(defn- ui32    [name] [name ::mem/int])
+(defn- bool    [name] [name ::mem/byte])
+(defn- pointer [name] [name ::mem/pointer])
 (def- ptr pointer)
 
 (defn- struct->int8-array
@@ -38,57 +36,73 @@
    {:datatype :int8
     :n-elems (dt-struct/datatype-size (keyword decl-type))}))
 
-(dt-struct/define-datatype! :vec2 [(f32 :x) (f32 :y)])
+(defmacro define-datatype! [type-name members]
+  `(mem/defalias ~(keyword "raylib-clj.core" (name type-name))
+    [::mem/struct ~members]))
 
-(dt-struct/define-datatype! :vec3 [(f32 :x) (f32 :y) (f32 :z)])
+(mem/defalias ::vec2
+  [::mem/struct
+   [(f32 :x)
+    (f32 :y)]])
 
-(dt-struct/define-datatype! :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
+(mem/defalias ::vec3
+  [::mem/struct
+   [[:x ::mem/float]
+    [:y ::mem/float]
+    [:z ::mem/float]]])
+
+(mem/defalias ::vec4
+  [::mem/struct
+   [[:x ::mem/float]
+    [:y ::mem/float]
+    [:z ::mem/float]
+    [:w ::mem/float]]])
 
 ;alias quaternion as vec4?
 
-(dt-struct/define-datatype! :mat4
+(define-datatype! :mat4
   [(f32 :m0)(f32 :m4)(f32 :m8) (f32 :m12)
    (f32 :m1)(f32 :m5)(f32 :m9) (f32 :m13)
    (f32 :m2)(f32 :m6)(f32 :m10)(f32 :m14)
    (f32 :m3)(f32 :m7)(f32 :m11)(f32 :m15)])
 
-(dt-struct/define-datatype! :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
+(define-datatype! :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
 
-(dt-struct/define-datatype! :rectangle [(f32 :x) (f32 :y) (f32 :width) (f32 :height)])
+(define-datatype! :rectangle [(f32 :x) (f32 :y) (f32 :width) (f32 :height)])
 
-(dt-struct/define-datatype! :image
+(define-datatype! :image
   [(pointer :data) (i32 :width) (i32 :height) (i32 :mipmaps) (i32 :format)])
 
-(dt-struct/define-datatype! :texture
+(define-datatype! :texture
   [(ui32 :id) (i32 :width) (i32 :height) (i32 :mipmaps) (i32 :format)])
 
 ;alias texture-2d as texture?
 
 ;alias texture-cubemap as texture?
 
-(dt-struct/define-datatype! :render-texture
+(define-datatype! :render-texture
   [(ui32 :id)
    {:name :texture :datatype :texture}
    {:name :depth :datatype :texture}])
 
 ;alias render-texture-2d as render-texture?
 
-(dt-struct/define-datatype! :n-patch-info
+(define-datatype! :n-patch-info
   [{:name :source :datatype :rectangle}
    (i32 :left) (i32 :top) (i32 :right) (i32 :bottom) (i32 :layout)])
 
-(dt-struct/define-datatype! :glyph-info
+(define-datatype! :glyph-info
   [(i32 :value) (i32 :offset-x) (i32 :offset-y) (i32 :advance-x)
    {:name :image :datatype :image}])
 
-(dt-struct/define-datatype! :font
+(define-datatype! :font
   [(i32 :base-size) (i32 :glyph-count) (i32 :glyph-padding)
    {:name :texture :datatype :texture}
    (ptr :rectangles) ;pointer to rectangle
    (ptr :glyphs) ;pointer to glyph
    ])
 
-(dt-struct/define-datatype! :camera-3d
+(define-datatype! :camera-3d
   [{:name :position :datatype :vec3}
    {:name :target :datatype :vec3}
    {:name :up :datatype :vec3}
@@ -97,13 +111,13 @@
 
 ;typedef :camera-3d Camera;    // :camera-3d type fallback, defaults to Camera3D
 
-(dt-struct/define-datatype! :camera-2d
+(define-datatype! :camera-2d
   [{:name :position :datatype :vec2}
    {:name :target :datatype :vec2}
    (f32 :rotation)
    (f32 :zoom)])
 
-(dt-struct/define-datatype! :mesh
+(define-datatype! :mesh
   [(i32 :vertex-count)
    (i32 :triangle-count)
    (ptr :vertices)
@@ -120,30 +134,30 @@
    (ui32 :vao-id)
    (ptr :vbo-id)])
 
-(dt-struct/define-datatype! :shader
+(define-datatype! :shader
   [(ui32 :id)
    (ptr :locs)])
 
-(dt-struct/define-datatype! :material-map
+(define-datatype! :material-map
   [{:name :texture :datatype :texture}
    {:name :color :datatype :color}
    (f32 :value)])
 
-(dt-struct/define-datatype! :material
+(define-datatype! :material
   [{:name :shader :datatype :shader}
    (ptr :maps)
    {:name :params :datatype :float32 :n-elems 4}])
 
-(dt-struct/define-datatype! :transform
+(define-datatype! :transform
   [{:name :translation :datatype :vec3}
    {:name :rotation :datatype :vec4}
    {:name :scale :datatype :vec3}])
 
-(dt-struct/define-datatype! :bone-info
+(define-datatype! :bone-info
   [{:name :name :datatype :int8 :n-elems 32}
    (i32 :parent)])
 
-(dt-struct/define-datatype! :model
+(define-datatype! :model
   [{:name :transform :datatype :mat4}
    (i32 :mesh-count)
    (i32 :material-count)
@@ -154,28 +168,28 @@
    (ptr :bones)
    (ptr :bind-pose)])
 
-(dt-struct/define-datatype! :model-animation
+(define-datatype! :model-animation
   [(i32 :bone-count)
    (i32 :frame-count)
    (ptr :bones)
    (ptr :frame-poses) ;type: Transform**
    {:name :name :datatype :uint8 :n-elems 32}])
 
-(dt-struct/define-datatype! :ray
+(define-datatype! :ray
   [{:name :position :datatype :vec3}
    {:name :direction :datatype :vec3}])
 
-(dt-struct/define-datatype! :ray-collision
+(define-datatype! :ray-collision
   [(bool :hit)
    (f32 :distance)
    {:name :po:int32 :datatype :vec3}
    {:name :normal :datatype :vec3}])
 
-(dt-struct/define-datatype! :bounding-box
+(define-datatype! :bounding-box
   [{:name :min :datatype :vec3}
    {:name :max :datatype :vec3}])
 
-(dt-struct/define-datatype! :wave
+(define-datatype! :wave
   [(ui32 :frame-count)
    (ui32 :sample-rate)
    (ui32 :sample-size)
@@ -187,25 +201,25 @@
 ;typedef struct rAudioBuffer rAudioBuffer;
 ;typedef struct rAudioProcessor rAudioProcessor;
 
-(dt-struct/define-datatype! :audio-stream
+(define-datatype! :audio-stream
   [(ptr :buffer)
    (ptr :processor)
    (ui32 :sample-rate)
    (ui32 :sample-size)
    (ui32 :channels)])
 
-(dt-struct/define-datatype! :sound
+(define-datatype! :sound
   [{:name :stream :datatype :audio-stream}
    (ui32 :frame-count)])
 
-(dt-struct/define-datatype! :music
+(define-datatype! :music
   [{:name :stream :datatype :audio-stream}
    (ui32 :frame-count)
    (bool :looping)
    (i32 :context-type)
    (ptr :context-data)])
 
-(dt-struct/define-datatype! :vr-device-info
+(define-datatype! :vr-device-info
   [(i32 :horizontal-resolution)
    (i32 :vertical-resolution)
    (f32 :horizontal-screen-size)
@@ -216,7 +230,7 @@
    {:name :lens-distortion-values :datatype :float32 :n-elems 4}
    {:name :chromatic-aberration-correction-values :datatype :float32 :n-elems 4}])
 
-(dt-struct/define-datatype! :vr-stereo-config
+(define-datatype! :vr-stereo-config
   [{:name :projection :datatype :mat4 :n-elems 2}
    {:name :view-offset :datatype :mat4 :n-elems 2}
    {:name :left-lens-center :datatype :float32 :n-elems 2}
@@ -226,7 +240,7 @@
    {:name :scale :datatype :float32 :n-elems 2}
    {:name :scale-in :datatype :float32 :n-elems 2}])
 
-(dt-struct/define-datatype! :file-path-list
+(define-datatype! :file-path-list
   [(ui32 :capacity)
    (ui32 :count)
    (ptr :paths)])
