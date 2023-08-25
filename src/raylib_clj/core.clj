@@ -57,6 +57,21 @@
 
 (define-datatype! :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
 
+(defn char->uchar [b]
+  (- b (* (if (< b 128) 0 1) 256)))
+
+(defmethod mem/serialize-into ::color
+  [[r g b a] _ segment session]
+  (mem/serialize-into
+   {:r (char->uchar r)
+    :g (char->uchar g)
+    :b (char->uchar b)
+    :a (char->uchar a)}
+   (layout/with-c-layout
+     [::mem/struct [[:r ::mem/byte] [:g ::mem/byte] [:b ::mem/byte] [:a ::mem/byte]]])
+   segment
+   session))
+
 (define-datatype! :rectangle [(f32 :x) (f32 :y) (f32 :width) (f32 :height)])
 
 (define-datatype! :image
@@ -1256,7 +1271,7 @@
   draw-text
   "[text posX posY fontSize color] -> void"
   DrawText
-  [:coffi.mem/pointer
+  [:coffi.mem/c-string
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
@@ -1295,7 +1310,8 @@
     (while (not (byte->bool (window-should-close)))
       (begin-drawing)
       (clear-background RAYWHITE)
-      (draw-text "Congrats! You created your first window!" 190 200 20 BLACK);
+      (draw-text "Congrats! You created your first raylib window!" 190 200 20 BLACK)
+      (draw-text "And you did it from clojure!" 190 240 20 BLACK)
       (end-drawing)
       )
     (close-window)
