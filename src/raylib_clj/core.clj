@@ -789,6 +789,10 @@
 (comment
 
   ;TODO:this thing doesn't work... whats the actual symbol in the shared library?
+  ;it seems like the function simply isn't in the exports of the library...
+  ;is this a build issue? is there some sort of flag that must be enabled before
+  ;the shared library contains the function?
+  ;the shared library *should* have been built with PLATFORM=DESKTOP...
   (coffi.ffi/defcfn
    toggle-borderless-windowed
    "[] -> void"
@@ -881,6 +885,144 @@
   [:raylib-clj.core/image]
   :coffi.mem/void)
 
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-clipboard-text
+   "[] -> pointer"
+   GetClipboardText
+   []
+   :raylib-clj.core/pointer))
+(coffi.ffi/defcfn
+  disable-event-waiting
+  "[] -> void"
+  DisableEventWaiting
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-render-width
+  "[] -> int"
+  GetRenderWidth
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-screen-width
+  "[] -> int"
+  GetScreenWidth
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-width
+  "[monitor] -> int"
+  GetMonitorWidth
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-screen-height
+  "[] -> int"
+  GetScreenHeight
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-refresh-rate
+  "[monitor] -> int"
+  GetMonitorRefreshRate
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-window-position
+  "[] -> vec2"
+  GetWindowPosition
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-monitor-height
+  "[monitor] -> int"
+  GetMonitorHeight
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-window-scale-dpi
+  "[] -> vec2"
+  GetWindowScaleDPI
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-current-monitor
+  "[] -> int"
+  GetCurrentMonitor
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-render-height
+  "[] -> int"
+  GetRenderHeight
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-physical-height
+  "[monitor] -> int"
+  GetMonitorPhysicalHeight
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-count
+  "[] -> int"
+  GetMonitorCount
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-position
+  "[monitor] -> vec2"
+  GetMonitorPosition
+  [:coffi.mem/int]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  enable-event-waiting
+  "[] -> void"
+  EnableEventWaiting
+  []
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-monitor-physical-width
+   "[monitor] -> nt32"
+   GetMonitorPhysicalWidth
+   [:coffi.mem/int]
+   :raylib-clj.core/nt32))
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-monitor-name
+   "[monitor] -> pointer"
+   GetMonitorName
+   [:coffi.mem/int]
+   :raylib-clj.core/pointer))
+(comment;TODO
+  (coffi.ffi/defcfn
+   set-clipboard-text
+   "[text] -> void"
+   SetClipboardText
+   [:raylib-clj.core/pointer]
+   :coffi.mem/void))
+
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-clipboard-text
+   "[] -> pointer"
+   GetClipboardText
+   []
+   :raylib-clj.core/pointer))
+(coffi.ffi/defcfn
+  enable-event-waiting
+  "[] -> void"
+  EnableEventWaiting
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  disable-event-waiting
+  "[] -> void"
+  DisableEventWaiting
+  []
+  :coffi.mem/void)
 (comment
 
   (coffify
@@ -890,6 +1032,7 @@
 
   (->> '{
          ;TODO: put old defs here
+
   }
        (map identity)
        (map #(coffify (first %) (second %)))
@@ -903,25 +1046,6 @@
 
 '{
 
-     :GetScreenWidth {:rettype :int32 :argtypes []}
-     :GetScreenHeight {:rettype :int32 :argtypes []}
-     :GetRenderWidth {:rettype :int32 :argtypes []}
-     :GetRenderHeight {:rettype :int32 :argtypes []}
-     :GetMonitorCount {:rettype :int32 :argtypes []}
-     :GetCurrentMonitor {:rettype :int32 :argtypes []}
-     :GetMonitorPosition {:rettype :vec2 :argtypes [[monitor :int32]]}
-     :GetMonitorWidth {:rettype :int32 :argtypes [[monitor :int32]]}
-     :GetMonitorHeight {:rettype :int32 :argtypes [[monitor :int32]]}
-     :GetMonitorPhysicalWidth {:rettype :nt32 :argtypes [[monitor :int32]]}
-     :GetMonitorPhysicalHeight {:rettype :int32 :argtypes [[monitor :int32]]}
-     :GetMonitorRefreshRate {:rettype :int32 :argtypes [[monitor :int32]]}
-     :GetWindowPosition {:rettype :vec2 :argtypes []}
-     :GetWindowScaleDPI {:rettype :vec2 :argtypes []}
-     :GetMonitorName {:rettype :pointer :argtypes [[monitor :int32]]}
-     :SetClipboardText {:rettype :void :argtypes [[text :pointer]]}
-     :GetClipboardText {:rettype :pointer :argtypes []}
-     :EnableEventWaiting {:rettype :void :argtypes []}
-     :DisableEventWaiting {:rettype :void :argtypes []}
                                         ; ;frame control functions
      ;;// NOTE: Those functions are intended for advance users that want full control over the frame processing
      ;;// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
