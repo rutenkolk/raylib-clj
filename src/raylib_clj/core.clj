@@ -681,9 +681,13 @@
         argtypes (vec (map type-converter (:argtypes signature)))
         argnames (filter identity (map arg-decl->arg-name (:argtypes signature)))
         argnames-str (clojure.string/join " " argnames)
+        boolean-return? (and (clojure.string/starts-with? fn-name-new "is-") (= rettype ::mem/byte))
         ]
-    `(cffi/defcfn ~fn-name-new
-       ~(str "[" argnames-str "]" " -> " (name rettype))
+    `(cffi/defcfn ~(if boolean-return?
+                     (str (clojure.string/replace-first (str fn-name-new) "is-" "") "?")
+                     fn-name-new
+                     )
+       ~(str "[" argnames-str "]" " -> " (if boolean-return? "bool" (name rettype)))
        ~(symbol (name fn-name-old))
        ~argtypes
        ~rettype
@@ -706,57 +710,57 @@
   :coffi.mem/void)
 
 (coffi.ffi/defcfn
-  is-window-ready
+  window-ready?
   "[] -> bool"
   IsWindowReady
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-fullscreen
+  window-fullscreen?
   "[ ] -> bool"
   IsWindowFullscreen
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-hidden
+  window-hidden?
   "[ ] -> bool"
   IsWindowHidden
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-minimized
+  window-minimized?
   "[ ] -> bool"
   IsWindowMinimized
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-maximized
+  window-maximized?
   "[ ] -> bool"
   IsWindowMaximized
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-focused
-  "[] -> byte"
+  window-focused?
+  "[] -> bool"
   IsWindowFocused
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-resized
-  "[] -> byte"
+  window-resized?
+  "[] -> bool"
   IsWindowResized
   []
   :coffi.mem/byte)
 
 (coffi.ffi/defcfn
-  is-window-state
-  "[flag] -> byte"
+  window-state?
+  "[flag] -> bool"
   IsWindowState
   [:coffi.mem/int]
   :coffi.mem/byte)
@@ -774,6 +778,7 @@
   ClearWindowState
   [:coffi.mem/int]
   :coffi.mem/void)
+
 (comment
 
   (coffify
@@ -783,11 +788,11 @@
 
   (->> '{
 
-     :IsWindowFocused {:rettype :int8 :argtypes []}
-     :IsWindowResized {:rettype :int8 :argtypes []}
-     :IsWindowState {:rettype :int8 :argtypes [[flag :int32]]}
-     :SetWindowState {:rettype :void :argtypes [[flags :int32]]}
-     :ClearWindowState {:rettype :void :argtypes [[flags :int32]]}
+         :ToggleFullscreen {:rettype :void :argtypes []}
+         :ToggleBorderlessWindowed {:rettype :void :argtypes []}
+         :MaximizeWindow {:rettype :void :argtypes []}
+         :MinimizeWindow {:rettype :void :argtypes []}
+         :RestoreWindow {:rettype :void :argtypes []}
 }
        (map identity)
        (map #(coffify (first %) (second %)))
@@ -801,16 +806,6 @@
 
 '{
 
-     :IsWindowFocused {:rettype :int8 :argtypes []}
-     :IsWindowResized {:rettype :int8 :argtypes []}
-     :IsWindowState {:rettype :int8 :argtypes [[flag :int32]]}
-     :SetWindowState {:rettype :void :argtypes [[flags :int32]]}
-     :ClearWindowState {:rettype :void :argtypes [[flags :int32]]}
-     :ToggleFullscreen {:rettype :void :argtypes []}
-     :ToggleBorderlessWindowed {:rettype :void :argtypes []}
-     :MaximizeWindow {:rettype :void :argtypes []}
-     :MinimizeWindow {:rettype :void :argtypes []}
-     :RestoreWindow {:rettype :void :argtypes []}
      :SetWindowIcon {:rettype :void :argtypes [[image :image]]}
      :SetWindowIcons {:rettype :void :argtypes [[images :pointer] [count :int32]]}
      :SetWindowTitle {:rettype :void :argtypes [[title :ptr]]}
