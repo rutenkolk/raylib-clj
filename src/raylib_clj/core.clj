@@ -832,7 +832,7 @@
     set-window-icons
     "[images count] -> void"
     SetWindowIcons
-    [:raylib-clj.core/pointer :coffi.mem/int]
+    [:coffi.mem/pointer :coffi.mem/int]
     :coffi.mem/void))
 (coffi.ffi/defcfn
   set-window-focused
@@ -877,7 +877,7 @@
    "[] -> pointer"
    GetWindowHandle
    []
-   :raylib-clj.core/pointer))
+   :coffi.mem/pointer))
 (coffi.ffi/defcfn
   set-window-icon
   "[image] -> void"
@@ -891,7 +891,7 @@
    "[] -> pointer"
    GetClipboardText
    []
-   :raylib-clj.core/pointer))
+   :coffi.mem/pointer))
 (coffi.ffi/defcfn
   disable-event-waiting
   "[] -> void"
@@ -995,13 +995,13 @@
    "[monitor] -> pointer"
    GetMonitorName
    [:coffi.mem/int]
-   :raylib-clj.core/pointer))
+   :coffi.mem/pointer))
 (comment;TODO
   (coffi.ffi/defcfn
    set-clipboard-text
    "[text] -> void"
    SetClipboardText
-   [:raylib-clj.core/pointer]
+   [:coffi.mem/pointer]
    :coffi.mem/void))
 
 (comment;TODO
@@ -1010,7 +1010,7 @@
    "[] -> pointer"
    GetClipboardText
    []
-   :raylib-clj.core/pointer))
+   :coffi.mem/pointer))
 (coffi.ffi/defcfn
   enable-event-waiting
   "[] -> void"
@@ -1023,6 +1023,256 @@
   DisableEventWaiting
   []
   :coffi.mem/void)
+
+(coffi.ffi/defcfn
+  swap-screen-buffer
+  "[] -> void"
+  SwapScreenBuffer
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn end-mode-3-d "[] -> void" EndMode3D [] :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   wait-time
+   "[seconds] -> void"
+   WaitTime
+   [:raylib-clj.core/float64]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  begin-mode-2-d
+  "[camera] -> void"
+  BeginMode2D
+  [:raylib-clj.core/camera-2d]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   "cursor-on-screen?"
+   "[] -> bool"
+   IsCursorOnScreen
+   []
+   :coffi.mem/byte))
+(coffi.ffi/defcfn end-mode-2-d "[] -> void" EndMode2D [] :coffi.mem/void)
+(coffi.ffi/defcfn
+  clear-background
+  "[color] -> void"
+  ClearBackground
+  [:raylib-clj.core/color]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   "cursor-hidden?"
+   "[] -> bool"
+   IsCursorHidden
+   []
+   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  begin-mode-3-d
+  "[camera] -> void"
+  BeginMode3D
+  [:raylib-clj.core/camera-3d]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  begin-texture-mode
+  "[target] -> void"
+  BeginTextureMode
+  [:raylib-clj.core/render-texture]
+  :coffi.mem/void)
+(coffi.ffi/defcfn end-blend-mode "[] -> void" EndBlendMode [] :coffi.mem/void)
+(coffi.ffi/defcfn
+  end-texture-mode
+  "[] -> void"
+  EndTextureMode
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn begin-drawing "[] -> void" BeginDrawing [] :coffi.mem/void)
+(coffi.ffi/defcfn show-cursor "[] -> void" ShowCursor [] :coffi.mem/void)
+(coffi.ffi/defcfn hide-cursor "[] -> void" HideCursor [] :coffi.mem/void)
+(coffi.ffi/defcfn
+  end-shader-mode
+  "[] -> void"
+  EndShaderMode
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  begin-shader-mode
+  "[shader] -> void"
+  BeginShaderMode
+  [:raylib-clj.core/shader]
+  :coffi.mem/void)
+(coffi.ffi/defcfn end-drawing "[] -> void" EndDrawing [] :coffi.mem/void)
+(coffi.ffi/defcfn
+  poll-input-events
+  "[] -> void"
+  PollInputEvents
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn enable-cursor "[] -> void" EnableCursor [] :coffi.mem/void)
+(coffi.ffi/defcfn
+  disable-cursor
+  "[] -> void"
+  DisableCursor
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  begin-blend-mode
+  "[mode] -> void"
+  BeginBlendMode
+  [:coffi.mem/int]
+  :coffi.mem/void)
+
+;font stuff 
+(comment;TODO
+  (coffi.ffi/defcfn
+   "font-ready?"
+   "[font] -> bool"
+   IsFontReady
+   [:raylib-clj.core/font]
+   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  export-font-as-code
+  "[font fileName] -> byte"
+  ExportFontAsCode
+  [:raylib-clj.core/font :coffi.mem/pointer]
+  :coffi.mem/byte)
+(comment;TODO
+  (coffi.ffi/defcfn
+   load-font-data
+   "[fileData dataSize fontSize fontChars glyphCount type] -> point"
+   LoadFontData
+   [:coffi.mem/pointer
+    :coffi.mem/int
+    :coffi.mem/int
+    :coffi.mem/pointer
+    :coffi.mem/int
+    :coffi.mem/int]
+   :raylib-clj.core/point))
+(coffi.ffi/defcfn
+  get-font-default
+  "[] -> font"
+  GetFontDefault
+  []
+  :raylib-clj.core/font)
+(coffi.ffi/defcfn
+  unload-font-data
+  "[chars glyphCount] -> void"
+  UnloadFontData
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-font
+  "[fileName] -> font"
+  LoadFont
+  [:coffi.mem/pointer]
+  :raylib-clj.core/font)
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-text-pro
+   "[font text position origin rotation fontSize spacing tint] -> void"
+   DrawTextPro
+   [:raylib-clj.core/font
+    :coffi.mem/pointer
+    :raylib-clj.core/vec2
+    :raylib-clj.core/vec2
+    :raylib-clj.core/float32
+    :raylib-clj.core/float32
+    :raylib-clj.core/float32
+    :raylib-clj.core/color]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-fps
+  "[posX posY] -> void"
+  DrawFPS
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-font-from-image
+  "[image key firstChar] -> font"
+  LoadFontFromImage
+  [:raylib-clj.core/image :raylib-clj.core/color :coffi.mem/int]
+  :raylib-clj.core/font)
+(coffi.ffi/defcfn
+  load-font-ex
+  "[fileName fontSize fontChars glyphCount] -> font"
+  LoadFontEx
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int]
+  :raylib-clj.core/font)
+(coffi.ffi/defcfn
+  unload-font
+  "[font] -> void"
+  UnloadFont
+  [:raylib-clj.core/font]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-text-codepoints
+   "[font codepoints count position fontSize spacing tint] -> void"
+   DrawTextCodepoints
+   [:raylib-clj.core/font
+    :coffi.mem/pointer
+    :coffi.mem/int
+    :raylib-clj.core/vec2
+    :raylib-clj.core/float32
+    :raylib-clj.core/float32
+    :raylib-clj.core/color]
+   :coffi.mem/void))
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-text-ex
+   "[font text position fontSize spacing tint] -> void"
+   DrawTextEx
+   [:raylib-clj.core/font
+    :coffi.mem/pointer
+    :raylib-clj.core/vec2
+    :raylib-clj.core/float32
+    :raylib-clj.core/float32
+    :raylib-clj.core/color]
+   :coffi.mem/void))
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-text-codepoint
+   "[font codepoint position fontSize tint] -> void"
+   DrawTextCodepoint
+   [:raylib-clj.core/font
+    :coffi.mem/int
+    :raylib-clj.core/vec2
+    :raylib-clj.core/float32
+    :raylib-clj.core/color]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  gen-image-font-atlas
+  "[chars recs glyphCount fontSize padding packMethod] -> image"
+  GenImageFontAtlas
+  [:coffi.mem/pointer
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  draw-text
+  "[text posX posY fontSize color] -> void"
+  DrawText
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-font-from-memory
+  "[fileType fileData dataSize fontSize fontChars glyphCount] -> font"
+  LoadFontFromMemory
+  [:coffi.mem/pointer
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int]
+  :raylib-clj.core/font)
 (comment
 
   (coffify
@@ -1032,13 +1282,55 @@
 
   (->> '{
          ;TODO: put old defs here
-
   }
        (map identity)
        (map #(coffify (first %) (second %)))
        )
 
-  )
+  (defn byte->bool [b] (not= b 0))
+
+
+  (do
+    (init-window 800 450 "raylib-clj [core] example - basic window")
+    (while (not (byte->bool (window-should-close)))
+      (begin-drawing)
+      (clear-background RAYWHITE)
+      (draw-text "Congrats! You created your first window!" 190 200 20 BLACK);
+      (end-drawing)
+      )
+    (close-window)
+    )
+
+
+)
+
+(def LIGHTGRAY  [ 200, 200, 200, 255    ])
+(def GRAY       [ 130, 130, 130, 255    ])
+(def DARKGRAY   [ 80, 80, 80, 255       ])
+(def YELLOW     [ 253, 249, 0, 255      ])
+(def GOLD       [ 255, 203, 0, 255      ])
+(def ORANGE     [ 255, 161, 0, 255      ])
+(def PINK       [ 255, 109, 194, 255    ])
+(def RED        [ 230, 41, 55, 255      ])
+(def MAROON     [ 190, 33, 55, 255      ])
+(def GREEN      [ 0, 228, 48, 255       ])
+(def LIME       [ 0, 158, 47, 255       ])
+(def DARKGREEN  [ 0, 117, 44, 255       ])
+(def SKYBLUE    [ 102, 191, 255, 255    ])
+(def BLUE       [ 0, 121, 241, 255      ])
+(def DARKBLUE   [ 0, 82, 172, 255       ])
+(def PURPLE     [ 200, 122, 255, 255    ])
+(def VIOLET     [ 135, 60, 190, 255     ])
+(def DARKPURPLE [ 112, 31, 126, 255     ])
+(def BEIGE      [ 211, 176, 131, 255    ])
+(def BROWN      [ 127, 106, 79, 255     ])
+(def DARKBROWN  [ 76, 63, 47, 255       ])
+
+(def WHITE      [ 255, 255, 255, 255    ])
+(def BLACK      [ 0, 0, 0, 255          ])
+(def BLANK      [ 0, 0, 0, 0            ])
+(def MAGENTA    [ 255, 0, 255, 255      ])
+(def RAYWHITE   [ 245, 245, 245, 255    ])
 
 
 
@@ -1050,30 +1342,6 @@
      ;;// NOTE: Those functions are intended for advance users that want full control over the frame processing
      ;;// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
      ;;// To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
-     :SwapScreenBuffer {:rettype :void :argtypes []}
-     :PollInputEvents {:rettype :void :argtypes []}
-     :WaitTime {:rettype :void :argtypes [[seconds :float64]]}
-     ;;-related functions
-     :ShowCursor {:rettype :void :argtypes []}
-     :HideCursor {:rettype :void :argtypes []}
-     :IsCursorHidden {:rettype :int8 :argtypes []}
-     :EnableCursor {:rettype :void :argtypes []}
-     :DisableCursor {:rettype :void :argtypes []}
-     :IsCursorOnScreen {:rettype :int8 :argtypes []}
-                                        ;-related functions
-     :ClearBackground {:rettype :void :argtypes [[color :color]]}
-     :BeginDrawing {:rettype :void :argtypes []}
-     :EndDrawing {:rettype :void :argtypes []}
-     :BeginMode2D {:rettype :void :argtypes [[camera :camera-2d]]}
-     :EndMode2D {:rettype :void :argtypes []}
-     :BeginMode3D {:rettype :void :argtypes [[camera :camera-3d]]}
-     :EndMode3D {:rettype :void :argtypes []}
-     :BeginTextureMode {:rettype :void :argtypes [[target :render-texture]]}
-     :EndTextureMode {:rettype :void :argtypes []}
-     :BeginShaderMode {:rettype :void :argtypes [[shader :shader]]}
-     :EndShaderMode {:rettype :void :argtypes []}
-     :BeginBlendMode {:rettype :void :argtypes [[mode :int32]]}
-     :EndBlendMode {:rettype :void :argtypes []}
      :BeginScissorMode {:rettype :void :argtypes [[x :int32] [y :int32] [width :int32] [height :int32]]}
      :EndScissorMode {:rettype :void :argtypes []}
      :BeginVrStereoMode {:rettype :void :argtypes [[config :vr-stereo-config]]}
@@ -1400,24 +1668,6 @@
      ;;//------------------------------------------------------------------------------------
      ;;
      ;;// :font loading/unloading functions
-     :GetFontDefault {:rettype :font :argtypes []}
-     :LoadFont {:rettype :font :argtypes [[fileName :pointer]]}
-     :LoadFontEx {:rettype :font :argtypes [[fileName :pointer] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
-     :LoadFontFrom:image {:rettype :font :argtypes [[image :image] [key :color] [firstChar :int32]]}
-     :LoadFontFromMemory {:rettype :font :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32]]}
-     :IsFontReady {:rettype :int8 :argtypes [[font :font]]}
-     :LoadFontData {:rettype :point :argtypes [[fileData :pointer] [dataSize :int32] [fontSize :int32] [fontChars :pointer] [glyphCount :int32] [type :int32]]}
-     :GenImageFontAtlas {:rettype :image :argtypes [[chars :pointer] [recs :pointer] [glyphCount :int32] [fontSize :int32] [padding :int32] [packMethod :int32]]}
-     :UnloadFontData {:rettype :void :argtypes [[chars :pointer] [glyphCount :int32]]}
-     :UnloadFont {:rettype :void :argtypes [[font :font]]}
-     :ExportFontAsCode {:rettype :int8 :argtypes [[font :font] [fileName :pointer]]}
-
-     :DrawFPS {:rettype :void :argtypes [[posX :int32] [posY :int32]]}
-     :DrawText {:rettype :void :argtypes [[text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
-     :DrawTextEx {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
-     :DrawTextPro {:rettype :void :argtypes [[font :font] [text :pointer] [position :vec2] [origin :vec2] [rotation :float32] [fontSize :float32] [spacing :float32] [tint :color]]}
-     :DrawTextCodepoint {:rettype :void :argtypes [[font :font] [codepoint :int32] [position :vec2] [fontSize :float32] [tint :color]]}
-     :DrawTextCodepoints {:rettype :void :argtypes [[font :font]  [codepoints :pointer] [count :int32] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
 
      :SetTextLineSpacing {:rettype :void :argtypes [[spacing :int32]]}
      :MeasureText {:rettype :int32 :argtypes [[text :pointer] [fontSize :int32]]}
