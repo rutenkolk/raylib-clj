@@ -779,6 +779,108 @@
   [:coffi.mem/int]
   :coffi.mem/void)
 
+(coffi.ffi/defcfn
+  toggle-fullscreen
+  "[] -> void"
+  ToggleFullscreen
+  []
+  :coffi.mem/void)
+
+(comment
+
+  ;TODO:this thing doesn't work... whats the actual symbol in the shared library?
+  (coffi.ffi/defcfn
+   toggle-borderless-windowed
+   "[] -> void"
+   ToggleBorderlessWindowed
+   []
+   :coffi.mem/void)
+  )
+
+(coffi.ffi/defcfn
+  maximize-window
+  "[] -> void"
+  MaximizeWindow
+  []
+  :coffi.mem/void)
+
+(coffi.ffi/defcfn
+  minimize-window
+  "[] -> void"
+  MinimizeWindow
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  restore-window
+  "[] -> void"
+  RestoreWindow
+  []
+  :coffi.mem/void)
+(comment
+  ;TODO: doesn't load
+  (coffi.ffi/defcfn
+    set-window-opacity
+    "[opacity] -> void"
+    SetWindowOpacity
+    [:raylib-clj.core/float32]
+    :coffi.mem/void)
+  (coffi.ffi/defcfn
+    set-window-icons
+    "[images count] -> void"
+    SetWindowIcons
+    [:raylib-clj.core/pointer :coffi.mem/int]
+    :coffi.mem/void))
+(coffi.ffi/defcfn
+  set-window-focused
+  "[] -> void"
+  SetWindowFocused
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-window-min-size
+  "[width height] -> void"
+  SetWindowMinSize
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-window-size
+  "[width height] -> void"
+  SetWindowSize
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(comment ;TODO
+  (coffi.ffi/defcfn
+   set-window-title
+   "[title] -> void"
+   SetWindowTitle
+   [:raylib-clj.core/ptr]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  set-window-position
+  "[x y] -> void"
+  SetWindowPosition
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-window-monitor
+  "[monitor] -> void"
+  SetWindowMonitor
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-window-handle
+   "[] -> pointer"
+   GetWindowHandle
+   []
+   :raylib-clj.core/pointer))
+(coffi.ffi/defcfn
+  set-window-icon
+  "[image] -> void"
+  SetWindowIcon
+  [:raylib-clj.core/image]
+  :coffi.mem/void)
+
 (comment
 
   (coffify
@@ -787,13 +889,8 @@
    )
 
   (->> '{
-
-         :ToggleFullscreen {:rettype :void :argtypes []}
-         :ToggleBorderlessWindowed {:rettype :void :argtypes []}
-         :MaximizeWindow {:rettype :void :argtypes []}
-         :MinimizeWindow {:rettype :void :argtypes []}
-         :RestoreWindow {:rettype :void :argtypes []}
-}
+         ;TODO: put old defs here
+  }
        (map identity)
        (map #(coffify (first %) (second %)))
        )
@@ -806,16 +903,6 @@
 
 '{
 
-     :SetWindowIcon {:rettype :void :argtypes [[image :image]]}
-     :SetWindowIcons {:rettype :void :argtypes [[images :pointer] [count :int32]]}
-     :SetWindowTitle {:rettype :void :argtypes [[title :ptr]]}
-     :SetWindowPosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
-     :SetWindowMonitor {:rettype :void :argtypes [[monitor :int32]]}
-     :SetWindowMinSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
-     :SetWindowSize {:rettype :void :argtypes [[width :int32] [height :int32]]}
-     :SetWindowOpacity {:rettype :void :argtypes [[opacity :float32]]}
-     :SetWindowFocused {:rettype :void :argtypes []}
-     :GetWindowHandle {:rettype :pointer :argtypes []}
      :GetScreenWidth {:rettype :int32 :argtypes []}
      :GetScreenHeight {:rettype :int32 :argtypes []}
      :GetRenderWidth {:rettype :int32 :argtypes []}
