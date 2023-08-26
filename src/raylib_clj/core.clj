@@ -858,20 +858,18 @@
   RestoreWindow
   []
   :coffi.mem/void)
-(comment
-  ;TODO: doesn't load
-  (coffi.ffi/defcfn
-    set-window-opacity
-    "[opacity] -> void"
-    SetWindowOpacity
-    [:raylib-clj.core/float32]
-    :coffi.mem/void)
-  (coffi.ffi/defcfn
-    set-window-icons
-    "[images count] -> void"
-    SetWindowIcons
-    [:coffi.mem/pointer :coffi.mem/int]
-    :coffi.mem/void))
+(coffi.ffi/defcfn
+  set-window-opacity
+  "[opacity] -> void"
+  SetWindowOpacity
+  [:coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-window-icons
+  "[images count] -> void"
+  SetWindowIcons
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   set-window-focused
   "[] -> void"
@@ -890,13 +888,12 @@
   SetWindowSize
   [:coffi.mem/int :coffi.mem/int]
   :coffi.mem/void)
-(comment ;TODO
-  (coffi.ffi/defcfn
-   set-window-title
-   "[title] -> void"
-   SetWindowTitle
-   [:raylib-clj.core/ptr]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  set-window-title
+  "[title] -> void"
+  SetWindowTitle
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   set-window-position
   "[x y] -> void"
@@ -909,13 +906,12 @@
   SetWindowMonitor
   [:coffi.mem/int]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-window-handle
-   "[] -> pointer"
-   GetWindowHandle
-   []
-   :coffi.mem/pointer))
+(coffi.ffi/defcfn
+  get-window-handle
+  "[] -> pointer"
+  GetWindowHandle
+  []
+  :coffi.mem/pointer)
 (coffi.ffi/defcfn
   set-window-icon
   "[image] -> void"
@@ -923,13 +919,12 @@
   [:raylib-clj.core/image]
   :coffi.mem/void)
 
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-clipboard-text
-   "[] -> pointer"
-   GetClipboardText
-   []
-   :coffi.mem/pointer))
+(coffi.ffi/defcfn
+  get-clipboard-text
+  "[] -> pointer"
+  GetClipboardText
+  []
+  :coffi.mem/pointer)
 (coffi.ffi/defcfn
   disable-event-waiting
   "[] -> void"
@@ -1020,35 +1015,31 @@
   EnableEventWaiting
   []
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-monitor-physical-width
-   "[monitor] -> nt32"
-   GetMonitorPhysicalWidth
-   [:coffi.mem/int]
-   :raylib-clj.core/nt32))
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-monitor-name
-   "[monitor] -> pointer"
-   GetMonitorName
-   [:coffi.mem/int]
-   :coffi.mem/pointer))
-(comment;TODO
-  (coffi.ffi/defcfn
-   set-clipboard-text
-   "[text] -> void"
-   SetClipboardText
-   [:coffi.mem/pointer]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  get-monitor-physical-width
+  "[monitor] -> int"
+  GetMonitorPhysicalWidth
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-monitor-name
+  "[monitor] -> pointer"
+  GetMonitorName
+  [:coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  set-clipboard-text
+  "[text] -> void"
+  SetClipboardText
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
 
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-clipboard-text
-   "[] -> pointer"
-   GetClipboardText
-   []
-   :coffi.mem/pointer))
+(coffi.ffi/defcfn
+  get-clipboard-text
+  "[] -> pointer"
+  GetClipboardText
+  []
+  :coffi.mem/pointer)
 (coffi.ffi/defcfn
   enable-event-waiting
   "[] -> void"
@@ -1069,26 +1060,24 @@
   []
   :coffi.mem/void)
 (coffi.ffi/defcfn end-mode-3-d "[] -> void" EndMode3D [] :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   wait-time
-   "[seconds] -> void"
-   WaitTime
-   [:raylib-clj.core/float64]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  wait-time
+  "[seconds] -> void"
+  WaitTime
+  [:coffi.mem/double]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   begin-mode-2-d
   "[camera] -> void"
   BeginMode2D
   [:raylib-clj.core/camera-2d]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   "cursor-on-screen?"
-   "[] -> bool"
-   IsCursorOnScreen
-   []
-   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  cursor-on-screen?
+  "[] -> bool"
+  IsCursorOnScreen
+  []
+  :coffi.mem/byte)
 (coffi.ffi/defcfn end-mode-2-d "[] -> void" EndMode2D [] :coffi.mem/void)
 (coffi.ffi/defcfn
   clear-background
@@ -1096,13 +1085,12 @@
   ClearBackground
   [:raylib-clj.core/color]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   "cursor-hidden?"
-   "[] -> bool"
-   IsCursorHidden
-   []
-   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  cursor-hidden?
+  "[] -> bool"
+  IsCursorHidden
+  []
+  :coffi.mem/byte)
 (coffi.ffi/defcfn
   begin-mode-3-d
   "[camera] -> void"
@@ -1201,13 +1189,12 @@
   :coffi.mem/void)
 
 ;font stuff 
-(comment;TODO
-  (coffi.ffi/defcfn
-   "font-ready?"
-   "[font] -> bool"
-   IsFontReady
-   [:raylib-clj.core/font]
-   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  font-ready?
+  "[font] -> bool"
+  IsFontReady
+  [:raylib-clj.core/font]
+  :coffi.mem/byte)
 (coffi.ffi/defcfn
   export-font-as-code
   "[font fileName] -> byte"
@@ -1244,20 +1231,19 @@
   LoadFont
   [:coffi.mem/pointer]
   :raylib-clj.core/font)
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-text-pro
-   "[font text position origin rotation fontSize spacing tint] -> void"
-   DrawTextPro
-   [:raylib-clj.core/font
-    :coffi.mem/pointer
-    :raylib-clj.core/vec2
-    :raylib-clj.core/vec2
-    :raylib-clj.core/float32
-    :raylib-clj.core/float32
-    :raylib-clj.core/float32
-    :raylib-clj.core/color]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-text-pro
+  "[font text position origin rotation fontSize spacing tint] -> void"
+  DrawTextPro
+  [:raylib-clj.core/font
+   :coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-fps
   "[posX posY] -> void"
@@ -1285,42 +1271,39 @@
   UnloadFont
   [:raylib-clj.core/font]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-text-codepoints
-   "[font codepoints count position fontSize spacing tint] -> void"
-   DrawTextCodepoints
-   [:raylib-clj.core/font
-    :coffi.mem/pointer
-    :coffi.mem/int
-    :raylib-clj.core/vec2
-    :raylib-clj.core/float32
-    :raylib-clj.core/float32
-    :raylib-clj.core/color]
-   :coffi.mem/void))
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-text-ex
-   "[font text position fontSize spacing tint] -> void"
-   DrawTextEx
-   [:raylib-clj.core/font
-    :coffi.mem/pointer
-    :raylib-clj.core/vec2
-    :raylib-clj.core/float32
-    :raylib-clj.core/float32
-    :raylib-clj.core/color]
-   :coffi.mem/void))
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-text-codepoint
-   "[font codepoint position fontSize tint] -> void"
-   DrawTextCodepoint
-   [:raylib-clj.core/font
-    :coffi.mem/int
-    :raylib-clj.core/vec2
-    :raylib-clj.core/float32
-    :raylib-clj.core/color]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-text-codepoints
+  "[font codepoints count position fontSize spacing tint] -> void"
+  DrawTextCodepoints
+  [:raylib-clj.core/font
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-text-ex
+  "[font text position fontSize spacing tint] -> void"
+  DrawTextEx
+  [:raylib-clj.core/font
+   :coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-text-codepoint
+  "[font codepoint position fontSize tint] -> void"
+  DrawTextCodepoint
+  [:raylib-clj.core/font
+   :coffi.mem/int
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   gen-image-font-atlas
   "[chars recs glyphCount fontSize padding packMethod] -> image"
