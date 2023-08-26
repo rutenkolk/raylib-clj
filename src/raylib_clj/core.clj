@@ -676,7 +676,9 @@
    :uint32      ::mem/int
    :void        ::mem/void
    :ptr         ::mem/pointer
+   :pointer     ::mem/pointer
    :float32     ::mem/float
+   :float       ::mem/float
 
    })
 
@@ -1688,6 +1690,33 @@
   []
   :coffi.mem/pointer)
 
+
+(coffi.ffi/defcfn
+  compress-data
+  "[data dataSize compDataSize] -> pointer"
+  CompressData
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  decompress-data
+  "[compData compDataSize dataSize] -> pointer"
+  DecompressData
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  encode-data-base-64
+  "[data dataSize outputSize] -> pointer"
+  EncodeDataBase64
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  decode-data-base-64
+  "[data outputSize] -> pointer"
+  DecodeDataBase64
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+
+
 (comment
 
   (coffify
@@ -1698,10 +1727,47 @@
   (->> '{
          ;TODO: put old defs here
 
-         :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
-         :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
-         :EncodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [outputSize :pointer]]}
-         :DecodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [outputSize :pointer]]}
+     :IsKeyPressed {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyDown {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyReleased {:rettype :int8 :argtypes [[key :int32]]}
+     :IsKeyUp {:rettype :int8 :argtypes [[key :int32]]}
+     :SetExitKey {:rettype :void :argtypes [[key :int32]]}
+     :GetKeyPressed {:rettype :int32 :argtypes []}
+     :GetCharPressed {:rettype :int32 :argtypes []}
+     ;;-related functions: gamepads
+     :IsGamepadAvailable {:rettype :int8 :argtypes [[gamepad :int32]]}
+     :GetGamepadName {:rettype :pointer :argtypes [[gamepad :int32]]}
+     :IsGamepadButtonPressed {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonDown {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonReleased {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :IsGamepadButtonUp {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
+     :GetGamepadButtonPressed {:rettype :int32 :argtypes []}
+     :GetGamepadAxisCount {:rettype :int32 :argtypes [[gamepad :int32]]}
+     :GetGamepadAxisMovement {:rettype :float :argtypes [[gamepad :int32] [axis :int32]]}
+     :SetGamepadMappings {:rettype :int32 :argtypes [[mappings :pointer]]}
+     ;;
+     ;;// Input-related functions: mouse
+     :IsMouseButtonPressed {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonDown {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonReleased {:rettype :int8 :argtypes [[button :int32]]}
+     :IsMouseButtonUp {:rettype :int8 :argtypes [[button :int32]]}
+     :GetMouseX {:rettype :int32 :argtypes []}
+     :GetMouseY {:rettype :int32 :argtypes []}
+     :GetMousePosition {:rettype :vec2 :argtypes []}
+     :GetMouseDelta {:rettype :vec2 :argtypes []}
+     :SetMousePosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
+     :SetMouseOffset {:rettype :void :argtypes [[offsetX :int32] [offsetY :int32]]}
+     :SetMouseScale {:rettype :void :argtypes [[scaleX :float32] [scaleY :float32]]}
+     :GetMouseWheelMove {:rettype :float :argtypes []}
+     :GetMouseWheelMoveV {:rettype :vec2 :argtypes []}
+     :SetMouseCursor {:rettype :void :argtypes [[cursor :int32]]}
+
+     :GetTouchX {:rettype :int32 :argtypes []}
+     :GetTouchY {:rettype :int32 :argtypes []}
+     :GetTouchPosition {:rettype :vec2 :argtypes [[index :int32]]}
+     :GetTouchPointId {:rettype :int32 :argtypes [[index :int32]]}
+     :GetTouchPointCount {:rettype :int32 :argtypes []}
+
   }
        (map identity)
        (map #(coffify (first %) (second %)))
@@ -1773,46 +1839,6 @@
      ;;//------------------------------------------------------------------------------------
      ;;
      ;;// Input-related functions: keyboard
-     :IsKeyPressed {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyDown {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyReleased {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyUp {:rettype :int8 :argtypes [[key :int32]]}
-     :SetExitKey {:rettype :void :argtypes [[key :int32]]}
-     :GetKeyPressed {:rettype :int32 :argtypes []}
-     :GetCharPressed {:rettype :int32 :argtypes []}
-     ;;-related functions: gamepads
-     :IsGamepadAvailable {:rettype :int8 :argtypes [[gamepad :int32]]}
-     :GetGamepadName {:rettype :pointer :argtypes [[gamepad :int32]]}
-     :IsGamepadButtonPressed {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonDown {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonReleased {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonUp {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :GetGamepadButtonPressed {:rettype :int32 :argtypes []}
-     :GetGamepadAxisCount {:rettype :int32 :argtypes [[gamepad :int32]]}
-     :GetGamepadAxisMovement {:rettype :float :argtypes [[gamepad :int32] [axis :int32]]}
-     :SetGamepadMappings {:rettype :int32 :argtypes [[mappings :pointer]]}
-     ;;
-     ;;// Input-related functions: mouse
-     :IsMouseButtonPressed {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonDown {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonReleased {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonUp {:rettype :int8 :argtypes [[button :int32]]}
-     :GetMouseX {:rettype :int32 :argtypes []}
-     :GetMouseY {:rettype :int32 :argtypes []}
-     :GetMousePosition {:rettype :vec2 :argtypes []}
-     :GetMouseDelta {:rettype :vec2 :argtypes []}
-     :SetMousePosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
-     :SetMouseOffset {:rettype :void :argtypes [[offsetX :int32] [offsetY :int32]]}
-     :SetMouseScale {:rettype :void :argtypes [[scaleX :float32] [scaleY :float32]]}
-     :GetMouseWheelMove {:rettype :float :argtypes []}
-     :GetMouseWheelMoveV {:rettype :vec2 :argtypes []}
-     :SetMouseCursor {:rettype :void :argtypes [[cursor :int32]]}
-
-     :GetTouchX {:rettype :int32 :argtypes []}
-     :GetTouchY {:rettype :int32 :argtypes []}
-     :GetTouchPosition {:rettype :vec2 :argtypes [[index :int32]]}
-     :GetTouchPointId {:rettype :int32 :argtypes [[index :int32]]}
-     :GetTouchPointCount {:rettype :int32 :argtypes []}
                                         ;Gestures and Touch Handling Functions  {:rettype :;// :rettype }[Module: rgestures]
      ;;//------------------------------------------------------------------------------------
      :SetGesturesEnabled {:rettype :void :argtypes [[flags :int32]]}
