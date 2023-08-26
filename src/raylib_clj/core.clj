@@ -665,17 +665,19 @@
 
 (comment
   (init-window 800 800 "henlo from clojure??")
-
   )
 
 (def old-types->new-types
-  {:int8   ::mem/byte
-   :int16  ::mem/short
-   :int32  ::mem/int
-   :uint8  ::mem/byte
-   :uint16 ::mem/short
-   :uint32 ::mem/int
-   :void   ::mem/void
+  {:int8        ::mem/byte
+   :int16       ::mem/short
+   :int32       ::mem/int
+   :uint8       ::mem/byte
+   :uint16      ::mem/short
+   :uint32      ::mem/int
+   :void        ::mem/void
+   :ptr         ::mem/pointer
+   :float32     ::mem/float
+
    })
 
 (defn type-converter [old]
@@ -1696,33 +1698,10 @@
   (->> '{
          ;TODO: put old defs here
 
-     :LoadFileData {:rettype :pointer :argtypes [[fileName :pointer] [bytesRead :pointer]]}
-     :UnloadFileData {:rettype :void :argtypes [[data :pointer]]}
-     :SaveFileData {:rettype :int8 :argtypes [[fileName :pointer] [data :pointer] [bytesToWrite :int32]]}
-     :ExportDataAsCode {:rettype :int8 :argtypes [[data :pointer] [size :int32] [fileName :pointer]]}
-     :LoadFileText {:rettype :pointer :argtypes [[fileName :pointer]]}
-     :UnloadFileText {:rettype :void :argtypes [[text :pointer]]}
-     :SaveFileText {:rettype :int8 :argtypes [[fileName :pointer] [text :pointer]]}
-     :FileExists {:rettype :int8 :argtypes [[fileName :pointer]]}
-     :DirectoryExists {:rettype :int8 :argtypes [[dirPath :pointer]]}
-     :IsFileExtension {:rettype :int8 :argtypes [[fileName :pointer] [ext :pointer]]}
-     :GetFileLength {:rettype :int32 :argtypes [[fileName :pointer]]}
-     :GetFileExtension {:rettype :pointer :argtypes [[fileName :pointer]]}
-     :GetFileName {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetFileNameWithoutExt {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetDirectoryPath {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetPrevDirectoryPath {:rettype :pointer :argtypes [[dirPath :pointer]]}
-     :GetWorkingDirectory {:rettype :pointer :argtypes []}
-     :GetApplicationDirectory {:rettype :pointer :argtypes []}
-     :ChangeDirectory {:rettype :int8 :argtypes [[dir :pointer]]}
-     :IsPathFile {:rettype :int8 :argtypes [[path :pointer]]}
-     :LoadDirectoryFiles {:rettype :file-path-list :argtypes [[dirPath :pointer]]}
-     :LoadDirectoryFilesEx {:rettype :file-path-list :argtypes [[basePath :pointer] [filter :pointer] [scanSubdirs :int8]]}
-     :UnloadDirectoryFiles {:rettype :void :argtypes [[files :file-path-list]]}
-     :IsFileDropped {:rettype :int8 :argtypes []}
-     :PathList {:rettype :file-path-list :argtypes []}
-     :UnloadDroppedFiles {:rettype :void :argtypes [[files :file-path-list]]}
-     :GetFileModTime {:rettype :long :argtypes [[fileName :pointer]]}
+         :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
+         :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
+         :EncodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [outputSize :pointer]]}
+         :DecodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [outputSize :pointer]]}
   }
        (map identity)
        (map #(coffify (first %) (second %)))
@@ -1790,10 +1769,6 @@
                                         ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
      ;; management functions
      ;;/Encoding functionality
-     :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
-     :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
-     :EncodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [outputSize :pointer]]}
-     :DecodeDataBase64 {:rettype :pointer :argtypes [[data :pointer]  [outputSize :pointer]]}
      ;;   Input Handling Functions  {:rettype :;// :rettype }[Module: core]
      ;;//------------------------------------------------------------------------------------
      ;;
