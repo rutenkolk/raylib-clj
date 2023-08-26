@@ -251,6 +251,34 @@
    (ptr :paths)])
 ; enums
 
+(def LIGHTGRAY  [ 200, 200, 200, 255    ])
+(def GRAY       [ 130, 130, 130, 255    ])
+(def DARKGRAY   [ 80, 80, 80, 255       ])
+(def YELLOW     [ 253, 249, 0, 255      ])
+(def GOLD       [ 255, 203, 0, 255      ])
+(def ORANGE     [ 255, 161, 0, 255      ])
+(def PINK       [ 255, 109, 194, 255    ])
+(def RED        [ 230, 41, 55, 255      ])
+(def MAROON     [ 190, 33, 55, 255      ])
+(def GREEN      [ 0, 228, 48, 255       ])
+(def LIME       [ 0, 158, 47, 255       ])
+(def DARKGREEN  [ 0, 117, 44, 255       ])
+(def SKYBLUE    [ 102, 191, 255, 255    ])
+(def BLUE       [ 0, 121, 241, 255      ])
+(def DARKBLUE   [ 0, 82, 172, 255       ])
+(def PURPLE     [ 200, 122, 255, 255    ])
+(def VIOLET     [ 135, 60, 190, 255     ])
+(def DARKPURPLE [ 112, 31, 126, 255     ])
+(def BEIGE      [ 211, 176, 131, 255    ])
+(def BROWN      [ 127, 106, 79, 255     ])
+(def DARKBROWN  [ 76, 63, 47, 255       ])
+
+(def WHITE      [ 255, 255, 255, 255    ])
+(def BLACK      [ 0, 0, 0, 255          ])
+(def BLANK      [ 0, 0, 0, 0            ])
+(def MAGENTA    [ 255, 0, 255, 255      ])
+(def RAYWHITE   [ 245, 245, 245, 255    ])
+
 ;typedef enum {
 (defconst FLAG_VSYNC_HINT               0x00000040)
 (defconst FLAG_FULLSCREEN_MODE          0x00000002)
@@ -1717,6 +1745,265 @@
   :coffi.mem/pointer)
 
 
+(coffi.ffi/defcfn
+  get-mouse-wheel-move
+  "[] -> float"
+  GetMouseWheelMove
+  []
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  key-pressed?
+  "[key] -> bool"
+  IsKeyPressed
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-touch-point-id
+  "[index] -> int"
+  GetTouchPointId
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-mouse-position
+  "[] -> vec2"
+  GetMousePosition
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  gamepad-available?
+  "[gamepad] -> bool"
+  IsGamepadAvailable
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  key-up?
+  "[key] -> bool"
+  IsKeyUp
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  gamepad-button-released?
+  "[gamepad button] -> bool"
+  IsGamepadButtonReleased
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-gamepad-name
+  "[gamepad] -> pointer"
+  GetGamepadName
+  [:coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  key-down?
+  "[key] -> bool"
+  IsKeyDown
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-gamepad-mappings
+  "[mappings] -> int"
+  SetGamepadMappings
+  [:coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-gamepad-axis-movement
+  "[gamepad axis] -> float"
+  GetGamepadAxisMovement
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  set-mouse-position
+  "[x y] -> void"
+  SetMousePosition
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-mouse-offset
+  "[offsetX offsetY] -> void"
+  SetMouseOffset
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  mouse-button-up?
+  "[button] -> bool"
+  IsMouseButtonUp
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-gamepad-axis-count
+  "[gamepad] -> int"
+  GetGamepadAxisCount
+  [:coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn get-mouse-y "[] -> int" GetMouseY [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-mouse-delta
+  "[] -> vec2"
+  GetMouseDelta
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-touch-position
+  "[index] -> vec2"
+  GetTouchPosition
+  [:coffi.mem/int]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-char-pressed
+  "[] -> int"
+  GetCharPressed
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-gamepad-button-pressed
+  "[] -> int"
+  GetGamepadButtonPressed
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-touch-point-count
+  "[] -> int"
+  GetTouchPointCount
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  key-released?
+  "[key] -> bool"
+  IsKeyReleased
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  gamepad-button-pressed?
+  "[gamepad button] -> bool"
+  IsGamepadButtonPressed
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn get-key-pressed "[] -> int" GetKeyPressed [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  gamepad-button-up?
+  "[gamepad button] -> bool"
+  IsGamepadButtonUp
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  mouse-button-released?
+  "[button] -> bool"
+  IsMouseButtonReleased
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-mouse-scale
+  "[scaleX scaleY] -> void"
+  SetMouseScale
+  [:coffi.mem/float :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn get-touch-x "[] -> int" GetTouchX [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  gamepad-button-down?
+  "[gamepad button] -> bool"
+  IsGamepadButtonDown
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-mouse-wheel-move-v
+  "[] -> vec2"
+  GetMouseWheelMoveV
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn get-touch-y "[] -> int" GetTouchY [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  set-exit-key
+  "[key] -> void"
+  SetExitKey
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-mouse-cursor
+  "[cursor] -> void"
+  SetMouseCursor
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  mouse-button-down?
+  "[button] -> bool"
+  IsMouseButtonDown
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn get-mouse-x "[] -> int" GetMouseX [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  mouse-button-pressed?
+  "[button] -> bool"
+  IsMouseButtonPressed
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+
+
+(coffi.ffi/defcfn
+  set-gestures-enabled
+  "[flags] -> void"
+  SetGesturesEnabled
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gesture-detected?
+  "[gesture] -> bool"
+  IsGestureDetected
+  [:coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-gesture-detected
+  "[] -> int"
+  GetGestureDetected
+  []
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-gesture-hold-duration
+  "[] -> float"
+  GetGestureHoldDuration
+  []
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  get-gesture-drag-vector
+  "[] -> vec2"
+  GetGestureDragVector
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-gesture-drag-angle
+  "[] -> float"
+  GetGestureDragAngle
+  []
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  get-gesture-pinch-vector
+  "[] -> vec2"
+  GetGesturePinchVector
+  []
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-gesture-pinch-angle
+  "[] -> float"
+  GetGesturePinchAngle
+  []
+  :coffi.mem/float)
+
+
+(comment;TODO
+  (coffi.ffi/defcfn
+   update-camera-3-d
+   "[camera-3d mode] -> void"
+   UpdateCamera3D
+   [:coffi.mem/pointer :coffi.mem/int]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  update-camera-pro
+  "[camera-3d movement rotation zoom] -> void"
+  UpdateCameraPro
+  [:coffi.mem/pointer
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float]
+  :coffi.mem/void)
 (comment
 
   (coffify
@@ -1726,47 +2013,6 @@
 
   (->> '{
          ;TODO: put old defs here
-
-     :IsKeyPressed {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyDown {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyReleased {:rettype :int8 :argtypes [[key :int32]]}
-     :IsKeyUp {:rettype :int8 :argtypes [[key :int32]]}
-     :SetExitKey {:rettype :void :argtypes [[key :int32]]}
-     :GetKeyPressed {:rettype :int32 :argtypes []}
-     :GetCharPressed {:rettype :int32 :argtypes []}
-     ;;-related functions: gamepads
-     :IsGamepadAvailable {:rettype :int8 :argtypes [[gamepad :int32]]}
-     :GetGamepadName {:rettype :pointer :argtypes [[gamepad :int32]]}
-     :IsGamepadButtonPressed {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonDown {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonReleased {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :IsGamepadButtonUp {:rettype :int8 :argtypes [[gamepad :int32] [button :int32]]}
-     :GetGamepadButtonPressed {:rettype :int32 :argtypes []}
-     :GetGamepadAxisCount {:rettype :int32 :argtypes [[gamepad :int32]]}
-     :GetGamepadAxisMovement {:rettype :float :argtypes [[gamepad :int32] [axis :int32]]}
-     :SetGamepadMappings {:rettype :int32 :argtypes [[mappings :pointer]]}
-     ;;
-     ;;// Input-related functions: mouse
-     :IsMouseButtonPressed {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonDown {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonReleased {:rettype :int8 :argtypes [[button :int32]]}
-     :IsMouseButtonUp {:rettype :int8 :argtypes [[button :int32]]}
-     :GetMouseX {:rettype :int32 :argtypes []}
-     :GetMouseY {:rettype :int32 :argtypes []}
-     :GetMousePosition {:rettype :vec2 :argtypes []}
-     :GetMouseDelta {:rettype :vec2 :argtypes []}
-     :SetMousePosition {:rettype :void :argtypes [[x :int32] [y :int32]]}
-     :SetMouseOffset {:rettype :void :argtypes [[offsetX :int32] [offsetY :int32]]}
-     :SetMouseScale {:rettype :void :argtypes [[scaleX :float32] [scaleY :float32]]}
-     :GetMouseWheelMove {:rettype :float :argtypes []}
-     :GetMouseWheelMoveV {:rettype :vec2 :argtypes []}
-     :SetMouseCursor {:rettype :void :argtypes [[cursor :int32]]}
-
-     :GetTouchX {:rettype :int32 :argtypes []}
-     :GetTouchY {:rettype :int32 :argtypes []}
-     :GetTouchPosition {:rettype :vec2 :argtypes [[index :int32]]}
-     :GetTouchPointId {:rettype :int32 :argtypes [[index :int32]]}
-     :GetTouchPointCount {:rettype :int32 :argtypes []}
 
   }
        (map identity)
@@ -1791,40 +2037,12 @@
 
 )
 
-(def LIGHTGRAY  [ 200, 200, 200, 255    ])
-(def GRAY       [ 130, 130, 130, 255    ])
-(def DARKGRAY   [ 80, 80, 80, 255       ])
-(def YELLOW     [ 253, 249, 0, 255      ])
-(def GOLD       [ 255, 203, 0, 255      ])
-(def ORANGE     [ 255, 161, 0, 255      ])
-(def PINK       [ 255, 109, 194, 255    ])
-(def RED        [ 230, 41, 55, 255      ])
-(def MAROON     [ 190, 33, 55, 255      ])
-(def GREEN      [ 0, 228, 48, 255       ])
-(def LIME       [ 0, 158, 47, 255       ])
-(def DARKGREEN  [ 0, 117, 44, 255       ])
-(def SKYBLUE    [ 102, 191, 255, 255    ])
-(def BLUE       [ 0, 121, 241, 255      ])
-(def DARKBLUE   [ 0, 82, 172, 255       ])
-(def PURPLE     [ 200, 122, 255, 255    ])
-(def VIOLET     [ 135, 60, 190, 255     ])
-(def DARKPURPLE [ 112, 31, 126, 255     ])
-(def BEIGE      [ 211, 176, 131, 255    ])
-(def BROWN      [ 127, 106, 79, 255     ])
-(def DARKBROWN  [ 76, 63, 47, 255       ])
-
-(def WHITE      [ 255, 255, 255, 255    ])
-(def BLACK      [ 0, 0, 0, 255          ])
-(def BLANK      [ 0, 0, 0, 0            ])
-(def MAGENTA    [ 255, 0, 255, 255      ])
-(def RAYWHITE   [ 245, 245, 245, 255    ])
 
 
 
 (comment (ffi/define-library! native-part-1
 
 '{
-
      ;; custom callbacks
      ;;// WARNING: Callbacks setup is intended for advance users
                                         ;TODO: what are those types?
@@ -1833,26 +2051,6 @@
                                         ;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
                                         ;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
                                         ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
-     ;; management functions
-     ;;/Encoding functionality
-     ;;   Input Handling Functions  {:rettype :;// :rettype }[Module: core]
-     ;;//------------------------------------------------------------------------------------
-     ;;
-     ;;// Input-related functions: keyboard
-                                        ;Gestures and Touch Handling Functions  {:rettype :;// :rettype }[Module: rgestures]
-     ;;//------------------------------------------------------------------------------------
-     :SetGesturesEnabled {:rettype :void :argtypes [[flags :int32]]}
-     :IsGestureDetected {:rettype :int8 :argtypes [[gesture :int32]]}
-     :GetGestureDetected {:rettype :int32 :argtypes []}
-     :GetGestureHoldDuration {:rettype :float :argtypes []}
-     :GetGestureDragVector {:rettype :vec2 :argtypes []}
-     :GetGestureDragAngle {:rettype :float :argtypes []}
-     :GetGesturePinchVector {:rettype :vec2 :argtypes []}
-     :GetGesturePinchAngle {:rettype :float :argtypes []}
-                                        ;:camera-3d System Functions  {:rettype :;// :rettype }[Module: rcamera]
-     ;;//------------------------------------------------------------------------------------
-     :UpdateCamera3D {:rettype :void :argtypes [[camera-3d :pointer] [mode :int32]]}
-     :UpdateCameraPro {:rettype :void :argtypes [[camera-3d :pointer] [movement :vec3] [rotation :vec3] [zoom :float32]]}
                                         ;Basic Shapes Drawing Functions  {:rettype :;// :rettype }[Module: shapes]
      ;;//------------------------------------------------------------------------------------
      ;;// Set texture and rectangle to be used on shapes drawing
