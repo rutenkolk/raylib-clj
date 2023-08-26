@@ -1,10 +1,6 @@
 (ns raylib-clj.core
   (:gen-class)
   (:require
-   [tech.v3.datatype :as dtype]
-   [tech.v3.datatype.ffi :as ffi]
-   [tech.v3.datatype.ffi.size-t :as ffi.size-t]
-   [tech.v3.datatype.struct :as dt-struct]
    [coffi.mem :as mem]
    [coffi.ffi :as cffi]
    [coffi.layout :as layout]
@@ -28,15 +24,6 @@
 (defn- bool    [name] [name ::mem/byte])
 (defn- pointer [name] [name ::mem/pointer])
 (def- ptr pointer)
-
-(defn- struct->int8-array
-  ([decl-name decl-type]
-   {:name (keyword decl-name)
-    :datatype :int8
-    :n-elems (dt-struct/datatype-size (keyword decl-type))})
-  ([decl-type]
-   {:datatype :int8
-    :n-elems (dt-struct/datatype-size (keyword decl-type))}))
 
 (defmacro define-datatype! [type-name members]
   `(mem/defalias ~(keyword "raylib-clj.core" (name type-name))
