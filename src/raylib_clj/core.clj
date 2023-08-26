@@ -2793,6 +2793,1463 @@
   [:coffi.mem/pointer]
   :raylib-clj.core/image)
 
+
+(coffi.ffi/defcfn
+  image-draw-pixel-v
+  "[image position color] -> void"
+  ImageDrawPixelV
+  [:coffi.mem/pointer :raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-circle
+  "[image centerX centerY radius color] -> void"
+  ImageDrawCircle
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-circle-lines
+  "[image centerX centerY radius color] -> void"
+  ImageDrawCircleLines
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-text-ex
+  "[image font text position fontSize spacing tint] -> void"
+  ImageDrawTextEx
+  [:coffi.mem/pointer
+   :raylib-clj.core/font
+   :coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-line-v
+  "[image start end color] -> void"
+  ImageDrawLineV
+  [:coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-circle-v
+  "[image center radius color] -> void"
+  ImageDrawCircleV
+  [:coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-pixel
+  "[image posX posY color] -> void"
+  ImageDrawPixel
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-line
+  "[image startPosX startPosY endPosX endPosY color] -> void"
+  ImageDrawLine
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw
+  "[image src srcRec dstRec tint] -> void"
+  ImageDraw
+  [:coffi.mem/pointer
+   :raylib-clj.core/image
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-clear-background
+  "[image color] -> void"
+  ImageClearBackground
+  [:coffi.mem/pointer :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-rectangle-v
+  "[image position size color] -> void"
+  ImageDrawRectangleV
+  [:coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-rectangle-rec
+  "[image rec color] -> void"
+  ImageDrawRectangleRec
+  [:coffi.mem/pointer :raylib-clj.core/rectangle :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-circle-lines-v
+  "[image center radius color] -> void"
+  ImageDrawCircleLinesV
+  [:coffi.mem/pointer
+   :raylib-clj.core/vec2
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-rectangle-lines
+  "[image rec thick color] -> void"
+  ImageDrawRectangleLines
+  [:coffi.mem/pointer
+   :raylib-clj.core/rectangle
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-text
+  "[image text posX posY fontSize color] -> void"
+  ImageDrawText
+  [:coffi.mem/pointer
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-draw-rectangle
+  "[image posX posY width height color] -> void"
+  ImageDrawRectangle
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+
+
+
+(coffi.ffi/defcfn
+  load-texture-cubemap
+  "[image layout] -> texture"
+  LoadTextureCubemap
+  [:raylib-clj.core/image :coffi.mem/int]
+  :raylib-clj.core/texture)
+(coffi.ffi/defcfn
+  color-alpha
+  "[color alpha] -> color"
+  ColorAlpha
+  [:raylib-clj.core/color :coffi.mem/float]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  update-texture-rec
+  "[texture rec pixels] -> void"
+  UpdateTextureRec
+  [:raylib-clj.core/texture :raylib-clj.core/rectangle :coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-texture-pro
+  "[texture source dest origin rotation tint] -> void"
+  DrawTexturePro
+  [:raylib-clj.core/texture
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  color-to-hsv
+  "[color] -> vec3"
+  ColorToHSV
+  [:raylib-clj.core/color]
+  :raylib-clj.core/vec3)
+(coffi.ffi/defcfn
+  color-normalize
+  "[color] -> vec4"
+  ColorNormalize
+  [:raylib-clj.core/color]
+  :raylib-clj.core/vec4)
+(coffi.ffi/defcfn
+  color-brightness
+  "[color factor] -> color"
+  ColorBrightness
+  [:raylib-clj.core/color :coffi.mem/float]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  color-contrast
+  "[color contrast] -> color"
+  ColorContrast
+  [:raylib-clj.core/color :coffi.mem/float]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  load-render-texture
+  "[width height] -> render-texture"
+  LoadRenderTexture
+  [:coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/render-texture)
+(coffi.ffi/defcfn
+  unload-render-texture
+  "[target] -> void"
+  UnloadRenderTexture
+  [:raylib-clj.core/render-texture]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  color-to-int
+  "[color] -> int"
+  ColorToInt
+  [:raylib-clj.core/color]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  draw-texture-ex
+  "[texture position rotation scale tint] -> void"
+  DrawTextureEx
+  [:raylib-clj.core/texture
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  fade
+  "[color alpha] -> color"
+  Fade
+  [:raylib-clj.core/color :coffi.mem/float]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  set-texture-wrap
+  "[texture wrap] -> void"
+  SetTextureWrap
+  [:raylib-clj.core/texture :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-pixel-color
+  "[dstPtr color format] -> void"
+  SetPixelColor
+  [:coffi.mem/pointer :raylib-clj.core/color :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-texture-filter
+  "[texture filter] -> void"
+  SetTextureFilter
+  [:raylib-clj.core/texture :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-texture-from-image
+  "[image] -> texture"
+  LoadTextureFromImage
+  [:raylib-clj.core/image]
+  :raylib-clj.core/texture)
+(coffi.ffi/defcfn
+  color-tint
+  "[color tint] -> color"
+  ColorTint
+  [:raylib-clj.core/color :raylib-clj.core/color]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  update-texture
+  "[texture pixels] -> void"
+  UpdateTexture
+  [:raylib-clj.core/texture :coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-texture-rec
+  "[texture source position tint] -> void"
+  DrawTextureRec
+  [:raylib-clj.core/texture
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-texture-mipmaps
+  "[texture] -> void"
+  GenTextureMipmaps
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-color
+  "[hexValue] -> color"
+  GetColor
+  [:coffi.mem/int]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  draw-texture-v
+  "[texture position tint] -> void"
+  DrawTextureV
+  [:raylib-clj.core/texture :raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  color-from-normalized
+  "[normalized] -> color"
+  ColorFromNormalized
+  [:raylib-clj.core/vec4]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  color-from-hsv
+  "[hue saturation value] -> color"
+  ColorFromHSV
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/float]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  render-texture-ready?
+  "[target] -> bool"
+  IsRenderTextureReady
+  [:raylib-clj.core/render-texture]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  load-texture
+  "[fileName] -> texture"
+  LoadTexture
+  [:coffi.mem/pointer]
+  :raylib-clj.core/texture)
+(coffi.ffi/defcfn
+  get-pixel-color
+  "[srcPtr format] -> color"
+  GetPixelColor
+  [:coffi.mem/pointer :coffi.mem/int]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  draw-texture
+  "[texture posX posY tint] -> void"
+  DrawTexture
+  [:raylib-clj.core/texture
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-texture-n-patch
+  "[texture nPatchInfo dest origin rotation tint] -> void"
+  DrawTextureNPatch
+  [:raylib-clj.core/texture
+   :raylib-clj.core/n-patch-info
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-texture
+  "[texture] -> void"
+  UnloadTexture
+  [:raylib-clj.core/texture]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  color-alpha-blend
+  "[dst src tint] -> color"
+  ColorAlphaBlend
+  [:raylib-clj.core/color :raylib-clj.core/color :raylib-clj.core/color]
+  :raylib-clj.core/color)
+(coffi.ffi/defcfn
+  get-pixel-data-size
+  "[width height format] -> int"
+  GetPixelDataSize
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  texture-ready?
+  "[texture] -> bool"
+  IsTextureReady
+  [:raylib-clj.core/texture]
+  :coffi.mem/byte)
+
+
+
+(coffi.ffi/defcfn
+  load-utf-8
+  "[codepoints length] -> pointer"
+  LoadUTF8
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-codepoint-next
+  "[text codepointSize] -> int"
+  GetCodepointNext
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-glyph-info
+  "[font codepoint] -> glyph-info"
+  GetGlyphInfo
+  [:raylib-clj.core/font :coffi.mem/int]
+  :raylib-clj.core/glyph-info)
+(coffi.ffi/defcfn
+  load-codepoints
+  "[text count] -> pointer"
+  LoadCodepoints
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-subtext
+  "[text position length] -> pointer"
+  TextSubtext
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-to-lower
+  "[text] -> pointer"
+  TextToLower
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-glyph-atlas-rec
+  "[font codepoint] -> rectangle"
+  GetGlyphAtlasRec
+  [:raylib-clj.core/font :coffi.mem/int]
+  :raylib-clj.core/rectangle)
+(coffi.ffi/defcfn
+  get-codepoint
+  "[text codepointSize] -> int"
+  GetCodepoint
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  measure-text
+  "[text fontSize] -> int"
+  MeasureText
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  text-append
+  "[text append position] -> void"
+  TextAppend
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-glyph-index
+  "[font codepoint] -> int"
+  GetGlyphIndex
+  [:raylib-clj.core/font :coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  text-join
+  "[textList count delimiter] -> pointer"
+  TextJoin
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-is-equal
+  "[text1 text2] -> byte"
+  TextIsEqual
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  text-copy
+  "[dst src] -> int"
+  TextCopy
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  text-find-index
+  "[text find] -> int"
+  TextFindIndex
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  measure-text-ex
+  "[font text fontSize spacing] -> vec2"
+  MeasureTextEx
+  [:raylib-clj.core/font :coffi.mem/pointer :coffi.mem/float :coffi.mem/float]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  unload-utf-8
+  "[text] -> void"
+  UnloadUTF8
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-codepoint-count
+  "[text] -> int"
+  GetCodepointCount
+  [:coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  set-text-line-spacing
+  "[spacing] -> void"
+  SetTextLineSpacing
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-codepoint-previous
+  "[text codepointSize] -> int"
+  GetCodepointPrevious
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  text-length
+  "[text] -> int"
+  TextLength
+  [:coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  text-replace
+  "[text replace by] -> pointer"
+  TextReplace
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-to-pascal
+  "[text] -> pointer"
+  TextToPascal
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-split
+  "[text delimiter count] -> pointer"
+  TextSplit
+  [:coffi.mem/pointer :coffi.mem/byte :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-insert
+  "[text insert position] -> pointer"
+  TextInsert
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  text-to-upper
+  "[text] -> pointer"
+  TextToUpper
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  codepoint-to-utf-8
+  "[codepoint utf8Size] -> pointer"
+  CodepointToUTF8
+  [:coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  unload-codepoints
+  "[codepoints] -> void"
+  UnloadCodepoints
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  text-to-integer
+  "[text] -> int"
+  TextToInteger
+  [:coffi.mem/pointer]
+  :coffi.mem/int)
+
+
+(coffi.ffi/defcfn
+  draw-circle-3-d
+  "[center radius rotationAxis rotationAngle color] -> void"
+  DrawCircle3D
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cylinder-ex
+  "[startPos endPos startRadius endRadius sides color] -> void"
+  DrawCylinderEx
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cube-wires-v
+  "[position size color] -> void"
+  DrawCubeWiresV
+  [:raylib-clj.core/vec3 :raylib-clj.core/vec3 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-capsule-wires
+  "[startPos endPos radius slices rings color] -> void"
+  DrawCapsuleWires
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-ray
+  "[ray color] -> void"
+  DrawRay
+  [:raylib-clj.core/ray :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cylinder-wires
+  "[position radiusTop radiusBottom height slices color] -> void"
+  DrawCylinderWires
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-sphere-wires
+  "[centerPos radius rings slices color] -> void"
+  DrawSphereWires
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-triangle-strip-3-d
+  "[points pointCount color] -> void"
+  DrawTriangleStrip3D
+  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-plane
+  "[centerPos size color] -> void"
+  DrawPlane
+  [:raylib-clj.core/vec3 :raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-line-3-d
+  "[startPos endPos color] -> void"
+  DrawLine3D
+  [:raylib-clj.core/vec3 :raylib-clj.core/vec3 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cube-wires
+  "[position width height length color] -> void"
+  DrawCubeWires
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cube-v
+  "[position size color] -> void"
+  DrawCubeV
+  [:raylib-clj.core/vec3 :raylib-clj.core/vec3 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cube
+  "[position width height length color] -> void"
+  DrawCube
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-point-3-d
+  "[position color] -> void"
+  DrawPoint3D
+  [:raylib-clj.core/vec3 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-triangle-3-d
+  "[v1 v2 v3 color] -> void"
+  DrawTriangle3D
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-sphere
+  "[centerPos radius color] -> void"
+  DrawSphere
+  [:raylib-clj.core/vec3 :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cylinder-wires-ex
+  "[startPos endPos startRadius endRadius sides color] -> void"
+  DrawCylinderWiresEx
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-capsule
+  "[startPos endPos radius slices rings color] -> void"
+  DrawCapsule
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-sphere-ex
+  "[centerPos radius rings slices color] -> void"
+  DrawSphereEx
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-grid
+  "[slices spacing] -> void"
+  DrawGrid
+  [:coffi.mem/int :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-cylinder
+  "[position radiusTop radiusBottom height slices color] -> void"
+  DrawCylinder
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+
+
+
+(coffi.ffi/defcfn
+  gen-mesh-cone
+  "[radius height slices] -> mesh"
+  GenMeshCone
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  gen-mesh-knot
+  "[radius size radSeg sides] -> mesh"
+  GenMeshKnot
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  unload-model
+  "[model] -> void"
+  UnloadModel
+  [:raylib-clj.core/model]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-billboard
+  "[camera texture position size tint] -> void"
+  DrawBillboard
+  [:raylib-clj.core/camera-3d
+   :raylib-clj.core/texture
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-model-ex
+  "[model position rotationAxis rotationAngle scale tint] -> void"
+  DrawModelEx
+  [:raylib-clj.core/model
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/vec3
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-model
+  "[fileName] -> model"
+  LoadModel
+  [:coffi.mem/pointer]
+  :raylib-clj.core/model)
+(coffi.ffi/defcfn
+  draw-billboard-rec
+  "[camera texture source position size tint] -> void"
+  DrawBillboardRec
+  [:raylib-clj.core/camera-3d
+   :raylib-clj.core/texture
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-mesh-poly
+  "[sides radius] -> mesh"
+  GenMeshPoly
+  [:coffi.mem/int :coffi.mem/float]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  gen-mesh-cylinder
+  "[radius height slices] -> mesh"
+  GenMeshCylinder
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  export-mesh
+  "[mesh fileName] -> byte"
+  ExportMesh
+  [:raylib-clj.core/mesh :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  gen-mesh-hemi-sphere
+  "[radius rings slices] -> mesh"
+  GenMeshHemiSphere
+  [:coffi.mem/float :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  gen-mesh-cube
+  "[width height length] -> mesh"
+  GenMeshCube
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/float]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  draw-model
+  "[model position scale tint] -> void"
+  DrawModel
+  [:raylib-clj.core/model
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-mesh-tangents
+  "[mesh] -> void"
+  GenMeshTangents
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-mesh
+  "[mesh] -> void"
+  UnloadMesh
+  [:raylib-clj.core/mesh]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-mesh-instanced
+  "[mesh material transforms instances] -> void"
+  DrawMeshInstanced
+  [:raylib-clj.core/mesh
+   :raylib-clj.core/material
+   :coffi.mem/pointer
+   :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  update-mesh-buffer
+  "[mesh index data dataSize offset] -> void"
+  UpdateMeshBuffer
+  [:raylib-clj.core/mesh
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-model-bounding-box
+  "[model] -> bounding-box"
+  GetModelBoundingBox
+  [:raylib-clj.core/model]
+  :raylib-clj.core/bounding-box)
+(coffi.ffi/defcfn
+  upload-mesh
+  "[mesh dynamic] -> void"
+  UploadMesh
+  [:coffi.mem/pointer :coffi.mem/byte]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  model-ready?
+  "[model] -> bool"
+  IsModelReady
+  [:raylib-clj.core/model]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  gen-mesh-cubicmap
+  "[cubicmap cubeSize] -> mesh"
+  GenMeshCubicmap
+  [:raylib-clj.core/image :raylib-clj.core/vec3]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  load-model-from-mesh
+  "[mesh] -> model"
+  LoadModelFromMesh
+  [:raylib-clj.core/mesh]
+  :raylib-clj.core/model)
+(coffi.ffi/defcfn
+  draw-mesh
+  "[mesh material transform] -> void"
+  DrawMesh
+  [:raylib-clj.core/mesh :raylib-clj.core/material :raylib-clj.core/mat4]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-mesh-plane
+  "[width length resX resZ] -> mesh"
+  GenMeshPlane
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  gen-mesh-sphere
+  "[radius rings slices] -> mesh"
+  GenMeshSphere
+  [:coffi.mem/float :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  draw-model-wires
+  "[model position scale tint] -> void"
+  DrawModelWires
+  [:raylib-clj.core/model
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-model-wires-ex
+  "[model position rotationAxis rotationAngle scale tint] -> void"
+  DrawModelWiresEx
+  [:raylib-clj.core/model
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/vec3
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-mesh-heightmap
+  "[heightmap size] -> mesh"
+  GenMeshHeightmap
+  [:raylib-clj.core/image :raylib-clj.core/vec3]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  get-mesh-bounding-box
+  "[mesh] -> bounding-box"
+  GetMeshBoundingBox
+  [:raylib-clj.core/mesh]
+  :raylib-clj.core/bounding-box)
+(coffi.ffi/defcfn
+  gen-mesh-torus
+  "[radius size radSeg sides] -> mesh"
+  GenMeshTorus
+  [:coffi.mem/float :coffi.mem/float :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/mesh)
+(coffi.ffi/defcfn
+  draw-billboard-pro
+  "[camera texture source position up size origin rotation tint] -> void"
+  DrawBillboardPro
+  [:raylib-clj.core/camera-3d
+   :raylib-clj.core/texture
+   :raylib-clj.core/rectangle
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-bounding-box
+  "[box color] -> void"
+  DrawBoundingBox
+  [:raylib-clj.core/bounding-box :raylib-clj.core/color]
+  :coffi.mem/void)
+
+
+
+(coffi.ffi/defcfn
+  get-ray-collision-triangle
+  "[ray p1 p2 p3] -> ray-collision"
+  GetRayCollisionTriangle
+  [:raylib-clj.core/ray
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3]
+  :raylib-clj.core/ray-collision)
+(coffi.ffi/defcfn
+  material-ready?
+  "[material] -> bool"
+  IsMaterialReady
+  [:raylib-clj.core/material]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  update-model-animation
+  "[model anim frame] -> void"
+  UpdateModelAnimation
+  [:raylib-clj.core/model :raylib-clj.core/model-animation :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-material
+  "[material] -> void"
+  UnloadMaterial
+  [:raylib-clj.core/material]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-spheres
+  "[center1 radius1 center2 radius2] -> byte"
+  CheckCollisionSpheres
+  [:raylib-clj.core/vec3
+   :coffi.mem/float
+   :raylib-clj.core/vec3
+   :coffi.mem/float]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  model-animation-valid?
+  "[model anim] -> bool"
+  IsModelAnimationValid
+  [:raylib-clj.core/model :raylib-clj.core/model-animation]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-ray-collision-sphere
+  "[ray center radius] -> ray-collision"
+  GetRayCollisionSphere
+  [:raylib-clj.core/ray :raylib-clj.core/vec3 :coffi.mem/float]
+  :raylib-clj.core/ray-collision)
+(coffi.ffi/defcfn
+  check-collision-box-sphere
+  "[box center radius] -> byte"
+  CheckCollisionBoxSphere
+  [:raylib-clj.core/bounding-box :raylib-clj.core/vec3 :coffi.mem/float]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  unload-model-animations
+  "[animations count] -> void"
+  UnloadModelAnimations
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-ray-collision-mesh
+  "[ray mesh transform] -> ray-collision"
+  GetRayCollisionMesh
+  [:raylib-clj.core/ray :raylib-clj.core/mesh :raylib-clj.core/mat4]
+  :raylib-clj.core/ray-collision)
+(coffi.ffi/defcfn
+  set-material-texture
+  "[material mapType texture] -> void"
+  SetMaterialTexture
+  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/texture]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-ray-collision-quad
+  "[ray p1 p2 p3 p4] -> ray-collision"
+  GetRayCollisionQuad
+  [:raylib-clj.core/ray
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3
+   :raylib-clj.core/vec3]
+  :raylib-clj.core/ray-collision)
+(coffi.ffi/defcfn
+  get-ray-collision-box
+  "[ray box] -> ray-collision"
+  GetRayCollisionBox
+  [:raylib-clj.core/ray :raylib-clj.core/bounding-box]
+  :raylib-clj.core/ray-collision)
+(coffi.ffi/defcfn
+  set-model-mesh-material
+  "[model meshId materialId] -> void"
+  SetModelMeshMaterial
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-model-animations
+  "[fileName animCount] -> pointer"
+  LoadModelAnimations
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  load-material-default
+  "[] -> material"
+  LoadMaterialDefault
+  []
+  :raylib-clj.core/material)
+(coffi.ffi/defcfn
+  load-materials
+  "[fileName materialCount] -> pointer"
+  LoadMaterials
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  check-collision-boxes
+  "[box1 box2] -> byte"
+  CheckCollisionBoxes
+  [:raylib-clj.core/bounding-box :raylib-clj.core/bounding-box]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  unload-model-animation
+  "[anim] -> void"
+  UnloadModelAnimation
+  [:raylib-clj.core/model-animation]
+  :coffi.mem/void)
+
+
+
+(coffi.ffi/defcfn
+  load-music-stream
+  "[fileName] -> music"
+  LoadMusicStream
+  [:coffi.mem/pointer]
+  :raylib-clj.core/music)
+(coffi.ffi/defcfn
+  load-music-stream-from-memory
+  "[fileType data dataSize] -> music"
+  LoadMusicStreamFromMemory
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  :raylib-clj.core/music)
+(coffi.ffi/defcfn
+  update-sound
+  "[sound data sampleCount] -> void"
+  UpdateSound
+  [:raylib-clj.core/sound :coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-music-stream
+  "[music] -> void"
+  UnloadMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-wave
+  "[fileName] -> wave"
+  LoadWave
+  [:coffi.mem/pointer]
+  :raylib-clj.core/wave)
+(coffi.ffi/defcfn
+  export-wave
+  "[wave fileName] -> byte"
+  ExportWave
+  [:raylib-clj.core/wave :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-audio-stream-pan
+  "[stream pan] -> void"
+  SetAudioStreamPan
+  [:raylib-clj.core/audio-stream :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  stop-sound
+  "[sound] -> void"
+  StopSound
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  export-wave-as-code
+  "[wave fileName] -> byte"
+  ExportWaveAsCode
+  [:raylib-clj.core/wave :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  stop-music-stream
+  "[music] -> void"
+  StopMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-audio-stream
+  "[sampleRate sampleSize channels] -> audio-stream"
+  LoadAudioStream
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/audio-stream)
+(coffi.ffi/defcfn
+  set-audio-stream-buffer-size-default
+  "[size] -> void"
+  SetAudioStreamBufferSizeDefault
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-sound-from-wave
+  "[wave] -> sound"
+  LoadSoundFromWave
+  [:raylib-clj.core/wave]
+  :raylib-clj.core/sound)
+(coffi.ffi/defcfn
+  set-music-pitch
+  "[music pitch] -> void"
+  SetMusicPitch
+  [:raylib-clj.core/music :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-music-time-length
+  "[music] -> float"
+  GetMusicTimeLength
+  [:raylib-clj.core/music]
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  resume-music-stream
+  "[music] -> void"
+  ResumeMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-music-volume
+  "[music volume] -> void"
+  SetMusicVolume
+  [:raylib-clj.core/music :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  sound-playing?
+  "[sound] -> bool"
+  IsSoundPlaying
+  [:raylib-clj.core/sound]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  sound-ready?
+  "[sound] -> bool"
+  IsSoundReady
+  [:raylib-clj.core/sound]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  update-music-stream
+  "[music] -> void"
+  UpdateMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  play-music-stream
+  "[music] -> void"
+  PlayMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-sound-pan
+  "[sound pan] -> void"
+  SetSoundPan
+  [:raylib-clj.core/sound :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  music-ready?
+  "[music] -> bool"
+  IsMusicReady
+  [:raylib-clj.core/music]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  update-audio-stream
+  "[stream data frameCount] -> void"
+  UpdateAudioStream
+  [:raylib-clj.core/audio-stream :coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  play-sound
+  "[sound] -> void"
+  PlaySound
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  resume-sound
+  "[sound] -> void"
+  ResumeSound
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  audio-stream-ready?
+  "[stream] -> bool"
+  IsAudioStreamReady
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  load-sound
+  "[fileName] -> sound"
+  LoadSound
+  [:coffi.mem/pointer]
+  :raylib-clj.core/sound)
+(coffi.ffi/defcfn
+  music-stream-playing?
+  "[music] -> bool"
+  IsMusicStreamPlaying
+  [:raylib-clj.core/music]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  seek-music-stream
+  "[music position] -> void"
+  SeekMusicStream
+  [:raylib-clj.core/music :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  audio-stream-playing?
+  "[stream] -> bool"
+  IsAudioStreamPlaying
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  load-wave-from-memory
+  "[fileType fileData dataSize] -> wave"
+  LoadWaveFromMemory
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  :raylib-clj.core/wave)
+(coffi.ffi/defcfn
+  unload-sound
+  "[sound] -> void"
+  UnloadSound
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  pause-music-stream
+  "[music] -> void"
+  PauseMusicStream
+  [:raylib-clj.core/music]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  pause-audio-stream
+  "[stream] -> void"
+  PauseAudioStream
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-audio-stream-pitch
+  "[stream pitch] -> void"
+  SetAudioStreamPitch
+  [:raylib-clj.core/audio-stream :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  stop-audio-stream
+  "[stream] -> void"
+  StopAudioStream
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  wave-copy
+  "[wave] -> wave"
+  WaveCopy
+  [:raylib-clj.core/wave]
+  :raylib-clj.core/wave)
+(coffi.ffi/defcfn
+  set-audio-stream-volume
+  "[stream volume] -> void"
+  SetAudioStreamVolume
+  [:raylib-clj.core/audio-stream :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  play-audio-stream
+  "[stream] -> void"
+  PlayAudioStream
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  wave-ready?
+  "[wave] -> bool"
+  IsWaveReady
+  [:raylib-clj.core/wave]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-sound-volume
+  "[sound volume] -> void"
+  SetSoundVolume
+  [:raylib-clj.core/sound :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  wave-format
+  "[wave sampleRate sampleSize channels] -> void"
+  WaveFormat
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-wave-samples
+  "[samples] -> void"
+  UnloadWaveSamples
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   load-sound-alias
+   "[source] -> sound"
+   LoadSoundAlias
+   [:raylib-clj.core/sound]
+   :raylib-clj.core/sound))
+(coffi.ffi/defcfn
+  audio-stream-processed?
+  "[stream] -> bool"
+  IsAudioStreamProcessed
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-sound-pitch
+  "[sound pitch] -> void"
+  SetSoundPitch
+  [:raylib-clj.core/sound :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  pause-sound
+  "[sound] -> void"
+  PauseSound
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   unload-sound-alias
+   "[alias] -> void"
+   UnloadSoundAlias
+   [:raylib-clj.core/sound]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  load-wave-samples
+  "[wave] -> pointer"
+  LoadWaveSamples
+  [:raylib-clj.core/wave]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-music-time-played
+  "[music] -> float"
+  GetMusicTimePlayed
+  [:raylib-clj.core/music]
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  unload-wave
+  "[wave] -> void"
+  UnloadWave
+  [:raylib-clj.core/wave]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  wave-crop
+  "[wave initSample finalSample] -> void"
+  WaveCrop
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  unload-audio-stream
+  "[stream] -> void"
+  UnloadAudioStream
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-music-pan
+  "[music pan] -> void"
+  SetMusicPan
+  [:raylib-clj.core/music :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  audio-device-ready?
+  "[] -> bool"
+  IsAudioDeviceReady
+  []
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  resume-audio-stream
+  "[stream] -> void"
+  ResumeAudioStream
+  [:raylib-clj.core/audio-stream]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-master-volume
+  "[volume] -> void"
+  SetMasterVolume
+  [:coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  close-audio-device
+  "[] -> void"
+  CloseAudioDevice
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  init-audio-device
+  "[] -> void"
+  InitAudioDevice
+  []
+  :coffi.mem/void)
 (comment
 
   (coffify
@@ -2802,6 +4259,7 @@
 
   (->> '{
          ;TODO: put old defs here
+
 
   }
        (map identity)
@@ -2823,317 +4281,27 @@
     (close-window)
     )
 
-
 )
 
 
-
-
-(comment (ffi/define-library! native-part-1
-
-'{
-     ;; custom callbacks
-     ;;// WARNING: Callbacks setup is intended for advance users
-                                        ;TODO: what are those types?
-                                        ;    :SetTraceLogCallback {:rettype :void :argtypes [TraceLogCallback callback]}
-                                        ;    :SetLoadFileDataCallback {:rettype :void :argtypes [LoadFileDataCallback callback]}
-                                        ;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
-                                        ;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
-                                        ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
-                                        ;   :texture Loading and Drawing Functions  {:rettype :;// :rettype }[Module: textures]
-     ;;//------------------------------------------------------------------------------------
-     ;;
-     ;;// :image loading functions
-     ;;// NOTE: These functions do not require GPU access
-     ;; drawing functions
-     ;;// NOTE: :image software-rendering functions (CPU)
-     :ImageClearBackground {:rettype :void :argtypes [[image :pointer] [color :color]]}
-     :ImageDrawPixel {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [color :color]]}
-     :ImageDrawPixelV {:rettype :void :argtypes [[image :pointer] [position :vec2] [color :color]]}
-     :ImageDrawLine {:rettype :void :argtypes [[image :pointer] [startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color :color]]}
-     :ImageDrawLineV {:rettype :void :argtypes [[image :pointer] [start :vec2] [end :vec2] [color :color]]}
-     :ImageDrawCircle {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
-     :ImageDrawCircleV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
-     :ImageDrawCircleLines {:rettype :void :argtypes [[image :pointer] [centerX :int32] [centerY :int32] [radius :int32] [color :color]]}
-     :ImageDrawCircleLinesV {:rettype :void :argtypes [[image :pointer] [center :vec2] [radius :int32] [color :color]]}
-     :ImageDrawRectangle {:rettype :void :argtypes [[image :pointer] [posX :int32] [posY :int32] [width :int32] [height :int32] [color :color]]}
-     :ImageDrawRectangleV {:rettype :void :argtypes [[image :pointer] [position :vec2] [size :vec2] [color :color]]}
-     :ImageDrawRectangleRec {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [color :color]]}
-     :ImageDrawRectangleLines {:rettype :void :argtypes [[image :pointer] [rec :rectangle] [thick :int32] [color :color]]}
-     :ImageDraw {:rettype :void :argtypes [[image :pointer] [src :image] [srcRec :rectangle] [dstRec :rectangle] [tint :color]]}
-     :ImageDrawText {:rettype :void :argtypes [[image :pointer] [text :pointer] [posX :int32] [posY :int32] [fontSize :int32] [color :color]]}
-     :ImageDrawTextEx {:rettype :void :argtypes [[image :pointer] [font :font] [text :pointer] [position :vec2] [fontSize :float32] [spacing :float32] [tint :color]]}
-     ;; loading functions
-     ;;// NOTE: These functions require GPU access
-     :LoadTexture {:rettype :texture :argtypes [[fileName :pointer]]}
-     :LoadTextureFrom:image {:rettype :texture :argtypes [[image :image]]}
-     :LoadTextureCubemap {:rettype :texture :argtypes [[image :image] [layout :int32]]}
-     :LoadRenderTexture {:rettype :render-texture :argtypes [[width :int32] [height :int32]]}
-     :IsTextureReady {:rettype :int8 :argtypes [[texture :texture]]}
-     :UnloadTexture {:rettype :void :argtypes [[texture :texture]]}
-     :IsRenderTextureReady {:rettype :int8 :argtypes [[target :render-texture]]}
-     :UnloadRenderTexture {:rettype :void :argtypes [[target :render-texture]]}
-     :UpdateTexture {:rettype :void :argtypes [[texture :texture] [pixels :pointer]]}
-     :UpdateTextureRec {:rettype :void :argtypes [[texture :texture] [rec :rectangle] [pixels :pointer]]}
-     ;; configuration functions
-     :GenTextureMipmaps {:rettype :void :argtypes [[texture :pointer]]}
-     :SetTextureFilter {:rettype :void :argtypes [[texture :texture] [filter :int32]]}
-     :SetTextureWrap {:rettype :void :argtypes [[texture :texture] [wrap :int32]]}
-     ;; drawing functions
-     :DrawTexture {:rettype :void :argtypes [[texture :texture] [posX :int32] [posY :int32] [tint :color]]}
-     :DrawTextureV {:rettype :void :argtypes [[texture :texture] [position :vec2] [tint :color]]}
-     :DrawTextureEx {:rettype :void :argtypes [[texture :texture] [position :vec2] [rotation :float32] [scale :float32] [tint :color]]}
-     :DrawTextureRec {:rettype :void :argtypes [[texture :texture] [source :rectangle] [position :vec2] [tint :color]]}
-     :DrawTexturePro {:rettype :void :argtypes [[texture :texture] [source :rectangle] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
-     :DrawTextureNPatch {:rettype :void :argtypes [[texture :texture] [nPatchInfo :n-patch-info] [dest :rectangle] [origin :vec2] [rotation :float32] [tint :color]]}
-
-     :Fade {:rettype :color :argtypes [[color :color] [alpha :float32]]}
-     :ColorToInt {:rettype :int32 :argtypes [[color :color]]}
-     :ColorNormalize {:rettype :vec4 :argtypes [[color :color]]}
-     :ColorFromNormalized {:rettype :color :argtypes [[normalized :vec4]]}
-     :ColorToHSV {:rettype :vec3 :argtypes [[color :color]]}
-     :ColorFromHSV {:rettype :color :argtypes [[hue :float32] [saturation :float32] [value :float32]]}
-     :ColorTint {:rettype :color :argtypes [[color :color] [tint :color]]}
-     :ColorBrightness {:rettype :color :argtypes [[color :color] [factor :float32]]}
-     :ColorContrast {:rettype :color :argtypes [[color :color] [contrast :float32]]}
-     :ColorAlpha {:rettype :color :argtypes [[color :color] [alpha :float32]]}
-     :ColorAlphaBlend {:rettype :color :argtypes [[dst :color] [src :color] [tint :color]]}
-     :GetColor {:rettype :color :argtypes [[hexValue :int32]]}
-     :GetPixelColor {:rettype :color :argtypes [[srcPtr :pointer] [format :int32]]}
-     :SetPixelColor {:rettype :void :argtypes [[dstPtr :pointer] [color :color] [format :int32]]}
-     :GetPixelDataSize {:rettype :int32 :argtypes [[width :int32] [height :int32] [format :int32]]}
-                                        ;:font Loading and Text Drawing Functions  {:rettype :;// :argtypes }[Module: text]
-     ;;//------------------------------------------------------------------------------------
-     ;;
-     ;;// :font loading/unloading functions
-
-     :SetTextLineSpacing {:rettype :void :argtypes [[spacing :int32]]}
-     :MeasureText {:rettype :int32 :argtypes [[text :pointer] [fontSize :int32]]}
-     :MeasureTextEx {:rettype :vec2 :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32]]}
-     :GetGlyphIndex {:rettype :int32 :argtypes [[font :font] [codepoint :int32]]}
-     :GetGlyphInfo {:rettype :glyph-info :argtypes [[font :font] [codepoint :int32]]}
-     :GetGlyphAtlasRec {:rettype :rectangle :argtypes [[font :font] [codepoint :int32]]}
-     ;;
-     ;;// Text codepoints management functions (unicode characters)
-     :LoadUTF8 {:rettype :pointer :argtypes [[codepoints :pointer] [length :int32]]}
-     :UnloadUTF8 {:rettype :void :argtypes [[text :pointer]]}
-     :LoadCodepoints {:rettype :pointer :argtypes [[text :pointer] [count :pointer]]}
-     :UnloadCodepoints {:rettype :void :argtypes [[codepoints :pointer]]}
-     :GetCodepointCount {:rettype :int32 :argtypes [[text :pointer]]}
-     :GetCodepoint {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-     :GetCodepointNext {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-     :GetCodepointPrevious {:rettype :int32 :argtypes [[text :pointer] [codepointSize :pointer]]}
-     :CodepointToUTF8 {:rettype :pointer :argtypes [[codepoint :int32] [utf8Size :pointer]]}
-     ;;
-     ;;// Text strings management functions (no UTF-8 strings, only byte chars)
-     ;;// NOTE: Some strings allocate memory internally for returned strings, just be careful!
-     :TextCopy {:rettype :int32 :argtypes [[dst :pointer] [src :pointer]]}
-     :TextIsEqual {:rettype :int8 :argtypes [[text1 :pointer] [text2 :pointer]]}
-     :TextLength {:rettype :int32 :argtypes [[text :pointer]]}
-                                        ;TODO: what to do here?
-                                        ;:TextFormat {:rettype :pointer :argtypes [[text :pointer] ...]}
-     :TextSubtext {:rettype :pointer :argtypes [[text :pointer] [position :int32] [length :int32]]}
-     :TextReplace {:rettype :pointer :argtypes [[text :pointer] [replace :pointer] [by :pointer]]}
-     :TextInsert {:rettype :pointer :argtypes [[text :pointer] [insert :pointer] [position :int32]]}
-     :TextJoin {:rettype :pointer :argtypes [[textList :pointer] [count :int32] [delimiter :pointer]]}
-     :TextSplit {:rettype :pointer :argtypes [[text :pointer] [delimiter :int8] [count :pointer]]}
-     :TextAppend {:rettype :void :argtypes [[text :pointer] [append :pointer] [position :pointer]]}
-     :TextFindIndex {:rettype :int32 :argtypes [[text :pointer] [find :pointer]]}
-     :TextToUpper {:rettype :pointer :argtypes [[text :pointer]]}
-     :TextToLower {:rettype :pointer :argtypes [[text :pointer]]}
-     :TextToPascal {:rettype :pointer :argtypes [[text :pointer]]}
-     :TextToInteger {:rettype :int32 :argtypes [[text :pointer]]}
-     ;;// Basic 3d Shapes Drawing Functions (Module: models)
-     ;;//------------------------------------------------------------------------------------
-     ;;
-     ;;// Basic geometric 3D shapes drawing functions
-     :DrawLine3D {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [color :color]]}
-     :DrawPoint3D {:rettype :void :argtypes [[position :vec3] [color :color]]}
-     :DrawCircle3D {:rettype :void :argtypes [[center :vec3] [radius :float32] [rotationAxis :vec3] [rotationAngle :float32] [color :color]]}
-     :DrawTriangle3D {:rettype :void :argtypes [[v1 :vec3] [v2 :vec3] [v3 :vec3] [color :color]]}
-     :DrawTriangleStrip3D {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color :color]]}
-     :DrawCube {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
-     :DrawCubeV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
-     :DrawCubeWires {:rettype :void :argtypes [[position :vec3] [width :float32] [height :float32] [length :float32] [color :color]]}
-     :DrawCubeWiresV {:rettype :void :argtypes [[position :vec3] [size :vec3] [color :color]]}
-     :DrawSphere {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [color :color]]}
-     :DrawSphereEx {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
-     :DrawSphereWires {:rettype :void :argtypes [[centerPos :vec3] [radius :float32] [rings :int32] [slices :int32] [color :color]]}
-     :DrawCylinder {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
-     :DrawCylinderEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
-     :DrawCylinderWires {:rettype :void :argtypes [[position :vec3] [radiusTop :float32] [radiusBottom :float32] [height :float32] [slices :int32] [color :color]]}
-     :DrawCylinderWiresEx {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [startRadius :float32] [endRadius :float32] [sides :int32] [color :color]]}
-     :DrawCapsule {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
-     :DrawCapsuleWires {:rettype :void :argtypes [[startPos :vec3] [endPos :vec3] [radius :float32] [slices :int32] [rings :int32] [color :color]]}
-     :DrawPlane {:rettype :void :argtypes [[centerPos :vec3] [size :vec2] [color :color]]}
-     :DrawRay {:rettype :void :argtypes [[ray :ray] [color :color]]}
-     :DrawGrid {:rettype :void :argtypes [[slices :int32] [spacing :float32]]}
-     ;;// :model 3d Loading and Drawing Functions (Module: models)
-     ;;//------------------------------------------------------------------------------------
-     ;;
-     ;;// :model management functions
-     :LoadModel {:rettype :model :argtypes [[fileName :pointer]]}
-     :LoadModelFromMesh {:rettype :model :argtypes [[mesh :mesh]]}
-     :IsModelReady {:rettype :int8 :argtypes [[model :model]]}
-     :UnloadModel {:rettype :void :argtypes [[model :model]]}
-     :GetModelBoundingBox {:rettype :bounding-box :argtypes [[model :model]]}
-
-     :DrawModel {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
-     :DrawModelEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
-     :DrawModelWires {:rettype :void :argtypes [[model :model] [position :vec3] [scale :float32] [tint :color]]}
-     :DrawModelWiresEx {:rettype :void :argtypes [[model :model] [position :vec3] [rotationAxis :vec3] [rotationAngle :float32] [scale :vec3] [tint :color]]}
-     :DrawBoundingBox {:rettype :void :argtypes [[box :bounding-box] [color :color]]}
-     :DrawBillboard {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [position :vec3] [size :float32] [tint :color]]}
-     :DrawBillboardRec {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [size :vec2] [tint :color]]}
-     :DrawBillboardPro {:rettype :void :argtypes [[camera :camera-3d] [texture :texture] [source :rectangle] [position :vec3] [up :vec3] [size :vec2] [origin :vec2] [rotation :float32] [tint :color]]}
-     ;;
-     ;;// :mesh management functions
-     :UploadMesh {:rettype :void :argtypes [[mesh :pointer] [dynamic :int8]]}
-     :UpdateMeshBuffer {:rettype :void :argtypes [[mesh :mesh] [index :int32] [data :pointer] [dataSize :int32] [offset :int32]]}
-     :UnloadMesh {:rettype :void :argtypes [[mesh :mesh]]}
-     :DrawMesh {:rettype :void :argtypes [[mesh :mesh] [material :material] [transform :mat4]]}
-     :DrawMeshInstanced {:rettype :void :argtypes [[mesh :mesh] [material :material] [transforms :pointer] [instances :int32]]}
-     :ExportMesh {:rettype :int8 :argtypes [[mesh :mesh] [fileName :pointer]]}
-     :GetMeshBoundingBox {:rettype :bounding-box :argtypes [[mesh :mesh]]}
-     :GenMeshTangents {:rettype :void :argtypes [[mesh :pointer]]}
-     ;; generation functions
-     :GenMeshPoly {:rettype :mesh :argtypes [[sides :int32] [radius :float32]]}
-     :GenMeshPlane {:rettype :mesh :argtypes [[width :float32] [length :float32] [resX :int32] [resZ :int32]]}
-     :GenMeshCube {:rettype :mesh :argtypes [[width :float32] [height :float32] [length :float32]]}
-     :GenMeshSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
-     :GenMeshHemiSphere {:rettype :mesh :argtypes [[radius :float32] [rings :int32] [slices :int32]]}
-     :GenMeshCylinder {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
-     :GenMeshCone {:rettype :mesh :argtypes [[radius :float32] [height :float32] [slices :int32]]}
-     :GenMeshTorus {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
-     :GenMeshKnot {:rettype :mesh :argtypes [[radius :float32] [size :float32] [radSeg :int32] [sides :int32]]}
-     :GenMeshHeightmap {:rettype :mesh :argtypes [[heightmap :image] [size :vec3]]}
-     :GenMeshCubicmap {:rettype :mesh :argtypes [[cubicmap :image] [cubeSize :vec3]]}
-     ;;
-
-     }
-   nil ;;no library symbols defined
-   nil ;;no systematic error checking
-   ))
-
-
 (comment
-  (ffi/define-library!
-   native-part-2
-   '{
-     ;;// :material loading/unloading functions
-     :LoadMaterials {:rettype :pointer :argtypes [[fileName :pointer] [materialCount :pointer]]}
-     :LoadMaterialDefault {:rettype :material :argtypes []}
-     :IsMaterialReady {:rettype :int8 :argtypes [[material :material]]}
-     :UnloadMaterial {:rettype :void :argtypes [[material :material]]}
-     :SetMaterialTexture {:rettype :void :argtypes [[material :pointer] [mapType :int32] [texture :texture]]}
-     :SetModelMeshMaterial {:rettype :void :argtypes [[model :pointer] [meshId :int32] [materialId :int32]]}
-     ;;
-     ;;// :model animations loading/unloading functions
-     :LoadModelAnimations {:rettype :pointer :argtypes [[fileName :pointer] [animCount :pointer]]}
-     :UpdateModelAnimation {:rettype :void :argtypes [[model :model] [anim :model-animation] [frame :int32]]}
-     :UnloadModelAnimation {:rettype :void :argtypes [[anim :model-animation]]}
-     :UnloadModelAnimations {:rettype :void :argtypes [[animations :pointer] [count :int32]]}
-     :IsModelAnimationValid {:rettype :int8 :argtypes [[model :model] [anim :model-animation]]}
-
-     :CheckCollisionSpheres {:rettype :int8 :argtypes [[center1 :vec3] [radius1 :float32] [center2 :vec3] [radius2 :float32]]}
-     :CheckCollisionBoxes {:rettype :int8 :argtypes [[box1 :bounding-box] [box2 :bounding-box]]}
-     :CheckCollisionBoxSphere {:rettype :int8 :argtypes [[box :bounding-box] [center :vec3] [radius :float32]]}
-     :GetRayCollisionSphere {:rettype :ray-collision :argtypes [[ray :ray] [center :vec3] [radius :float32]]}
-     :GetRayCollisionBox {:rettype :ray-collision :argtypes [[ray :ray] [box :bounding-box]]}
-     :GetRayCollision:mesh {:rettype :ray-collision :argtypes [[ray :ray] [mesh :mesh] [transform :mat4]]}
-     :GetRayCollisionTriangle {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3]]}
-     :GetRayCollisionQuad {:rettype :ray-collision :argtypes [[ray :ray] [p1 :vec3] [p2 :vec3] [p3 :vec3] [p4 :vec3]]}
-     ;;// Audio Loading and Playing Functions (Module: audio)
-     ;;//------------------------------------------------------------------------------------
-     ;;typedef void (*AudioCallback)(:pointer bufferData, :int32 frames);
-     ;;
-     ;;// Audio device management functions
-     :InitAudioDevice {:rettype :void :argtypes []}
-     :CloseAudioDevice {:rettype :void :argtypes []}
-     :IsAudioDeviceReady {:rettype :int8 :argtypes []}
-     :SetMasterVolume {:rettype :void :argtypes [[volume :float32]]}
-
-     ;;// Wave/:sound loading/unloading functions
-     :LoadWave {:rettype :wave :argtypes [[fileName :pointer]]}
-     :LoadWaveFromMemory {:rettype :wave :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
-     :IsWaveReady {:rettype :int8 :argtypes [[wave :wave]]}
-     :LoadSound {:rettype :sound :argtypes [[fileName :pointer]]}
-     :LoadSoundFromWave {:rettype :sound :argtypes [[wave :wave]]}
-     :LoadSoundAlias {:rettype :sound :argtypes [[source :sound]]}
-     :IsSoundReady {:rettype :int8 :argtypes [[sound :sound]]}
-     :UpdateSound {:rettype :void :argtypes [[sound :sound]  [data :pointer] [sampleCount :int32]]}
-     :UnloadWave {:rettype :void :argtypes [[wave :wave]]}
-     :UnloadSound {:rettype :void :argtypes [[sound :sound]]}
-     :UnloadSoundAlias {:rettype :void :argtypes [[alias :sound]]}
-     :ExportWave {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
-     :ExportWaveAsCode {:rettype :int8 :argtypes [[wave :wave] [fileName :pointer]]}
-     ;; management functions
-     :PlaySound {:rettype :void :argtypes [[sound :sound]]}
-     :StopSound {:rettype :void :argtypes [[sound :sound]]}
-     :PauseSound {:rettype :void :argtypes [[sound :sound]]}
-     :ResumeSound {:rettype :void :argtypes [[sound :sound]]}
-     :IsSoundPlaying {:rettype :int8 :argtypes [[sound :sound]]}
-     :SetSoundVolume {:rettype :void :argtypes [[sound :sound] [volume :float32]]}
-     :SetSoundPitch {:rettype :void :argtypes [[sound :sound] [pitch :float32]]}
-     :SetSoundPan {:rettype :void :argtypes [[sound :sound] [pan :float32]]}
-     :WaveCopy {:rettype :wave :argtypes [[wave :wave]]}
-     :WaveCrop {:rettype :void :argtypes [[wave :pointer] [initSample :int32] [finalSample :int32]]}
-     :WaveFormat {:rettype :void :argtypes [[wave :pointer] [sampleRate :int32] [sampleSize :int32] [channels :int32]]}
-     :LoadWaveSamples {:rettype :pointer :argtypes [[wave :wave]]}
-     :UnloadWaveSamples {:rettype :void :argtypes [[samples :pointer]]}
-
-     :LoadMusicStream {:rettype :music :argtypes [[fileName :pointer]]}
-     :LoadMusicStreamFromMemory {:rettype :music :argtypes [[fileType :pointer] [data :pointer] [dataSize :int32]]}
-     :IsMusicReady {:rettype :int8 :argtypes [[music :music]]}
-     :UnloadMusicStream {:rettype :void :argtypes [[music :music]]}
-     :PlayMusicStream {:rettype :void :argtypes [[music :music]]}
-     :IsMusicStreamPlaying {:rettype :int8 :argtypes [[music :music]]}
-     :UpdateMusicStream {:rettype :void :argtypes [[music :music]]}
-     :StopMusicStream {:rettype :void :argtypes [[music :music]]}
-     :PauseMusicStream {:rettype :void :argtypes [[music :music]]}
-     :ResumeMusicStream {:rettype :void :argtypes [[music :music]]}
-     :SeekMusicStream {:rettype :void :argtypes [[music :music] [position :float32]]}
-     :SetMusicVolume {:rettype :void :argtypes [[music :music] [volume :float32]]}
-     :SetMusicPitch {:rettype :void :argtypes [[music :music] [pitch :float32]]}
-     :SetMusicPan {:rettype :void :argtypes [[music :music] [pan :float32]]}
-     :GetMusicTimeLength {:rettype :float :argtypes [[music :music]]}
-     :GetMusicTimePlayed {:rettype :float :argtypes [[music :music]]}
-     ;; management functions
-     :LoadAudioStream {:rettype :audio-stream :argtypes [[sampleRate :int32] [sampleSize :int32] [channels :int32]]}
-     :IsAudioStreamReady {:rettype :int8 :argtypes [[stream :audio-stream]]}
-     :UnloadAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-     :UpdateAudioStream {:rettype :void :argtypes [[stream :audio-stream] [data :pointer] [frameCount :int32]]}
-     :IsAudioStreamProcessed {:rettype :int8 :argtypes [[stream :audio-stream]]}
-     :PlayAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-     :PauseAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-     :ResumeAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-     :IsAudioStreamPlaying {:rettype :int8 :argtypes [[stream :audio-stream]]}
-     :StopAudioStream {:rettype :void :argtypes [[stream :audio-stream]]}
-     :SetAudioStreamVolume {:rettype :void :argtypes [[stream :audio-stream] [volume :float32]]}
-     :SetAudioStreamPitch {:rettype :void :argtypes [[stream :audio-stream] [pitch :float32]]}
-     :SetAudioStreamPan {:rettype :void :argtypes [[stream :audio-stream] [pan :float32]]}
-     :SetAudioStreamBufferSizeDefault {:rettype :void :argtypes [[size :int32]]}
-                                        ;TODO: how to handle callback?
-                                        ;:SetAudioStreamCallback {:rettype :void :argtypes [[stream :audio-stream] [callback AudioCallback]]}
-                                        ;:AttachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
-                                        ;:DetachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
-                                        ;:AttachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
-                                        ;:DetachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
-
-     }
-   nil
-   nil
-   ))
-
-;(ffi/set-ffi-impl! :jdk)
-
-;(ffi/library-singleton-set! native-part-1 "raylib")
-
-;(ffi/library-singleton-set! native-part-2 "raylib")
-
+;TODO: what are those types?
+;    :SetTraceLogCallback {:rettype :void :argtypes [TraceLogCallback callback]}
+;    :SetLoadFileDataCallback {:rettype :void :argtypes [LoadFileDataCallback callback]}
+;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
+;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
+;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
+;TODO: what to do here?
+;:TextFormat {:rettype :pointer :argtypes [[text :pointer] ...]}
+;TODO: how to handle callback?
+;:SetAudioStreamCallback {:rettype :void :argtypes [[stream :audio-stream] [callback AudioCallback]]}
+;:AttachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
+;:DetachAudioStreamProcessor {:rettype :void :argtypes [[stream :audio-stream] [processor AudioCallback]]}
+;:AttachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
+;:DetachAudioMixedProcessor {:rettype :void :argtypes [[processor AudioCallback]]}
+         )
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
-
