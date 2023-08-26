@@ -4252,22 +4252,7 @@
   :coffi.mem/void)
 (comment
 
-  (coffify
-   :IsWindowState
-   {:rettype :int8 :argtypes [['flag :int32]]}
-   )
-
-  (->> '{
-         ;TODO: put old defs here
-
-
-  }
-       (map identity)
-       (map #(coffify (first %) (second %)))
-       )
-
   (defn byte->bool [b] (not= b 0))
-
 
   (do
     (init-window 800 450 "raylib-clj [core] example - basic window")
