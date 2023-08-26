@@ -2004,6 +2004,795 @@
    :raylib-clj.core/vec3
    :coffi.mem/float]
   :coffi.mem/void)
+
+
+(coffi.ffi/defcfn
+  check-collision-point-triangle
+  "[point p1 p2 p3] -> byte"
+  CheckCollisionPointTriangle
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-poly
+  "[center sides radius rotation color] -> void"
+  DrawPoly
+  [:raylib-clj.core/vec2
+   :coffi.mem/int
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-lines
+  "[startPos1 endPos1 startPos2 endPos2 collisionPoint] -> byte"
+  CheckCollisionLines
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-shapes-texture
+  "[texture source] -> void"
+  SetShapesTexture
+  [:raylib-clj.core/texture :raylib-clj.core/rectangle]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-rounded-lines
+  "[rec roundness segments lineThick color] -> void"
+  DrawRectangleRoundedLines
+  [:raylib-clj.core/rectangle
+   :coffi.mem/float
+   :coffi.mem/int
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-circle-lines
+  "[centerX centerY radius color] -> void"
+  DrawCircleLines
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-ring
+  "[center innerRadius outerRadius startAngle endAngle segments color] -> void"
+  DrawRing
+  [:raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-circle-gradient
+  "[centerX centerY radius color1 color2] -> void"
+  DrawCircleGradient
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-line-v
+  "[startPos endPos color] -> void"
+  DrawLineV
+  [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-line-b-spline
+   "[points pointCount thick color] -> void"
+   DrawLineBSpline
+   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-pixel-v
+  "[position color] -> void"
+  DrawPixelV
+  [:raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-circle-sector-lines
+  "[center radius startAngle endAngle segments color] -> void"
+  DrawCircleSectorLines
+  [:raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-poly-lines
+  "[center sides radius rotation color] -> void"
+  DrawPolyLines
+  [:raylib-clj.core/vec2
+   :coffi.mem/int
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-point-circle
+  "[point center radius] -> byte"
+  CheckCollisionPointCircle
+  [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :coffi.mem/float]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-circle-v
+  "[center radius color] -> void"
+  DrawCircleV
+  [:raylib-clj.core/vec2 :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-rec
+  "[rec color] -> void"
+  DrawRectangleRec
+  [:raylib-clj.core/rectangle :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-triangle-lines
+  "[v1 v2 v3 color] -> void"
+  DrawTriangleLines
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-circle-rec
+  "[center radius rec] -> byte"
+  CheckCollisionCircleRec
+  [:raylib-clj.core/vec2 :coffi.mem/float :raylib-clj.core/rectangle]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-triangle-fan
+  "[points pointCount color] -> void"
+  DrawTriangleFan
+  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-point-rec
+  "[point rec] -> byte"
+  CheckCollisionPointRec
+  [:raylib-clj.core/vec2 :raylib-clj.core/rectangle]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-ellipse
+  "[centerX centerY radiusH radiusV color] -> void"
+  DrawEllipse
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-ring-lines
+  "[center innerRadius outerRadius startAngle endAngle segments color] -> void"
+  DrawRingLines
+  [:raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   check-collision-point-poly
+   "[point points pointCount] -> byte"
+   CheckCollisionPointPoly
+   [:raylib-clj.core/vec2 :raylib-clj.core/point :coffi.mem/int]
+   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  draw-ellipse-lines
+  "[centerX centerY radiusH radiusV color] -> void"
+  DrawEllipseLines
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-gradient-ex
+  "[rec col1 col2 col3 col4] -> void"
+  DrawRectangleGradientEx
+  [:raylib-clj.core/rectangle
+   :raylib-clj.core/color
+   :raylib-clj.core/color
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-triangle-strip
+  "[points pointCount color] -> void"
+  DrawTriangleStrip
+  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-lines-ex
+  "[rec lineThick color] -> void"
+  DrawRectangleLinesEx
+  [:raylib-clj.core/rectangle :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-point-line
+  "[point p1 p2 threshold] -> byte"
+  CheckCollisionPointLine
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-line-bezier-cubic
+  "[startPos endPos startControlPos endControlPos thick color] -> void"
+  DrawLineBezierCubic
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-circles
+  "[center1 radius1 center2 radius2] -> byte"
+  CheckCollisionCircles
+  [:raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/vec2
+   :coffi.mem/float]
+  :coffi.mem/byte)
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-line-strip
+   "[points pointCount color] -> void"
+   DrawLineStrip
+   [:raylib-clj.core/points :coffi.mem/int :raylib-clj.core/color]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-circle
+  "[centerX centerY radius color] -> void"
+  DrawCircle
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-collision-rec
+  "[rec1 rec2] -> rectangle"
+  GetCollisionRec
+  [:raylib-clj.core/rectangle :raylib-clj.core/rectangle]
+  :raylib-clj.core/rectangle)
+(coffi.ffi/defcfn
+  draw-line-bezier-quad
+  "[startPos endPos controlPos thick color] -> void"
+  DrawLineBezierQuad
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  check-collision-recs
+  "[rec1 rec2] -> byte"
+  CheckCollisionRecs
+  [:raylib-clj.core/rectangle :raylib-clj.core/rectangle]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  draw-rectangle-rounded
+  "[rec roundness segments color] -> void"
+  DrawRectangleRounded
+  [:raylib-clj.core/rectangle
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle
+  "[posX posY width height color] -> void"
+  DrawRectangle
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   draw-line-catmull-rom
+   "[points pointCount thick color] -> void"
+   DrawLineCatmullRom
+   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-line-bezier
+  "[startPos endPos thick color] -> void"
+  DrawLineBezier
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-line
+  "[startPosX startPosY endPosX endPosY color] -> void"
+  DrawLine
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-poly-lines-ex
+  "[center sides radius rotation lineThick color] -> void"
+  DrawPolyLinesEx
+  [:raylib-clj.core/vec2
+   :coffi.mem/int
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-pixel
+  "[posX posY color] -> void"
+  DrawPixel
+  [:coffi.mem/int :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-lines
+  "[posX posY width height color] -> void"
+  DrawRectangleLines
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-gradient-v
+  "[posX posY width height color1 color2] -> void"
+  DrawRectangleGradientV
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-circle-sector
+  "[center radius startAngle endAngle segments color] -> void"
+  DrawCircleSector
+  [:raylib-clj.core/vec2
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/float
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-triangle
+  "[v1 v2 v3 color] -> void"
+  DrawTriangle
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-line-ex
+  "[startPos endPos thick color] -> void"
+  DrawLineEx
+  [:raylib-clj.core/vec2
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-pro
+  "[rec origin rotation color] -> void"
+  DrawRectanglePro
+  [:raylib-clj.core/rectangle
+   :raylib-clj.core/vec2
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-gradient-h
+  "[posX posY width height color1 color2] -> void"
+  DrawRectangleGradientH
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  draw-rectangle-v
+  "[position size color] -> void"
+  DrawRectangleV
+  [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :raylib-clj.core/color]
+  :coffi.mem/void)
+
+
+(coffi.ffi/defcfn
+  image-color-grayscale
+  "[image] -> void"
+  ImageColorGrayscale
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  export-image
+  "[image fileName] -> byte"
+  ExportImage
+  [:raylib-clj.core/image :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  load-image-colors
+  "[image] -> pointer"
+  LoadImageColors
+  [:raylib-clj.core/image]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  unload-image
+  "[image] -> void"
+  UnloadImage
+  [:raylib-clj.core/image]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-blur-gaussian
+  "[image blurSize] -> void"
+  ImageBlurGaussian
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-format
+  "[image newFormat] -> void"
+  ImageFormat
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-mipmaps
+  "[image] -> void"
+  ImageMipmaps
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-gradient-radial
+  "[width height density inner outer] -> image"
+  GenImageGradientRadial
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  export-image-as-code
+  "[image fileName] -> byte"
+  ExportImageAsCode
+  [:raylib-clj.core/image :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  gen-image-gradient-linear
+  "[width height direction start end] -> image"
+  GenImageGradientLinear
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-copy
+  "[image] -> image"
+  ImageCopy
+  [:raylib-clj.core/image]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-resize
+  "[image newWidth newHeight] -> void"
+  ImageResize
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-ready?
+  "[image] -> bool"
+  IsImageReady
+  [:raylib-clj.core/image]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  image-dither
+  "[image rBpp gBpp bBpp aBpp] -> void"
+  ImageDither
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-image-palette
+  "[image maxPaletteSize colorCount] -> pointer"
+  LoadImagePalette
+  [:raylib-clj.core/image :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  image-to-pot
+  "[image fill] -> void"
+  ImageToPOT
+  [:coffi.mem/pointer :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-from-image
+  "[image rec] -> image"
+  ImageFromImage
+  [:raylib-clj.core/image :raylib-clj.core/rectangle]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-resize-canvas
+  "[image newWidth newHeight offsetX offsetY fill] -> void"
+  ImageResizeCanvas
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-image-from-memory
+  "[fileType fileData dataSize] -> image"
+  LoadImageFromMemory
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  :raylib-clj.core/image)
+(comment;TODO
+  (coffi.ffi/defcfn
+   get-image-colors
+   "[image x y] -> color"
+   GetImageColors
+   [:raylib-clj.core/image :coffi.mem/int :coffi.mem/int]
+   :raylib-clj.core/color))
+(coffi.ffi/defcfn
+  gen-image-cellular
+  "[width height tileSize] -> image"
+  GenImageCellular
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  unload-image-palette
+  "[colors] -> void"
+  UnloadImagePalette
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-rotate
+  "[image degrees] -> void"
+  ImageRotate
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-text-ex
+  "[font text fontSize spacing tint] -> image"
+  ImageTextEx
+  [:raylib-clj.core/font
+   :coffi.mem/pointer
+   :coffi.mem/float
+   :coffi.mem/float
+   :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-flip-vertical
+  "[image] -> void"
+  ImageFlipVertical
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-color-tint
+  "[image color] -> void"
+  ImageColorTint
+  [:coffi.mem/pointer :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-alpha-mask
+  "[image alphaMask] -> void"
+  ImageAlphaMask
+  [:coffi.mem/pointer :raylib-clj.core/image]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-text
+  "[width height text] -> image"
+  GenImageText
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/pointer]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  load-image-anim
+  "[fileName frames] -> image"
+  LoadImageAnim
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  load-image-raw
+  "[fileName width height format headerSize] -> image"
+  LoadImageRaw
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  export-image-to-memory
+  "[image fileType fileSize] -> pointer"
+  ExportImageToMemory
+  [:raylib-clj.core/image :coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  image-color-replace
+  "[image color replace] -> void"
+  ImageColorReplace
+  [:coffi.mem/pointer :raylib-clj.core/color :raylib-clj.core/color]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-crop
+  "[image crop] -> void"
+  ImageCrop
+  [:coffi.mem/pointer :raylib-clj.core/rectangle]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-image-alpha-border
+  "[image threshold] -> rectangle"
+  GetImageAlphaBorder
+  [:raylib-clj.core/image :coffi.mem/float]
+  :raylib-clj.core/rectangle)
+(coffi.ffi/defcfn
+  unload-image-colors
+  "[colors] -> void"
+  UnloadImageColors
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-white-noise
+  "[width height factor] -> image"
+  GenImageWhiteNoise
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/float]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-color-brightness
+  "[image brightness] -> void"
+  ImageColorBrightness
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-rotate-cw
+  "[image] -> void"
+  ImageRotateCW
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-image-from-texture
+  "[texture] -> image"
+  LoadImageFromTexture
+  [:raylib-clj.core/texture]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-resize-nn
+  "[image newWidth newHeight] -> void"
+  ImageResizeNN
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-color
+  "[width height color] -> image"
+  GenImageColor
+  [:coffi.mem/int :coffi.mem/int :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-rotate-ccw
+  "[image] -> void"
+  ImageRotateCCW
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-gradient-square
+  "[width height density inner outer] -> image"
+  GenImageGradientSquare
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-color-contrast
+  "[image contrast] -> void"
+  ImageColorContrast
+  [:coffi.mem/pointer :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-checked
+  "[width height checksX checksY col1 col2] -> image"
+  GenImageChecked
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :raylib-clj.core/color
+   :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-color-invert
+  "[image] -> void"
+  ImageColorInvert
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-alpha-premultiply
+  "[image] -> void"
+  ImageAlphaPremultiply
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  gen-image-perlin-noise
+  "[width height offsetX offsetY scale] -> image"
+  GenImagePerlinNoise
+  [:coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/float]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-alpha-crop
+  "[image threshold] -> void"
+  ImageAlphaCrop
+  [:coffi.mem/pointer :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-flip-horizontal
+  "[image] -> void"
+  ImageFlipHorizontal
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-image-from-screen
+  "[] -> image"
+  LoadImageFromScreen
+  []
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  image-alpha-clear
+  "[image color threshold] -> void"
+  ImageAlphaClear
+  [:coffi.mem/pointer :raylib-clj.core/color :coffi.mem/float]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  image-text
+  "[text fontSize color] -> image"
+  ImageText
+  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
+  :raylib-clj.core/image)
+(coffi.ffi/defcfn
+  load-image
+  "[fileName] -> image"
+  LoadImage
+  [:coffi.mem/pointer]
+  :raylib-clj.core/image)
+
 (comment
 
   (coffify
@@ -2051,125 +2840,11 @@
                                         ;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
                                         ;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
                                         ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
-                                        ;Basic Shapes Drawing Functions  {:rettype :;// :rettype }[Module: shapes]
-     ;;//------------------------------------------------------------------------------------
-     ;;// Set texture and rectangle to be used on shapes drawing
-     ;;// NOTE: It can be useful when using basic shapes and one single font,
-     ;;// defining a font char white rectangle would allow drawing everything in a single draw call
-     :SetShapesTexture {:rettype :void :argtypes [[texture :texture] [source  :rectangle]]}
-
-
-     :DrawPixel {:rettype :void :argtypes [[posX :int32] [posY :int32] [color :color]]}
-     :DrawPixelV {:rettype :void :argtypes [[position :vec2] [color  :color]]}
-     :DrawLine {:rettype :void :argtypes [[startPosX :int32] [startPosY :int32] [endPosX :int32] [endPosY :int32] [color  :color]]}
-     :DrawLineV {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [color  :color]]}
-     :DrawLineEx {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
-     :DrawLineBezier {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [thick :float32] [color  :color]]}
-     :DrawLineBezierQuad {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [controlPos :vec2] [thick :float32] [color  :color]]}
-     :DrawLineBezierCubic {:rettype :void :argtypes [[startPos :vec2] [endPos :vec2] [startControlPos :vec2] [endControlPos :vec2] [thick :float32] [color  :color]]}
-     :DrawLineBSpline {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
-     :DrawLineCatmullRom {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [thick :float32] [color  :color]]}
-     :DrawLineStrip {:rettype :void :argtypes [[points :points] [pointCount :int32] [color  :color]]}
-     :DrawCircle {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
-     :DrawCircleSector {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-     :DrawCircleSectorLines {:rettype :void :argtypes [[center :vec2] [radius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-     :DrawCircleGradient {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color1 :color] [color2  :color]]}
-     :DrawCircleV {:rettype :void :argtypes [[center :vec2] [radius :float32] [color  :color]]}
-     :DrawCircleLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radius :float32] [color  :color]]}
-     :DrawEllipse {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
-     :DrawEllipseLines {:rettype :void :argtypes [[centerX :int32] [centerY :int32] [radiusH :float32] [radiusV :float32] [color  :color]]}
-     :DrawRing {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-     :DrawRingLines {:rettype :void :argtypes [[center :vec2] [innerRadius :float32] [outerRadius :float32] [startAngle :float32] [endAngle :float32] [segments :int32] [color  :color]]}
-     :DrawRectangle {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
-     :DrawRectangleV {:rettype :void :argtypes [[position :vec2] [size :vec2] [color  :color]]}
-     :DrawRectangleRec {:rettype :void :argtypes [[rec :rectangle] [color  :color]]}
-     :DrawRectanglePro {:rettype :void :argtypes [[rec :rectangle] [origin :vec2] [rotation :float32] [color  :color]]}
-     :DrawRectangleGradientV {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
-     :DrawRectangleGradientH {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color1 :color] [color2  :color]]}
-     :DrawRectangleGradientEx {:rettype :void :argtypes [[rec :rectangle] [col1 :color] [col2 :color] [col3 :color] [col4  :color]]}
-     :DrawRectangleLines {:rettype :void :argtypes [[posX :int32] [posY :int32] [width :int32] [height :int32] [color  :color]]}
-     :DrawRectangleLinesEx {:rettype :void :argtypes [[rec :rectangle] [lineThick :float32] [color  :color]]}
-     :DrawRectangleRounded {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [color  :color]]}
-     :DrawRectangleRoundedLines {:rettype :void :argtypes [[rec :rectangle] [roundness :float32] [segments :int32] [lineThick :float32] [color  :color]]}
-     :DrawTriangle {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
-     :DrawTriangleLines {:rettype :void :argtypes [[v1 :vec2] [v2 :vec2] [v3 :vec2] [color  :color]]}
-     :DrawTriangleFan {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
-     :DrawTriangleStrip {:rettype :void :argtypes [[points :pointer] [pointCount :int32] [color  :color]]}
-     :DrawPoly {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
-     :DrawPolyLines {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [color  :color]]}
-     :DrawPolyLinesEx {:rettype :void :argtypes [[center :vec2] [sides :int32] [radius :float32] [rotation :float32] [lineThick :float32] [color  :color]]}
-     ;; shapes collision detection functions
-     :CheckCollisionRecs {:rettype :int8 :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
-     :CheckCollisionCircles {:rettype :int8 :argtypes [[center1 :vec2] [radius1 :float32] [center2 :vec2] [radius2 :float32]]}
-     :CheckCollisionCircleRec {:rettype :int8 :argtypes [[center :vec2] [radius :float32] [rec :rectangle]]}
-     :CheckCollisionPointRec {:rettype :int8 :argtypes [[point :vec2] [rec :rectangle]]}
-     :CheckCollisionPointCircle {:rettype :int8 :argtypes [[point :vec2] [center :vec2] [radius :float32]]}
-     :CheckCollisionPointTriangle {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [p3 :vec2]]}
-     :CheckCollisionPointPoly {:rettype :int8 :argtypes [[point :vec2] [points :point] [pointCount :int32]]}
-     :CheckCollisionLines {:rettype :int8 :argtypes [[startPos1 :vec2] [endPos1 :vec2] [startPos2 :vec2] [endPos2 :vec2] [collisionPoint :pointer]]}
-     :CheckCollisionPointLine {:rettype :int8 :argtypes [[point :vec2] [p1 :vec2] [p2 :vec2] [threshold :int32]]}
-     :GetCollisionRec {:rettype :rectangle :argtypes [[rec1 :rectangle] [rec2 :rectangle]]}
                                         ;   :texture Loading and Drawing Functions  {:rettype :;// :rettype }[Module: textures]
      ;;//------------------------------------------------------------------------------------
      ;;
      ;;// :image loading functions
      ;;// NOTE: These functions do not require GPU access
-     :LoadImage {:rettype :image :argtypes [[fileName :pointer]]}
-     :LoadImageRaw {:rettype :image :argtypes [[fileName :pointer] [width :int32] [height :int32] [format :int32] [headerSize :int32]]}
-     :LoadImageAnim {:rettype :image :argtypes [[fileName :pointer] [frames :pointer]]}
-     :LoadImageFromMemory {:rettype :image :argtypes [[fileType :pointer] [fileData :pointer] [dataSize :int32]]}
-     :LoadImageFromTexture {:rettype :image :argtypes [[texture :texture]]}
-     :LoadImageFromScreen {:rettype :image :argtypes []}
-     :IsImageReady {:rettype :int8 :argtypes [[image :image]]}
-     :UnloadImage {:rettype :void :argtypes [[image :image]]}
-     :ExportImage {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
-     :ExportImageToMemory {:rettype :pointer :argtypes [[image :image] [fileType :pointer] [fileSize :pointer]]}
-     :ExportImageAsCode {:rettype :int8 :argtypes [[image :image] [fileName :pointer]]}
-     ;; generation functions
-     :GenImageColor {:rettype :image :argtypes [[width :int32] [height :int32] [color :color]]}
-     :GenImageGradientLinear {:rettype :image :argtypes [[width :int32] [height :int32] [direction :int32] [start :color] [end :color]]}
-     :GenImageGradientRadial {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
-     :GenImageGradientSquare {:rettype :image :argtypes [[width :int32] [height :int32] [density :float32] [inner :color] [outer :color]]}
-     :GenImageChecked {:rettype :image :argtypes [[width :int32] [height :int32] [checksX :int32] [checksY :int32] [col1 :color] [col2 :color]]}
-     :GenImageWhiteNoise {:rettype :image :argtypes [[width :int32] [height :int32] [factor :float32]]}
-     :GenImagePerlinNoise {:rettype :image :argtypes [[width :int32] [height :int32] [offsetX :int32] [offsetY :int32] [scale :float32]]}
-     :GenImageCellular {:rettype :image :argtypes [[width :int32] [height :int32] [tileSize :int32]]}
-     :GenImageText {:rettype :image :argtypes [[width :int32] [height :int32] [text :pointer]]}
-
-     :ImageCopy {:rettype :image :argtypes [[image :image]]}
-     :ImageFromImage {:rettype :image :argtypes [[image :image] [rec :rectangle]]}
-     :ImageText {:rettype :image :argtypes [[text :pointer] [fontSize :int32] [color :color]]}
-     :ImageTextEx {:rettype :image :argtypes [[font :font] [text :pointer] [fontSize :float32] [spacing :float32] [tint :color]]}
-     :ImageFormat {:rettype :void :argtypes [[image :pointer] [newFormat :int32]]}
-     :ImageToPOT {:rettype :void :argtypes [[image :pointer] [fill :color]]}
-     :ImageCrop {:rettype :void :argtypes [[image :pointer] [crop :rectangle]]}
-     :ImageAlphaCrop {:rettype :void :argtypes [[image :pointer] [threshold :float32]]}
-     :ImageAlphaClear {:rettype :void :argtypes [[image :pointer] [color :color] [threshold :float32]]}
-     :ImageAlphaMask {:rettype :void :argtypes [[image :pointer] [alphaMask :image]]}
-     :ImageAlphaPremultiply {:rettype :void :argtypes [[image :pointer]]}
-     :ImageBlurGaussian {:rettype :void :argtypes [[image :pointer] [blurSize :int32]]}
-     :ImageResize {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
-     :ImageResizeNN {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32]]}
-     :ImageResizeCanvas {:rettype :void :argtypes [[image :pointer] [newWidth :int32] [newHeight :int32] [offsetX :int32] [offsetY :int32] [fill :color]]}
-     :ImageMipmaps {:rettype :void :argtypes [[image :pointer]]}
-     :ImageDither {:rettype :void :argtypes [[image :pointer] [rBpp :int32] [gBpp :int32] [bBpp :int32] [aBpp :int32]]}
-     :ImageFlipVertical {:rettype :void :argtypes [[image :pointer]]}
-     :ImageFlipHorizontal {:rettype :void :argtypes [[image :pointer]]}
-     :ImageRotate {:rettype :void :argtypes [[image :pointer] [degrees :int32]]}
-     :ImageRotateCW {:rettype :void :argtypes [[image :pointer]]}
-     :ImageRotateCCW {:rettype :void :argtypes [[image :pointer]]}
-     :ImageColorTint {:rettype :void :argtypes [[image :pointer] [color :color]]}
-     :ImageColorInvert {:rettype :void :argtypes [[image :pointer]]}
-     :ImageColorGrayscale {:rettype :void :argtypes [[image :pointer]]}
-     :ImageColorContrast {:rettype :void :argtypes [[image :pointer] [contrast :float32]]}
-     :ImageColorBrightness {:rettype :void :argtypes [[image :pointer] [brightness :int32]]}
-     :ImageColorReplace {:rettype :void :argtypes [[image :pointer] [color :color] [replace :color]]}
-     :LoadImageColors {:rettype :pointer :argtypes [[image :image]]}
-     :LoadImagePalette {:rettype :pointer :argtypes [[image :image] [maxPaletteSize :int32] [colorCount :pointer]]}
-     :UnloadImageColors {:rettype :void :argtypes [[colors :pointer]]}
-     :UnloadImagePalette {:rettype :void :argtypes [[colors :pointer]]}
-     :GetImageAlphaBorder {:rettype :rectangle :argtypes [[image :image] [threshold :float32]]}
-     :GetImageColors {:rettype :color :argtypes [[image :image] [x :int32] [y :int32]]}
      ;; drawing functions
      ;;// NOTE: :image software-rendering functions (CPU)
      :ImageClearBackground {:rettype :void :argtypes [[image :pointer] [color :color]]}
