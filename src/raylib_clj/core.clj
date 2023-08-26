@@ -697,11 +697,15 @@
         argnames (filter identity (map arg-decl->arg-name (:argtypes signature)))
         argnames-str (clojure.string/join " " argnames)
         boolean-return? (and (clojure.string/starts-with? fn-name-new "is-") (= rettype ::mem/byte))
+        cfn-name-final (if boolean-return?
+                         (-> fn-name-new
+                             (str)
+                             (clojure.string/replace-first "is-" "")
+                             (str "?")
+                             (symbol))
+                         fn-name-new)
         ]
-    `(cffi/defcfn ~(if boolean-return?
-                     (str (clojure.string/replace-first (str fn-name-new) "is-" "") "?")
-                     fn-name-new
-                     )
+    `(cffi/defcfn ~cfn-name-final
        ~(str "[" argnames-str "]" " -> " (if boolean-return? "bool" (name rettype)))
        ~(symbol (name fn-name-old))
        ~argtypes
@@ -1135,6 +1139,48 @@
   [:coffi.mem/int]
   :coffi.mem/void)
 
+
+
+
+(coffi.ffi/defcfn
+  begin-scissor-mode
+  "[x y width height] -> void"
+  BeginScissorMode
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/int :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  end-scissor-mode
+  "[] -> void"
+  EndScissorMode
+  []
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  begin-vr-stereo-mode
+  "[config] -> void"
+  BeginVrStereoMode
+  [:raylib-clj.core/vr-stereo-config]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  end-vr-stereo-mode
+  "[] -> void"
+  EndVrStereoMode
+  []
+  :coffi.mem/void)
+
+
+(coffi.ffi/defcfn
+  load-vr-stereo-config
+  "[device] -> vr-stereo-config"
+  LoadVrStereoConfig
+  [:raylib-clj.core/vr-device-info]
+  :raylib-clj.core/vr-stereo-config)
+(coffi.ffi/defcfn
+  unload-vr-stereo-config
+  "[config] -> void"
+  UnloadVrStereoConfig
+  [:raylib-clj.core/vr-stereo-config]
+  :coffi.mem/void)
+
 ;font stuff 
 (comment;TODO
   (coffi.ffi/defcfn
@@ -1288,6 +1334,358 @@
    :coffi.mem/pointer
    :coffi.mem/int]
   :raylib-clj.core/font)
+
+
+(coffi.ffi/defcfn
+  set-shader-value
+  "[shader locIndex value uniformType] -> void"
+  SetShaderValue
+  [:raylib-clj.core/shader
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  shader-ready?
+  "[shader] -> bool"
+  IsShaderReady
+  [:raylib-clj.core/shader]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  set-shader-value-matrix
+  "[shader locIndex mat] -> mat4"
+  SetShaderValueMatrix
+  [:raylib-clj.core/shader :coffi.mem/int :raylib-clj.core/mat4]
+  :raylib-clj.core/mat4)
+(coffi.ffi/defcfn
+  unload-shader
+  "[shader] -> shader"
+  UnloadShader
+  [:raylib-clj.core/shader]
+  :raylib-clj.core/shader)
+(coffi.ffi/defcfn
+  set-shader-value-texture
+  "[shader locIndex texture] -> texture"
+  SetShaderValueTexture
+  [:raylib-clj.core/shader :coffi.mem/int :raylib-clj.core/texture]
+  :raylib-clj.core/texture)
+(coffi.ffi/defcfn
+  load-shader-from-memory
+  "[vsCode fsCode] -> shader"
+  LoadShaderFromMemory
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :raylib-clj.core/shader)
+(coffi.ffi/defcfn
+  load-shader
+  "[vsFileName fsFileName] -> shader"
+  LoadShader
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :raylib-clj.core/shader)
+(coffi.ffi/defcfn
+  get-shader-location-attrib
+  "[shader attribName] -> int"
+  GetShaderLocationAttrib
+  [:raylib-clj.core/shader :coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  set-shader-value-v
+  "[shader locIndex value uniformType count] -> void"
+  SetShaderValueV
+  [:raylib-clj.core/shader
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-shader-location
+  "[shader uniformName] -> int"
+  GetShaderLocation
+  [:raylib-clj.core/shader :coffi.mem/pointer]
+  :coffi.mem/int)
+
+
+(coffi.ffi/defcfn
+  get-mouse-ray
+  "[mousePosition camera] -> ray"
+  GetMouseRay
+  [:raylib-clj.core/vec2 :raylib-clj.core/camera-3d]
+  :raylib-clj.core/ray)
+(coffi.ffi/defcfn
+  get-camera-matrix
+  "[camera] -> mat4"
+  GetCameraMatrix
+  [:raylib-clj.core/camera-3d]
+  :raylib-clj.core/mat4)
+(coffi.ffi/defcfn
+  get-camera-matrix-2-d
+  "[camera] -> mat4"
+  GetCameraMatrix2D
+  [:raylib-clj.core/camera-2d]
+  :raylib-clj.core/mat4)
+(coffi.ffi/defcfn
+  get-world-to-screen
+  "[position camera] -> vec2"
+  GetWorldToScreen
+  [:raylib-clj.core/vec3 :raylib-clj.core/camera-3d]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-screen-to-world-2-d
+  "[position camera] -> vec2"
+  GetScreenToWorld2D
+  [:raylib-clj.core/vec2 :raylib-clj.core/camera-2d]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-world-to-screen-ex
+  "[position camera width height] -> vec2"
+  GetWorldToScreenEx
+  [:raylib-clj.core/vec3
+   :raylib-clj.core/camera-3d
+   :coffi.mem/int
+   :coffi.mem/int]
+  :raylib-clj.core/vec2)
+(coffi.ffi/defcfn
+  get-world-to-screen-2-d
+  "[position camera] -> vec2"
+  GetWorldToScreen2D
+  [:raylib-clj.core/vec2 :raylib-clj.core/camera-2d]
+  :raylib-clj.core/vec2)
+
+(coffi.ffi/defcfn
+  set-target-fps
+  "[fps] -> void"
+  SetTargetFPS
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-random-seed
+  "[seed] -> void"
+  SetRandomSeed
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  open-url
+  "[url] -> void"
+  OpenURL
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  set-config-flags
+  "[flags] -> void"
+  SetConfigFlags
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  mem-free
+  "[ptr] -> void"
+  MemFree
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-random-value
+  "[min max] -> int"
+  GetRandomValue
+  [:coffi.mem/int :coffi.mem/int]
+  :coffi.mem/int)
+(coffi.ffi/defcfn get-fps "[] -> int" GetFPS [] :coffi.mem/int)
+(coffi.ffi/defcfn
+  set-trace-log-level
+  "[logLevel] -> void"
+  SetTraceLogLevel
+  [:coffi.mem/int]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  mem-realloc
+  "[ptr size] -> pointer"
+  MemRealloc
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-frame-time
+  "[] -> float"
+  GetFrameTime
+  []
+  :coffi.mem/float)
+(coffi.ffi/defcfn
+  take-screenshot
+  "[fileName] -> void"
+  TakeScreenshot
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  mem-alloc
+  "[size] -> pointer"
+  MemAlloc
+  [:coffi.mem/int]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn get-time "[] -> double" GetTime [] :coffi.mem/double)
+
+
+
+(coffi.ffi/defcfn
+  file-exists
+  "[fileName] -> byte"
+  FileExists
+  [:coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  unload-directory-files
+  "[files] -> void"
+  UnloadDirectoryFiles
+  [:raylib-clj.core/file-path-list]
+  :coffi.mem/void)
+(comment;TODO
+  (coffi.ffi/defcfn
+   path-list
+   "[] -> file-path-list"
+   PathList
+   []
+   :raylib-clj.core/file-path-list))
+(coffi.ffi/defcfn
+  change-directory
+  "[dir] -> byte"
+  ChangeDirectory
+  [:coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-directory-path
+  "[filePath] -> pointer"
+  GetDirectoryPath
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-file-length
+  "[fileName] -> int"
+  GetFileLength
+  [:coffi.mem/pointer]
+  :coffi.mem/int)
+(coffi.ffi/defcfn
+  get-prev-directory-path
+  "[dirPath] -> pointer"
+  GetPrevDirectoryPath
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  directory-exists
+  "[dirPath] -> byte"
+  DirectoryExists
+  [:coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  path-file?
+  "[path] -> bool"
+  IsPathFile
+  [:coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  save-file-data
+  "[fileName data bytesToWrite] -> byte"
+  SaveFileData
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  get-file-extension
+  "[fileName] -> pointer"
+  GetFileExtension
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-file-name
+  "[filePath] -> pointer"
+  GetFileName
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  get-file-mod-time
+  "[fileName] -> long"
+  GetFileModTime
+  [:coffi.mem/pointer]
+  :coffi.mem/long)
+(coffi.ffi/defcfn
+  get-working-directory
+  "[] -> pointer"
+  GetWorkingDirectory
+  []
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  load-directory-files
+  "[dirPath] -> file-path-list"
+  LoadDirectoryFiles
+  [:coffi.mem/pointer]
+  :raylib-clj.core/file-path-list)
+(coffi.ffi/defcfn
+  save-file-text
+  "[fileName text] -> byte"
+  SaveFileText
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  unload-dropped-files
+  "[files] -> void"
+  UnloadDroppedFiles
+  [:raylib-clj.core/file-path-list]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  load-file-text
+  "[fileName] -> pointer"
+  LoadFileText
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  unload-file-data
+  "[data] -> void"
+  UnloadFileData
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-file-name-without-ext
+  "[filePath] -> pointer"
+  GetFileNameWithoutExt
+  [:coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  file-dropped?
+  "[] -> bool"
+  IsFileDropped
+  []
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  load-file-data
+  "[fileName bytesRead] -> pointer"
+  LoadFileData
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/pointer)
+(coffi.ffi/defcfn
+  load-directory-files-ex
+  "[basePath filter scanSubdirs] -> file-path-list"
+  LoadDirectoryFilesEx
+  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/byte]
+  :raylib-clj.core/file-path-list)
+(coffi.ffi/defcfn
+  export-data-as-code
+  "[data size fileName] -> byte"
+  ExportDataAsCode
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  file-extension?
+  "[fileName ext] -> bool"
+  IsFileExtension
+  [:coffi.mem/pointer :coffi.mem/pointer]
+  :coffi.mem/byte)
+(coffi.ffi/defcfn
+  unload-file-text
+  "[text] -> void"
+  UnloadFileText
+  [:coffi.mem/pointer]
+  :coffi.mem/void)
+(coffi.ffi/defcfn
+  get-application-directory
+  "[] -> pointer"
+  GetApplicationDirectory
+  []
+  :coffi.mem/pointer)
+
 (comment
 
   (coffify
@@ -1297,6 +1695,34 @@
 
   (->> '{
          ;TODO: put old defs here
+
+     :LoadFileData {:rettype :pointer :argtypes [[fileName :pointer] [bytesRead :pointer]]}
+     :UnloadFileData {:rettype :void :argtypes [[data :pointer]]}
+     :SaveFileData {:rettype :int8 :argtypes [[fileName :pointer] [data :pointer] [bytesToWrite :int32]]}
+     :ExportDataAsCode {:rettype :int8 :argtypes [[data :pointer] [size :int32] [fileName :pointer]]}
+     :LoadFileText {:rettype :pointer :argtypes [[fileName :pointer]]}
+     :UnloadFileText {:rettype :void :argtypes [[text :pointer]]}
+     :SaveFileText {:rettype :int8 :argtypes [[fileName :pointer] [text :pointer]]}
+     :FileExists {:rettype :int8 :argtypes [[fileName :pointer]]}
+     :DirectoryExists {:rettype :int8 :argtypes [[dirPath :pointer]]}
+     :IsFileExtension {:rettype :int8 :argtypes [[fileName :pointer] [ext :pointer]]}
+     :GetFileLength {:rettype :int32 :argtypes [[fileName :pointer]]}
+     :GetFileExtension {:rettype :pointer :argtypes [[fileName :pointer]]}
+     :GetFileName {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetFileNameWithoutExt {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetDirectoryPath {:rettype :pointer :argtypes [[filePath :pointer]]}
+     :GetPrevDirectoryPath {:rettype :pointer :argtypes [[dirPath :pointer]]}
+     :GetWorkingDirectory {:rettype :pointer :argtypes []}
+     :GetApplicationDirectory {:rettype :pointer :argtypes []}
+     :ChangeDirectory {:rettype :int8 :argtypes [[dir :pointer]]}
+     :IsPathFile {:rettype :int8 :argtypes [[path :pointer]]}
+     :LoadDirectoryFiles {:rettype :file-path-list :argtypes [[dirPath :pointer]]}
+     :LoadDirectoryFilesEx {:rettype :file-path-list :argtypes [[basePath :pointer] [filter :pointer] [scanSubdirs :int8]]}
+     :UnloadDirectoryFiles {:rettype :void :argtypes [[files :file-path-list]]}
+     :IsFileDropped {:rettype :int8 :argtypes []}
+     :PathList {:rettype :file-path-list :argtypes []}
+     :UnloadDroppedFiles {:rettype :void :argtypes [[files :file-path-list]]}
+     :GetFileModTime {:rettype :long :argtypes [[fileName :pointer]]}
   }
        (map identity)
        (map #(coffify (first %) (second %)))
@@ -1354,57 +1780,6 @@
 
 '{
 
-                                        ; ;frame control functions
-     ;;// NOTE: Those functions are intended for advance users that want full control over the frame processing
-     ;;// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
-     ;;// To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
-     :BeginScissorMode {:rettype :void :argtypes [[x :int32] [y :int32] [width :int32] [height :int32]]}
-     :EndScissorMode {:rettype :void :argtypes []}
-     :BeginVrStereoMode {:rettype :void :argtypes [[config :vr-stereo-config]]}
-     :EndVrStereoMode {:rettype :void :argtypes []}
-     ;; stereo config functions for VR simulator
-     :LoadVrStereoConfig  {:rettype :vr-stereo-config :argtypes [[device :vr-device-info]]}
-     :UnloadVrStereoConfig {:rettype :void :argtypes [[config :vr-stereo-config]]}
-     ;; management functions
-     ;;// NOTE: :shader functionality is not available on OpenGL 1.1
-     :LoadShader {:rettype :shader :argtypes [[vsFileName :pointer] [fsFileName :pointer]]}
-     :LoadShaderFromMemory {:rettype :shader :argtypes [[vsCode :pointer] [fsCode :pointer]]}
-     :IsShaderReady {:rettype :int8 :argtypes [[shader :shader]]}
-     :GetShaderLocation {:rettype :int32 :argtypes [[shader :shader] [uniformName :pointer]]}
-     :GetShaderLocationAttrib {:rettype :int32 :argtypes [[shader :shader] [attribName :pointer]]}
-     :SetShaderValue {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32]]}
-     :SetShaderValueV {:rettype :void :argtypes [[shader :shader] [locIndex :int32]  [value :pointer] [uniformType :int32] [count :int32]]}
-     :SetShaderValueMatrix {:rettype :mat4 :argtypes [[shader :shader] [locIndex :int32] [mat :mat4]]}
-     :SetShaderValueTexture {:rettype :texture :argtypes [[shader :shader] [locIndex :int32] [texture :texture]]}
-     :UnloadShader {:rettype :shader :argtypes [[shader :shader]]}
-     ;;-space-related functions
-
-     :GetMouseRay {:rettype :ray :argtypes [[mousePosition :vec2] [camera :camera-3d]]}
-     :GetCameraMatrix {:rettype :mat4 :argtypes [[camera :camera-3d]]}
-     :GetCameraMatrix2D {:rettype :mat4 :argtypes [[camera :camera-2d]]}
-     :GetWorldToScreen {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d]]}
-     :GetScreenToWorld2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
-     :GetWorldToScreenEx {:rettype :vec2 :argtypes [[position :vec3] [camera :camera-3d] [width :int32] [height :int32]]}
-     :GetWorldToScreen2D {:rettype :vec2 :argtypes [[position :vec2] [camera :camera-2d]]}
-     ;;-related functions
-
-     :SetTargetFPS {:rettype :void :argtypes [[fps :int32]]}
-     :GetFPS {:rettype :int32 :argtypes []}
-     :GetFrameTime {:rettype :float :argtypes []}
-     :GetTime {:rettype :double :argtypes []}
-     ;;. functions
-
-     :GetRandomValue {:rettype :int32 :argtypes [[min :int32] [max :int32]]}
-     :SetRandomSeed {:rettype :void :argtypes [[seed :int32]]}
-     :TakeScreenshot {:rettype :void :argtypes [[fileName :pointer]]}
-     :SetConfigFlags {:rettype :void :argtypes [[flags :int32]]}
-                                        ;TODO: what to do here???
-                                        ;:void TraceLog {:rettype :LAPI :argtypes [:int32 logLevel, :pointer text, ...]} 
-     :SetTraceLogLevel {:rettype :void :argtypes [[logLevel :int32]]}
-     :MemAlloc {:rettype :pointer :argtypes [[size :int32]]}
-     :MemRealloc {:rettype :pointer :argtypes [[ptr :pointer] [size :int32]]}
-     :MemFree {:rettype :void :argtypes [[ptr :pointer]]}
-     :OpenURL {:rettype :void :argtypes [[url :pointer]]}
      ;; custom callbacks
      ;;// WARNING: Callbacks setup is intended for advance users
                                         ;TODO: what are those types?
@@ -1414,33 +1789,6 @@
                                         ;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
                                         ;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
      ;; management functions
-     :LoadFileData {:rettype :pointer :argtypes [[fileName :pointer] [bytesRead :pointer]]}
-     :UnloadFileData {:rettype :void :argtypes [[data :pointer]]}
-     :SaveFileData {:rettype :int8 :argtypes [[fileName :pointer] [data :pointer] [bytesToWrite :int32]]}
-     :ExportDataAsCode {:rettype :int8 :argtypes [[data :pointer] [size :int32] [fileName :pointer]]}
-     :LoadFileText {:rettype :pointer :argtypes [[fileName :pointer]]}
-     :UnloadFileText {:rettype :void :argtypes [[text :pointer]]}
-     :SaveFileText {:rettype :int8 :argtypes [[fileName :pointer] [text :pointer]]}
-     :FileExists {:rettype :int8 :argtypes [[fileName :pointer]]}
-     :DirectoryExists {:rettype :int8 :argtypes [[dirPath :pointer]]}
-     :IsFileExtension {:rettype :int8 :argtypes [[fileName :pointer] [ext :pointer]]}
-     :GetFileLength {:rettype :int32 :argtypes [[fileName :pointer]]}
-     :GetFileExtension {:rettype :pointer :argtypes [[fileName :pointer]]}
-     :GetFileName {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetFileNameWithoutExt {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetDirectoryPath {:rettype :pointer :argtypes [[filePath :pointer]]}
-     :GetPrevDirectoryPath {:rettype :pointer :argtypes [[dirPath :pointer]]}
-     :GetWorkingDirectory {:rettype :pointer :argtypes []}
-     :GetApplicationDirectory {:rettype :pointer :argtypes []}
-     :ChangeDirectory {:rettype :int8 :argtypes [[dir :pointer]]}
-     :IsPathFile {:rettype :int8 :argtypes [[path :pointer]]}
-     :LoadDirectoryFiles {:rettype :file-path-list :argtypes [[dirPath :pointer]]}
-     :LoadDirectoryFilesEx {:rettype :file-path-list :argtypes [[basePath :pointer] [filter :pointer] [scanSubdirs :int8]]}
-     :UnloadDirectoryFiles {:rettype :void :argtypes [[files :file-path-list]]}
-     :IsFileDropped {:rettype :int8 :argtypes []}
-     :PathList {:rettype :file-path-list :argtypes []}
-     :UnloadDroppedFiles {:rettype :void :argtypes [[files :file-path-list]]}
-     :GetFileModTime {:rettype :long :argtypes [[fileName :pointer]]}
      ;;/Encoding functionality
      :CompressData {:rettype :pointer :argtypes [[data :pointer]  [dataSize :int32]  [compDataSize :pointer]]}
      :DecompressData {:rettype :pointer :argtypes [[compData :pointer]  [compDataSize :int32]  [dataSize :pointer]]}
