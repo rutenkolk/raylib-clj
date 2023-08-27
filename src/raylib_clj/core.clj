@@ -3163,18 +3163,6 @@
   [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
-  text-subtext
-  "[text position length] -> pointer"
-  TextSubtext
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-to-lower
-  "[text] -> pointer"
-  TextToLower
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
   get-glyph-atlas-rec
   "[font codepoint] -> rectangle"
   GetGlyphAtlasRec
@@ -3193,40 +3181,10 @@
   [:coffi.mem/c-string :coffi.mem/int]
   :coffi.mem/int)
 (coffi.ffi/defcfn
-  text-append
-  "[text append position] -> void"
-  TextAppend
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
   get-glyph-index
   "[font codepoint] -> int"
   GetGlyphIndex
   [:raylib-clj.core/font :coffi.mem/int]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
-  text-join
-  "[textList count delimiter] -> pointer"
-  TextJoin
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-is-equal
-  "[text1 text2] -> bool"
-  TextIsEqual
-  [:coffi.mem/pointer :coffi.mem/pointer]
-  ::bool)
-(coffi.ffi/defcfn
-  text-copy
-  "[dst src] -> int"
-  TextCopy
-  [:coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
-  text-find-index
-  "[text find] -> int"
-  TextFindIndex
-  [:coffi.mem/pointer :coffi.mem/pointer]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   measure-text-ex
@@ -3259,42 +3217,6 @@
   [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/int)
 (coffi.ffi/defcfn
-  text-length
-  "[text] -> int"
-  TextLength
-  [:coffi.mem/pointer]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
-  text-replace
-  "[text replace by] -> pointer"
-  TextReplace
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-to-pascal
-  "[text] -> pointer"
-  TextToPascal
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-split
-  "[text delimiter count] -> pointer"
-  TextSplit
-  [:coffi.mem/pointer :coffi.mem/char :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-insert
-  "[text insert position] -> pointer"
-  TextInsert
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  text-to-upper
-  "[text] -> pointer"
-  TextToUpper
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
   codepoint-to-utf-8
   "[codepoint utf8Size] -> string"
   CodepointToUTF8
@@ -3310,7 +3232,7 @@
   text-to-integer
   "[text] -> int"
   TextToInteger
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/int)
 
 
