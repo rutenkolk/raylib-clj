@@ -825,6 +825,7 @@
   :coffi.mem/void)
 
 (comment
+(+ 1 2)
 
   ;TODO:this thing doesn't work... whats the actual symbol in the shared library?
   ;it seems like the function simply isn't in the exports of the library...
@@ -1523,7 +1524,6 @@
 (coffi.ffi/defcfn get-time "[] -> double" GetTime [] :coffi.mem/double)
 
 
-
 (coffi.ffi/defcfn
   file-exists
   "[fileName] -> byte"
@@ -1536,13 +1536,12 @@
   UnloadDirectoryFiles
   [:raylib-clj.core/file-path-list]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   path-list
-   "[] -> file-path-list"
-   PathList
-   []
-   :raylib-clj.core/file-path-list))
+(coffi.ffi/defcfn
+  load-dropped-files
+  "[] -> file-path-list"
+  LoadDroppedFiles
+  []
+  :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   change-directory
   "[dir] -> byte"
