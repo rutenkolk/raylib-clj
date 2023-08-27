@@ -901,7 +901,7 @@
   set-window-title
   "[title] -> void"
   SetWindowTitle
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/void)
 (coffi.ffi/defcfn
   set-window-position
@@ -1035,12 +1035,12 @@
   "[monitor] -> pointer"
   GetMonitorName
   [:coffi.mem/int]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   set-clipboard-text
   "[text] -> void"
   SetClipboardText
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/void)
 
 (coffi.ffi/defcfn
@@ -1048,7 +1048,7 @@
   "[] -> pointer"
   GetClipboardText
   []
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   enable-event-waiting
   "[] -> void"
@@ -1208,7 +1208,7 @@
   export-font-as-code
   "[font fileName] -> byte"
   ExportFontAsCode
-  [:raylib-clj.core/font :coffi.mem/pointer]
+  [:raylib-clj.core/font :coffi.mem/c-string]
   :coffi.mem/byte)
 (coffi.ffi/defcfn
   load-font-data
@@ -1237,14 +1237,14 @@
   load-font
   "[fileName] -> font"
   LoadFont
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/font)
 (coffi.ffi/defcfn
   draw-text-pro
   "[font text position origin rotation fontSize spacing tint] -> void"
   DrawTextPro
   [:raylib-clj.core/font
-   :coffi.mem/pointer
+   :coffi.mem/c-string
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :coffi.mem/float
@@ -1268,7 +1268,7 @@
   load-font-ex
   "[fileName fontSize fontChars glyphCount] -> font"
   LoadFontEx
-  [:coffi.mem/pointer
+  [:coffi.mem/c-string
    :coffi.mem/int
    :coffi.mem/pointer
    :coffi.mem/int]
@@ -1296,7 +1296,7 @@
   "[font text position fontSize spacing tint] -> void"
   DrawTextEx
   [:raylib-clj.core/font
-   :coffi.mem/pointer
+   :coffi.mem/c-string
    :raylib-clj.core/vec2
    :coffi.mem/float
    :coffi.mem/float
@@ -1337,7 +1337,7 @@
   load-font-from-memory
   "[fileType fileData dataSize fontSize fontChars glyphCount] -> font"
   LoadFontFromMemory
-  [:coffi.mem/pointer
+  [:coffi.mem/c-string
    :coffi.mem/pointer
    :coffi.mem/int
    :coffi.mem/int
@@ -1383,19 +1383,19 @@
   load-shader-from-memory
   "[vsCode fsCode] -> shader"
   LoadShaderFromMemory
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/c-string]
   :raylib-clj.core/shader)
 (coffi.ffi/defcfn
   load-shader
   "[vsFileName fsFileName] -> shader"
   LoadShader
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/c-string]
   :raylib-clj.core/shader)
 (coffi.ffi/defcfn
   get-shader-location-attrib
   "[shader attribName] -> int"
   GetShaderLocationAttrib
-  [:raylib-clj.core/shader :coffi.mem/pointer]
+  [:raylib-clj.core/shader :coffi.mem/c-string]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   set-shader-value-v
@@ -1411,7 +1411,7 @@
   get-shader-location
   "[shader uniformName] -> int"
   GetShaderLocation
-  [:raylib-clj.core/shader :coffi.mem/pointer]
+  [:raylib-clj.core/shader :coffi.mem/c-string]
   :coffi.mem/int)
 
 
@@ -1477,7 +1477,7 @@
   open-url
   "[url] -> void"
   OpenURL
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/void)
 (coffi.ffi/defcfn
   set-config-flags
@@ -1520,7 +1520,7 @@
   take-screenshot
   "[fileName] -> void"
   TakeScreenshot
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/void)
 (coffi.ffi/defcfn
   mem-alloc
@@ -1535,7 +1535,7 @@
   file-exists?
   "[fileName] -> bool"
   FileExists
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   unload-directory-files
@@ -1553,79 +1553,79 @@
   change-directory
   "[dir] -> bool"
   ChangeDirectory
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   get-directory-path
-  "[filePath] -> pointer"
+  "[filePath] -> string"
   GetDirectoryPath
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
+  [:coffi.mem/c-string]
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   get-file-length
   "[fileName] -> int"
   GetFileLength
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   get-prev-directory-path
-  "[dirPath] -> pointer"
+  "[dirPath] -> string"
   GetPrevDirectoryPath
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
+  [:coffi.mem/c-string]
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   directory-exists?
   "[dirPath] -> bool"
   DirectoryExists
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   path-file?
   "[path] -> bool"
   IsPathFile
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   save-file-data
   "[fileName data bytesToWrite] -> bool"
   SaveFileData
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
   ::bool)
 (coffi.ffi/defcfn
   get-file-extension
   "[fileName] -> pointer"
   GetFileExtension
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
+  [:coffi.mem/c-string]
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   get-file-name
   "[filePath] -> pointer"
   GetFileName
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
+  [:coffi.mem/c-string]
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   get-file-mod-time
   "[fileName] -> long"
   GetFileModTime
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/long)
 (coffi.ffi/defcfn
   get-working-directory
-  "[] -> pointer"
+  "[] -> string"
   GetWorkingDirectory
   []
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   load-directory-files
   "[dirPath] -> file-path-list"
   LoadDirectoryFiles
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   save-file-text
   "[fileName text] -> bool"
   SaveFileText
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   unload-dropped-files
@@ -1637,7 +1637,7 @@
   load-file-text
   "[fileName] -> pointer"
   LoadFileText
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   unload-file-data
@@ -1649,8 +1649,8 @@
   get-file-name-without-ext
   "[filePath] -> pointer"
   GetFileNameWithoutExt
-  [:coffi.mem/pointer]
-  :coffi.mem/pointer)
+  [:coffi.mem/c-string]
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   file-dropped?
   "[] -> bool"
@@ -1661,25 +1661,25 @@
   load-file-data
   "[fileName bytesRead] -> pointer"
   LoadFileData
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/pointer :coffi.mem/c-string]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   load-directory-files-ex
   "[basePath filter scanSubdirs] -> file-path-list"
   LoadDirectoryFilesEx
-  [:coffi.mem/pointer :coffi.mem/pointer ::bool]
+  [:coffi.mem/c-string :coffi.mem/c-string ::bool]
   :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   export-data-as-code
   "[data size fileName] -> bool"
   ExportDataAsCode
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   file-extension?
   "[fileName ext] -> bool"
   IsFileExtension
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   unload-file-text
@@ -1689,10 +1689,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   get-application-directory
-  "[] -> pointer"
+  "[] -> string"
   GetApplicationDirectory
   []
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 
 
 (coffi.ffi/defcfn
@@ -1765,10 +1765,10 @@
   ::bool)
 (coffi.ffi/defcfn
   get-gamepad-name
-  "[gamepad] -> pointer"
+  "[gamepad] -> string"
   GetGamepadName
   [:coffi.mem/int]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   key-down?
   "[key] -> bool"
@@ -1779,7 +1779,7 @@
   set-gamepad-mappings
   "[mappings] -> int"
   SetGamepadMappings
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   get-gamepad-axis-movement
@@ -2410,14 +2410,14 @@
   export-image
   "[image fileName] -> bool"
   ExportImage
-  [:raylib-clj.core/image :coffi.mem/pointer]
+  [:raylib-clj.core/image :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   load-image-colors
-  "[image] -> pointer"
+  "[image] -> string"
   LoadImageColors
   [:raylib-clj.core/image]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   unload-image
   "[image] -> void"
@@ -2456,7 +2456,7 @@
   export-image-as-code
   "[image fileName] -> bool"
   ExportImageAsCode
-  [:raylib-clj.core/image :coffi.mem/pointer]
+  [:raylib-clj.core/image :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   gen-image-gradient-linear
@@ -2529,7 +2529,7 @@
   load-image-from-memory
   "[fileType fileData dataSize] -> image"
   LoadImageFromMemory
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   get-image-color
@@ -2560,7 +2560,7 @@
   "[font text fontSize spacing tint] -> image"
   ImageTextEx
   [:raylib-clj.core/font
-   :coffi.mem/pointer
+   :coffi.mem/c-string
    :coffi.mem/float
    :coffi.mem/float
    :raylib-clj.core/color]
@@ -2587,19 +2587,19 @@
   gen-image-text
   "[width height text] -> image"
   GenImageText
-  [:coffi.mem/int :coffi.mem/int :coffi.mem/pointer]
+  [:coffi.mem/int :coffi.mem/int :coffi.mem/c-string]
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   load-image-anim
   "[fileName frames] -> image"
   LoadImageAnim
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   load-image-raw
   "[fileName width height format headerSize] -> image"
   LoadImageRaw
-  [:coffi.mem/pointer
+  [:coffi.mem/c-string
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
@@ -2609,7 +2609,7 @@
   export-image-to-memory
   "[image fileType fileSize] -> pointer"
   ExportImageToMemory
-  [:raylib-clj.core/image :coffi.mem/pointer :coffi.mem/pointer]
+  [:raylib-clj.core/image :coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   image-color-replace
@@ -2754,7 +2754,7 @@
   image-text
   "[text fontSize color] -> image"
   ImageText
-  [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
+  [:coffi.mem/c-string :coffi.mem/int :raylib-clj.core/color]
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   load-image
@@ -2796,7 +2796,7 @@
   ImageDrawTextEx
   [:coffi.mem/pointer
    :raylib-clj.core/font
-   :coffi.mem/pointer
+   :coffi.mem/c-string
    :raylib-clj.core/vec2
    :coffi.mem/float
    :coffi.mem/float
@@ -2891,7 +2891,7 @@
   "[image text posX posY fontSize color] -> void"
   ImageDrawText
   [:coffi.mem/pointer
-   :coffi.mem/pointer
+   :coffi.mem/c-string
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
@@ -3083,7 +3083,7 @@
   load-texture
   "[fileName] -> texture"
   LoadTexture
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/texture)
 (coffi.ffi/defcfn
   get-pixel-color
@@ -3148,7 +3148,7 @@
   get-codepoint-next
   "[text codepointSize] -> int"
   GetCodepointNext
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   get-glyph-info
@@ -3160,7 +3160,7 @@
   load-codepoints
   "[text count] -> pointer"
   LoadCodepoints
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   text-subtext
@@ -3184,13 +3184,13 @@
   get-codepoint
   "[text codepointSize] -> int"
   GetCodepoint
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   measure-text
   "[text fontSize] -> int"
   MeasureText
-  [:coffi.mem/pointer :coffi.mem/int]
+  [:coffi.mem/c-string :coffi.mem/int]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   text-append
@@ -3232,7 +3232,7 @@
   measure-text-ex
   "[font text fontSize spacing] -> vec2"
   MeasureTextEx
-  [:raylib-clj.core/font :coffi.mem/pointer :coffi.mem/float :coffi.mem/float]
+  [:raylib-clj.core/font :coffi.mem/c-string :coffi.mem/float :coffi.mem/float]
   :raylib-clj.core/vec2)
 (coffi.ffi/defcfn
   unload-utf-8
@@ -3244,7 +3244,7 @@
   get-codepoint-count
   "[text] -> int"
   GetCodepointCount
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   set-text-line-spacing
@@ -3256,7 +3256,7 @@
   get-codepoint-previous
   "[text codepointSize] -> int"
   GetCodepointPrevious
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/int)
 (coffi.ffi/defcfn
   text-length
@@ -3296,10 +3296,10 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   codepoint-to-utf-8
-  "[codepoint utf8Size] -> pointer"
+  "[codepoint utf8Size] -> string"
   CodepointToUTF8
   [:coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   unload-codepoints
   "[codepoints] -> void"
