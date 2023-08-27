@@ -824,21 +824,12 @@
   []
   :coffi.mem/void)
 
-(comment
-(+ 1 2)
-
-  ;TODO:this thing doesn't work... whats the actual symbol in the shared library?
-  ;it seems like the function simply isn't in the exports of the library...
-  ;is this a build issue? is there some sort of flag that must be enabled before
-  ;the shared library contains the function?
-  ;the shared library *should* have been built with PLATFORM=DESKTOP...
-  (coffi.ffi/defcfn
-   toggle-borderless-windowed
-   "[] -> void"
-   ToggleBorderlessWindowed
-   []
-   :coffi.mem/void)
-  )
+(coffi.ffi/defcfn
+  toggle-borderless-windowed
+  "[] -> void"
+  ToggleBorderlessWindowed
+  []
+  :coffi.mem/void)
 
 (coffi.ffi/defcfn
   maximize-window
@@ -1202,18 +1193,17 @@
   ExportFontAsCode
   [:raylib-clj.core/font :coffi.mem/pointer]
   :coffi.mem/byte)
-(comment;TODO
-  (coffi.ffi/defcfn
-   load-font-data
-   "[fileData dataSize fontSize fontChars glyphCount type] -> point"
-   LoadFontData
-   [:coffi.mem/pointer
-    :coffi.mem/int
-    :coffi.mem/int
-    :coffi.mem/pointer
-    :coffi.mem/int
-    :coffi.mem/int]
-   :raylib-clj.core/point))
+(coffi.ffi/defcfn
+  load-font-data
+  "[fileData dataSize fontSize fontChars glyphCount type] -> point"
+  LoadFontData
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int]
+  [:coffi.mem/pointer :raylib-clj.core/glyph-info])
 (coffi.ffi/defcfn
   get-font-default
   "[] -> font"
@@ -1957,13 +1947,12 @@
   :coffi.mem/float)
 
 
-(comment;TODO
-  (coffi.ffi/defcfn
-   update-camera-3-d
-   "[camera-3d mode] -> void"
-   UpdateCamera3D
-   [:coffi.mem/pointer :coffi.mem/int]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  update-camera
+  "[camera-3d mode] -> void"
+  UpdateCamera
+  [:coffi.mem/pointer :coffi.mem/int]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   update-camera-pro
   "[camera-3d movement rotation zoom] -> void"
@@ -2054,13 +2043,12 @@
   DrawLineV
   [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :raylib-clj.core/color]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-line-b-spline
-   "[points pointCount thick color] -> void"
-   DrawLineBSpline
-   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-line-b-spline
+  "[points pointCount thick color] -> void"
+  DrawLineBSpline
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-pixel-v
   "[position color] -> void"
@@ -2155,13 +2143,12 @@
    :coffi.mem/int
    :raylib-clj.core/color]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   check-collision-point-poly
-   "[point points pointCount] -> byte"
-   CheckCollisionPointPoly
-   [:raylib-clj.core/vec2 :raylib-clj.core/point :coffi.mem/int]
-   :coffi.mem/byte))
+(coffi.ffi/defcfn
+  check-collision-point-poly
+  "[point points pointCount] -> byte"
+  CheckCollisionPointPoly
+  [:raylib-clj.core/vec2 [:coffi.mem/pointer :raylib-clj.core/vec2] :coffi.mem/int]
+  :coffi.mem/byte)
 (coffi.ffi/defcfn
   draw-ellipse-lines
   "[centerX centerY radiusH radiusV color] -> void"
@@ -2223,13 +2210,12 @@
    :raylib-clj.core/vec2
    :coffi.mem/float]
   :coffi.mem/byte)
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-line-strip
-   "[points pointCount color] -> void"
-   DrawLineStrip
-   [:raylib-clj.core/points :coffi.mem/int :raylib-clj.core/color]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-line-strip
+  "[points pointCount color] -> void"
+  DrawLineStrip
+  [[:coffi.mem/pointer :raylib-clj.core/point] :coffi.mem/int :raylib-clj.core/color]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-circle
   "[centerX centerY radius color] -> void"
@@ -2277,13 +2263,12 @@
    :coffi.mem/int
    :raylib-clj.core/color]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   draw-line-catmull-rom
-   "[points pointCount thick color] -> void"
-   DrawLineCatmullRom
-   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  draw-line-catmull-rom
+  "[points pointCount thick color] -> void"
+  DrawLineCatmullRom
+  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-line-bezier
   "[startPos endPos thick color] -> void"
@@ -2529,13 +2514,12 @@
   LoadImageFromMemory
   [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
   :raylib-clj.core/image)
-(comment;TODO
-  (coffi.ffi/defcfn
-   get-image-colors
-   "[image x y] -> color"
-   GetImageColors
-   [:raylib-clj.core/image :coffi.mem/int :coffi.mem/int]
-   :raylib-clj.core/color))
+(coffi.ffi/defcfn
+  get-image-color
+  "[image x y] -> color"
+  GetImageColor
+  [:raylib-clj.core/image :coffi.mem/int :coffi.mem/int]
+  :raylib-clj.core/color)
 (coffi.ffi/defcfn
   gen-image-cellular
   "[width height tileSize] -> image"
@@ -4121,13 +4105,12 @@
   UnloadWaveSamples
   [:coffi.mem/pointer]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   load-sound-alias
-   "[source] -> sound"
-   LoadSoundAlias
-   [:raylib-clj.core/sound]
-   :raylib-clj.core/sound))
+(coffi.ffi/defcfn
+  load-sound-alias
+  "[source] -> sound"
+  LoadSoundAlias
+  [:raylib-clj.core/sound]
+  :raylib-clj.core/sound)
 (coffi.ffi/defcfn
   audio-stream-processed?
   "[stream] -> bool"
@@ -4146,13 +4129,12 @@
   PauseSound
   [:raylib-clj.core/sound]
   :coffi.mem/void)
-(comment;TODO
-  (coffi.ffi/defcfn
-   unload-sound-alias
-   "[alias] -> void"
-   UnloadSoundAlias
-   [:raylib-clj.core/sound]
-   :coffi.mem/void))
+(coffi.ffi/defcfn
+  unload-sound-alias
+  "[alias] -> void"
+  UnloadSoundAlias
+  [:raylib-clj.core/sound]
+  :coffi.mem/void)
 (coffi.ffi/defcfn
   load-wave-samples
   "[wave] -> pointer"
