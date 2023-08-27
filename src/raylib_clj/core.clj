@@ -4142,51 +4142,27 @@
   :coffi.mem/void)
 (comment
 
-  (defn byte->bool [b] (not= b 0))
-
   (def state (atom [(System/nanoTime) [1]]))
-
 
   (do
 
     (init-window 800 450 "raylib-clj [core] example - basic window")
-
+    (set-target-fps 240)
     (clear-window-state FLAG_VSYNC_HINT)
-    (set-target-fps 480)
     (while (not (window-should-close?))
       (let [[last-time acc] @state
-            window-should-close-state (window-should-close?)
-                                        ;_ (println (str "last-time: " last-time))
             newtime (System/nanoTime)
             diff (- newtime last-time)
-                                        ;_ (println (str "diff: " diff))
-            newvec (conj acc diff)
-                                        ;_ (println "newvec calculated.. " )
-            newacc (vec (take-last 1000 newvec))
-                                        ;_ (println "newacc calculated.. " )
+            newacc (vec (take-last 100 (conj acc diff)))
             average-diff (/ (reduce + newacc) (count newacc))
-            average-diff-ms (long (/ average-diff 1000000))
-                                        ;_ (println "average-diff calculated.. " )
-            average-fps (long (/ 1000000000 average-diff))
-                                        ;_ (println "average-fps calculated.. " )
-            ]
+            average-fps (long (/ 1000000000 average-diff))]
         (reset! state [newtime newacc])
-
         (begin-drawing)
         (clear-background RAYWHITE)
         (draw-text "Congrats! You created your first raylib window!" 190 200 20 BLACK)
-        (draw-text "And you did it from clojure!" (int (+ 190 (rand 10))) 240 20 BLACK)
-        (draw-text (str "vsync on? " (-> FLAG_VSYNC_HINT (window-state?) (byte->bool))) 190 280 20 BLACK)
-        ;(draw-text (str "count newacc: " (count newacc) ) 190 340 20 BLACK)
-        ;(draw-text (str "average-diff in ms: " average-diff-ms ) 190 360 20 BLACK)
-        (draw-text (str "ad-hoc-fps: " average-fps ) 190 380 20 BLACK)
-        ;(draw-text (str "newtime: " newtime ) 190 400 20 BLACK)
-        ;(draw-text (str "last-diff: " (long (/ diff 1000000)) ) 190 420 20 BLACK)
-        (draw-text (str "window-should-close-state: " window-should-close-state ) 190 420 20 BLACK)
-        window-should-close-state
-        ;(draw-fps 700 20)
+        (draw-text "And you did it from clojure!" (int (+ 190 (rand 5))) 240 20 BLACK)
+        (draw-text (str "fps: " average-fps ) 190 380 20 BLACK)
         (end-drawing)
-
         )
       )
     (close-window)
