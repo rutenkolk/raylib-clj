@@ -30,7 +30,23 @@
      (layout/with-c-layout
        [::mem/struct ~members])))
 
+(mem/defalias ::bool [::mem/struct [[:value ::mem/byte]]])
+
+(defmethod mem/serialize-into ::bool
+  [v _ segment session]
+  (mem/serialize-into
+   {:value (if v 1 0)}
+   [::mem/struct [[:value ::mem/byte]]]
+   segment
+   session))
+
+(defmethod mem/deserialize-from ::bool
+  [segment _]
+  (let [byteval (mem/deserialize-from segment ::mem/byte)]
+    (not= 0 byteval)))
+
 (define-datatype! :vec2 [(f32 :x) (f32 :y)])
+
 (define-datatype! :vec3 [(f32 :x) (f32 :y) (f32 :z)])
 (define-datatype! :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
 
@@ -734,11 +750,12 @@
   )
 
 (coffi.ffi/defcfn
-  window-should-close
+  window-should-close?
   "[] -> bool"
   WindowShouldClose
   []
-  :coffi.mem/byte)
+  :raylib-clj.core/bool
+  )
 
 (coffi.ffi/defcfn
   close-window
@@ -752,56 +769,56 @@
   "[] -> bool"
   IsWindowReady
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-fullscreen?
   "[ ] -> bool"
   IsWindowFullscreen
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-hidden?
   "[ ] -> bool"
   IsWindowHidden
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-minimized?
   "[ ] -> bool"
   IsWindowMinimized
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-maximized?
   "[ ] -> bool"
   IsWindowMaximized
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-focused?
   "[] -> bool"
   IsWindowFocused
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-resized?
   "[] -> bool"
   IsWindowResized
   []
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   window-state?
   "[flag] -> bool"
   IsWindowState
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 
 (coffi.ffi/defcfn
   set-window-state
@@ -1069,7 +1086,7 @@
   "[] -> bool"
   IsCursorOnScreen
   []
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn end-mode-2-d "[] -> void" EndMode2D [] :coffi.mem/void)
 (coffi.ffi/defcfn
   clear-background
@@ -1082,7 +1099,7 @@
   "[] -> bool"
   IsCursorHidden
   []
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   begin-mode-3-d
   "[camera] -> void"
@@ -1186,7 +1203,7 @@
   "[font] -> bool"
   IsFontReady
   [:raylib-clj.core/font]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   export-font-as-code
   "[font fileName] -> byte"
@@ -1343,7 +1360,7 @@
   "[shader] -> bool"
   IsShaderReady
   [:raylib-clj.core/shader]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-shader-value-matrix
   "[shader locIndex mat] -> mat4"
@@ -1567,7 +1584,7 @@
   "[path] -> bool"
   IsPathFile
   [:coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   save-file-data
   "[fileName data bytesToWrite] -> byte"
@@ -1639,7 +1656,7 @@
   "[] -> bool"
   IsFileDropped
   []
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   load-file-data
   "[fileName bytesRead] -> pointer"
@@ -1663,7 +1680,7 @@
   "[fileName ext] -> bool"
   IsFileExtension
   [:coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   unload-file-text
   "[text] -> void"
@@ -1715,7 +1732,7 @@
   "[key] -> bool"
   IsKeyPressed
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-touch-point-id
   "[index] -> int"
@@ -1733,19 +1750,19 @@
   "[gamepad] -> bool"
   IsGamepadAvailable
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   key-up?
   "[key] -> bool"
   IsKeyUp
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   gamepad-button-released?
   "[gamepad button] -> bool"
   IsGamepadButtonReleased
   [:coffi.mem/int :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-gamepad-name
   "[gamepad] -> pointer"
@@ -1757,7 +1774,7 @@
   "[key] -> bool"
   IsKeyDown
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-gamepad-mappings
   "[mappings] -> int"
@@ -1787,7 +1804,7 @@
   "[button] -> bool"
   IsMouseButtonUp
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-gamepad-axis-count
   "[gamepad] -> int"
@@ -1830,26 +1847,26 @@
   "[key] -> bool"
   IsKeyReleased
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   gamepad-button-pressed?
   "[gamepad button] -> bool"
   IsGamepadButtonPressed
   [:coffi.mem/int :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn get-key-pressed "[] -> int" GetKeyPressed [] :coffi.mem/int)
 (coffi.ffi/defcfn
   gamepad-button-up?
   "[gamepad button] -> bool"
   IsGamepadButtonUp
   [:coffi.mem/int :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   mouse-button-released?
   "[button] -> bool"
   IsMouseButtonReleased
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-mouse-scale
   "[scaleX scaleY] -> void"
@@ -1862,7 +1879,7 @@
   "[gamepad button] -> bool"
   IsGamepadButtonDown
   [:coffi.mem/int :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-mouse-wheel-move-v
   "[] -> vec2"
@@ -1887,14 +1904,14 @@
   "[button] -> bool"
   IsMouseButtonDown
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn get-mouse-x "[] -> int" GetMouseX [] :coffi.mem/int)
 (coffi.ffi/defcfn
   mouse-button-pressed?
   "[button] -> bool"
   IsMouseButtonPressed
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 
 
 (coffi.ffi/defcfn
@@ -1908,7 +1925,7 @@
   "[gesture] -> bool"
   IsGestureDetected
   [:coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-gesture-detected
   "[] -> int"
@@ -2468,7 +2485,7 @@
   "[image] -> bool"
   IsImageReady
   [:raylib-clj.core/image]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   image-dither
   "[image rBpp gBpp bBpp aBpp] -> void"
@@ -3061,7 +3078,7 @@
   "[target] -> bool"
   IsRenderTextureReady
   [:raylib-clj.core/render-texture]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   load-texture
   "[fileName] -> texture"
@@ -3117,7 +3134,7 @@
   "[texture] -> bool"
   IsTextureReady
   [:raylib-clj.core/texture]
-  :coffi.mem/byte)
+  ::bool)
 
 
 
@@ -3622,7 +3639,7 @@
   "[model] -> bool"
   IsModelReady
   [:raylib-clj.core/model]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   gen-mesh-cubicmap
   "[cubicmap cubeSize] -> mesh"
@@ -3728,7 +3745,7 @@
   "[material] -> bool"
   IsMaterialReady
   [:raylib-clj.core/material]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   update-model-animation
   "[model anim frame] -> void"
@@ -3755,7 +3772,7 @@
   "[model anim] -> bool"
   IsModelAnimationValid
   [:raylib-clj.core/model :raylib-clj.core/model-animation]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-ray-collision-sphere
   "[ray center radius] -> ray-collision"
@@ -3948,13 +3965,13 @@
   "[sound] -> bool"
   IsSoundPlaying
   [:raylib-clj.core/sound]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   sound-ready?
   "[sound] -> bool"
   IsSoundReady
   [:raylib-clj.core/sound]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   update-music-stream
   "[music] -> void"
@@ -3978,7 +3995,7 @@
   "[music] -> bool"
   IsMusicReady
   [:raylib-clj.core/music]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   update-audio-stream
   "[stream data frameCount] -> void"
@@ -4002,7 +4019,7 @@
   "[stream] -> bool"
   IsAudioStreamReady
   [:raylib-clj.core/audio-stream]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   load-sound
   "[fileName] -> sound"
@@ -4014,7 +4031,7 @@
   "[music] -> bool"
   IsMusicStreamPlaying
   [:raylib-clj.core/music]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   seek-music-stream
   "[music position] -> void"
@@ -4026,7 +4043,7 @@
   "[stream] -> bool"
   IsAudioStreamPlaying
   [:raylib-clj.core/audio-stream]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   load-wave-from-memory
   "[fileType fileData dataSize] -> wave"
@@ -4086,7 +4103,7 @@
   "[wave] -> bool"
   IsWaveReady
   [:raylib-clj.core/wave]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-sound-volume
   "[sound volume] -> void"
@@ -4116,7 +4133,7 @@
   "[stream] -> bool"
   IsAudioStreamProcessed
   [:raylib-clj.core/audio-stream]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-sound-pitch
   "[sound pitch] -> void"
@@ -4176,7 +4193,7 @@
   "[] -> bool"
   IsAudioDeviceReady
   []
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   resume-audio-stream
   "[stream] -> void"
@@ -4214,8 +4231,9 @@
 
     (clear-window-state FLAG_VSYNC_HINT)
     (set-target-fps 480)
-    (while (not (byte->bool (window-should-close)))
+    (while (not (window-should-close?))
       (let [[last-time acc] @state
+            window-should-close-state (window-should-close?)
                                         ;_ (println (str "last-time: " last-time))
             newtime (System/nanoTime)
             diff (- newtime last-time)
@@ -4242,7 +4260,8 @@
         (draw-text (str "ad-hoc-fps: " average-fps ) 190 380 20 BLACK)
         ;(draw-text (str "newtime: " newtime ) 190 400 20 BLACK)
         ;(draw-text (str "last-diff: " (long (/ diff 1000000)) ) 190 420 20 BLACK)
-
+        (draw-text (str "window-should-close-state: " window-should-close-state ) 190 420 20 BLACK)
+        window-should-close-state
         ;(draw-fps 700 20)
         (end-drawing)
 
