@@ -930,10 +930,10 @@
 
 (coffi.ffi/defcfn
   get-clipboard-text
-  "[] -> pointer"
+  "[] -> string"
   GetClipboardText
   []
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   disable-event-waiting
   "[] -> void"
@@ -1032,7 +1032,7 @@
   :coffi.mem/int)
 (coffi.ffi/defcfn
   get-monitor-name
-  "[monitor] -> pointer"
+  "[monitor] -> string"
   GetMonitorName
   [:coffi.mem/int]
   :coffi.mem/c-string)
@@ -1045,7 +1045,7 @@
 
 (coffi.ffi/defcfn
   get-clipboard-text
-  "[] -> pointer"
+  "[] -> string"
   GetClipboardText
   []
   :coffi.mem/c-string)
@@ -1593,13 +1593,13 @@
   ::bool)
 (coffi.ffi/defcfn
   get-file-extension
-  "[fileName] -> pointer"
+  "[fileName] -> string"
   GetFileExtension
   [:coffi.mem/c-string]
   :coffi.mem/c-string)
 (coffi.ffi/defcfn
   get-file-name
-  "[filePath] -> pointer"
+  "[filePath] -> string"
   GetFileName
   [:coffi.mem/c-string]
   :coffi.mem/c-string)
@@ -1635,10 +1635,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   load-file-text
-  "[fileName] -> pointer"
+  "[fileName] -> string"
   LoadFileText
   [:coffi.mem/c-string]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   unload-file-data
   "[data] -> void"
@@ -1647,7 +1647,7 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   get-file-name-without-ext
-  "[filePath] -> pointer"
+  "[filePath] -> string"
   GetFileNameWithoutExt
   [:coffi.mem/c-string]
   :coffi.mem/c-string)
@@ -1709,15 +1709,15 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   encode-data-base-64
-  "[data dataSize outputSize] -> pointer"
+  "[data dataSize outputSize] -> string"
   EncodeDataBase64
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/pointer)
+  :coffi.mem/c-string)
 (coffi.ffi/defcfn
   decode-data-base-64
   "[data outputSize] -> pointer"
   DecodeDataBase64
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 
 
