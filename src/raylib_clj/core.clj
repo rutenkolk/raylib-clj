@@ -3461,7 +3461,7 @@
   load-model
   "[fileName] -> model"
   LoadModel
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/model)
 (coffi.ffi/defcfn
   draw-billboard-rec
@@ -3490,7 +3490,7 @@
   export-mesh
   "[mesh fileName] -> bool"
   ExportMesh
-  [:raylib-clj.core/mesh :coffi.mem/pointer]
+  [:raylib-clj.core/mesh :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   gen-mesh-hemi-sphere
@@ -3751,7 +3751,7 @@
   load-model-animations
   "[fileName animCount] -> pointer"
   LoadModelAnimations
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   load-material-default
@@ -3763,7 +3763,7 @@
   load-materials
   "[fileName materialCount] -> pointer"
   LoadMaterials
-  [:coffi.mem/pointer :coffi.mem/pointer]
+  [:coffi.mem/c-string :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   check-collision-boxes
@@ -3784,13 +3784,13 @@
   load-music-stream
   "[fileName] -> music"
   LoadMusicStream
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/music)
 (coffi.ffi/defcfn
   load-music-stream-from-memory
   "[fileType data dataSize] -> music"
   LoadMusicStreamFromMemory
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
   :raylib-clj.core/music)
 (coffi.ffi/defcfn
   update-sound
@@ -3808,13 +3808,13 @@
   load-wave
   "[fileName] -> wave"
   LoadWave
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/wave)
 (coffi.ffi/defcfn
   export-wave
   "[wave fileName] -> bool"
   ExportWave
-  [:raylib-clj.core/wave :coffi.mem/pointer]
+  [:raylib-clj.core/wave :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   set-audio-stream-pan
@@ -3832,7 +3832,7 @@
   export-wave-as-code
   "[wave fileName] -> bool"
   ExportWaveAsCode
-  [:raylib-clj.core/wave :coffi.mem/pointer]
+  [:raylib-clj.core/wave :coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
   stop-music-stream
@@ -3946,7 +3946,7 @@
   load-sound
   "[fileName] -> sound"
   LoadSound
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/sound)
 (coffi.ffi/defcfn
   music-stream-playing?
@@ -3970,7 +3970,7 @@
   load-wave-from-memory
   "[fileType fileData dataSize] -> wave"
   LoadWaveFromMemory
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
+  [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
   :raylib-clj.core/wave)
 (coffi.ffi/defcfn
   unload-sound
