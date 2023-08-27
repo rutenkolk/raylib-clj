@@ -1532,11 +1532,11 @@
 
 
 (coffi.ffi/defcfn
-  file-exists
-  "[fileName] -> byte"
+  file-exists?
+  "[fileName] -> bool"
   FileExists
   [:coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   unload-directory-files
   "[files] -> void"
@@ -1551,10 +1551,10 @@
   :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   change-directory
-  "[dir] -> byte"
+  "[dir] -> bool"
   ChangeDirectory
   [:coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-directory-path
   "[filePath] -> pointer"
@@ -1574,11 +1574,11 @@
   [:coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
-  directory-exists
-  "[dirPath] -> byte"
+  directory-exists?
+  "[dirPath] -> bool"
   DirectoryExists
   [:coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   path-file?
   "[path] -> bool"
@@ -1587,10 +1587,10 @@
   ::bool)
 (coffi.ffi/defcfn
   save-file-data
-  "[fileName data bytesToWrite] -> byte"
+  "[fileName data bytesToWrite] -> bool"
   SaveFileData
   [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   get-file-extension
   "[fileName] -> pointer"
@@ -1623,10 +1623,10 @@
   :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   save-file-text
-  "[fileName text] -> byte"
+  "[fileName text] -> bool"
   SaveFileText
   [:coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   unload-dropped-files
   "[files] -> void"
@@ -1667,14 +1667,14 @@
   load-directory-files-ex
   "[basePath filter scanSubdirs] -> file-path-list"
   LoadDirectoryFilesEx
-  [:coffi.mem/pointer :coffi.mem/pointer :coffi.mem/byte]
+  [:coffi.mem/pointer :coffi.mem/pointer ::bool]
   :raylib-clj.core/file-path-list)
 (coffi.ffi/defcfn
   export-data-as-code
-  "[data size fileName] -> byte"
+  "[data size fileName] -> bool"
   ExportDataAsCode
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   file-extension?
   "[fileName ext] -> bool"
@@ -1983,13 +1983,13 @@
 
 (coffi.ffi/defcfn
   check-collision-point-triangle
-  "[point p1 p2 p3] -> byte"
+  "[point p1 p2 p3] -> bool"
   CheckCollisionPointTriangle
   [:raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-poly
   "[center sides radius rotation color] -> void"
@@ -2002,14 +2002,14 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-lines
-  "[startPos1 endPos1 startPos2 endPos2 collisionPoint] -> byte"
+  "[startPos1 endPos1 startPos2 endPos2 collisionPoint] -> bool"
   CheckCollisionLines
   [:raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-shapes-texture
   "[texture source] -> void"
@@ -2095,10 +2095,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-point-circle
-  "[point center radius] -> byte"
+  "[point center radius] -> bool"
   CheckCollisionPointCircle
   [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :coffi.mem/float]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-circle-v
   "[center radius color] -> void"
@@ -2122,10 +2122,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-circle-rec
-  "[center radius rec] -> byte"
+  "[center radius rec] -> bool"
   CheckCollisionCircleRec
   [:raylib-clj.core/vec2 :coffi.mem/float :raylib-clj.core/rectangle]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-triangle-fan
   "[points pointCount color] -> void"
@@ -2134,10 +2134,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-point-rec
-  "[point rec] -> byte"
+  "[point rec] -> bool"
   CheckCollisionPointRec
   [:raylib-clj.core/vec2 :raylib-clj.core/rectangle]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-ellipse
   "[centerX centerY radiusH radiusV color] -> void"
@@ -2162,10 +2162,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-point-poly
-  "[point points pointCount] -> byte"
+  "[point points pointCount] -> bool"
   CheckCollisionPointPoly
   [:raylib-clj.core/vec2 [:coffi.mem/pointer :raylib-clj.core/vec2] :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-ellipse-lines
   "[centerX centerY radiusH radiusV color] -> void"
@@ -2200,13 +2200,13 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-point-line
-  "[point p1 p2 threshold] -> byte"
+  "[point p1 p2 threshold] -> bool"
   CheckCollisionPointLine
   [:raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :coffi.mem/int]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-line-bezier-cubic
   "[startPos endPos startControlPos endControlPos thick color] -> void"
@@ -2220,13 +2220,13 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-circles
-  "[center1 radius1 center2 radius2] -> byte"
+  "[center1 radius1 center2 radius2] -> bool"
   CheckCollisionCircles
   [:raylib-clj.core/vec2
    :coffi.mem/float
    :raylib-clj.core/vec2
    :coffi.mem/float]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-line-strip
   "[points pointCount color] -> void"
@@ -2257,10 +2257,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-recs
-  "[rec1 rec2] -> byte"
+  "[rec1 rec2] -> bool"
   CheckCollisionRecs
   [:raylib-clj.core/rectangle :raylib-clj.core/rectangle]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   draw-rectangle-rounded
   "[rec roundness segments color] -> void"
@@ -2408,10 +2408,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   export-image
-  "[image fileName] -> byte"
+  "[image fileName] -> bool"
   ExportImage
   [:raylib-clj.core/image :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   load-image-colors
   "[image] -> pointer"
@@ -2454,10 +2454,10 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   export-image-as-code
-  "[image fileName] -> byte"
+  "[image fileName] -> bool"
   ExportImageAsCode
   [:raylib-clj.core/image :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   gen-image-gradient-linear
   "[width height direction start end] -> image"
@@ -3212,10 +3212,10 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   text-is-equal
-  "[text1 text2] -> byte"
+  "[text1 text2] -> bool"
   TextIsEqual
   [:coffi.mem/pointer :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   text-copy
   "[dst src] -> int"
@@ -3280,7 +3280,7 @@
   text-split
   "[text delimiter count] -> pointer"
   TextSplit
-  [:coffi.mem/pointer :coffi.mem/byte :coffi.mem/pointer]
+  [:coffi.mem/pointer :coffi.mem/char :coffi.mem/pointer]
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   text-insert
@@ -3566,10 +3566,10 @@
   :raylib-clj.core/mesh)
 (coffi.ffi/defcfn
   export-mesh
-  "[mesh fileName] -> byte"
+  "[mesh fileName] -> bool"
   ExportMesh
   [:raylib-clj.core/mesh :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   gen-mesh-hemi-sphere
   "[radius rings slices] -> mesh"
@@ -3632,7 +3632,7 @@
   upload-mesh
   "[mesh dynamic] -> void"
   UploadMesh
-  [:coffi.mem/pointer :coffi.mem/byte]
+  [:coffi.mem/pointer ::bool]
   :coffi.mem/void)
 (coffi.ffi/defcfn
   model-ready?
@@ -3760,13 +3760,13 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-spheres
-  "[center1 radius1 center2 radius2] -> byte"
+  "[center1 radius1 center2 radius2] -> bool"
   CheckCollisionSpheres
   [:raylib-clj.core/vec3
    :coffi.mem/float
    :raylib-clj.core/vec3
    :coffi.mem/float]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   model-animation-valid?
   "[model anim] -> bool"
@@ -3781,10 +3781,10 @@
   :raylib-clj.core/ray-collision)
 (coffi.ffi/defcfn
   check-collision-box-sphere
-  "[box center radius] -> byte"
+  "[box center radius] -> bool"
   CheckCollisionBoxSphere
   [:raylib-clj.core/bounding-box :raylib-clj.core/vec3 :coffi.mem/float]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   unload-model-animations
   "[animations count] -> void"
@@ -3845,10 +3845,10 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   check-collision-boxes
-  "[box1 box2] -> byte"
+  "[box1 box2] -> bool"
   CheckCollisionBoxes
   [:raylib-clj.core/bounding-box :raylib-clj.core/bounding-box]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   unload-model-animation
   "[anim] -> void"
@@ -3890,10 +3890,10 @@
   :raylib-clj.core/wave)
 (coffi.ffi/defcfn
   export-wave
-  "[wave fileName] -> byte"
+  "[wave fileName] -> bool"
   ExportWave
   [:raylib-clj.core/wave :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   set-audio-stream-pan
   "[stream pan] -> void"
@@ -3908,10 +3908,10 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   export-wave-as-code
-  "[wave fileName] -> byte"
+  "[wave fileName] -> bool"
   ExportWaveAsCode
   [:raylib-clj.core/wave :coffi.mem/pointer]
-  :coffi.mem/byte)
+  ::bool)
 (coffi.ffi/defcfn
   stop-music-stream
   "[music] -> void"
