@@ -25,10 +25,45 @@
 (defn- pointer [name] [name ::mem/pointer])
 (def- ptr pointer)
 
+(defn as-signed-char  [v] (- v (* (if (< v 128) 0 1) 256)))
+(defn as-signed-short [v] (- v (* (if (< v 16384) 0 1) 32768)))
+(defn as-signed-int   [v] (- v (* (if (< v 1073741824) 0 1) 2147483648)))
+(defn as-boolean-int  [v] (if v 1 0))
+
+(def value-as-type
+  {'uchar 'as-signed-char
+   'ui8   'as-signed-char
+   'ui16  'as-signed-short
+   'ui32  'as-signed-int
+   'bool  'as-boolean-int
+   })
+
+(defn get-data-from-datatype [index [type-name member-name]]
+  (let [value-as-type-fn (value-as-type type-name)]
+    (if value-as-type-fn
+      [member-name `(~(value-as-type type-name) (nth ~'obj ~index))]
+      [member-name `(nth ~'obj ~index)]
+      )
+    )
+  )
+
+
+(defmacro define-serialize-into [type-name members]
+  `(defmethod mem/serialize-into ~(keyword "raylib-clj.core" (name type-name))
+     [~'obj ~'_ ~'segment ~'session]
+     (mem/serialize-into
+      ~(->> members (map-indexed get-data-from-datatype) (into (hash-map)))
+      (layout/with-c-layout
+        [::mem/struct ~(eval members)])
+      ~'segment
+      ~'session)))
+
 (defmacro define-datatype! [type-name members]
-  `(mem/defalias ~(keyword "raylib-clj.core" (name type-name))
-     (layout/with-c-layout
-       [::mem/struct ~members])))
+  `(do
+     (mem/defalias ~(keyword "raylib-clj.core" (name type-name))
+      (layout/with-c-layout
+        [::mem/struct ~members]))
+     (define-serialize-into ~type-name ~members)))
 
 (mem/defalias ::bool [::mem/struct [[:value ::mem/byte]]])
 
@@ -46,7 +81,6 @@
     (not= 0 byteval)))
 
 (define-datatype! :vec2 [(f32 :x) (f32 :y)])
-
 (define-datatype! :vec3 [(f32 :x) (f32 :y) (f32 :z)])
 (define-datatype! :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
 
@@ -60,18 +94,26 @@
 
 (define-datatype! :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
 
-(defn char->uchar [b]
-  (- b (* (if (< b 128) 0 1) 256)))
 
 (defmethod mem/serialize-into ::color
   [[r g b a] _ segment session]
   (mem/serialize-into
-   {:r (char->uchar r)
-    :g (char->uchar g)
-    :b (char->uchar b)
-    :a (char->uchar a)}
+   {:r (as-signed-char r)
+    :g (as-signed-char g)
+    :b (as-signed-char b)
+    :a (as-signed-char a)}
    (layout/with-c-layout
      [::mem/struct [[:r ::mem/byte] [:g ::mem/byte] [:b ::mem/byte] [:a ::mem/byte]]])
+   segment
+   session))
+
+(defmethod mem/serialize-into :raylib-clj.core/vec2
+  [value _ segment session]
+  (mem/serialize-into
+   {:x (nth value 0)
+    :y (nth value 1)}
+   (layout/with-c-layout
+     [:coffi.mem/struct [[:x :coffi.mem/float] [:y :coffi.mem/float]]])
    segment
    session))
 
