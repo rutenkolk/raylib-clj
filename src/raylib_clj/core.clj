@@ -25,11 +25,12 @@
 (defn- pointer [name] [name ::mem/pointer])
 (def- ptr pointer)
 
+;deprecated?
 (defn as-signed-char  [v] (- v (* (if (< v 128) 0 1) 256)))
 (defn as-signed-short [v] (- v (* (if (< v 16384) 0 1) 32768)))
 (defn as-signed-int   [v] (- v (* (if (< v 1073741824) 0 1) 2147483648)))
 (defn as-boolean-int  [v] (if v 1 0))
-
+;deprecated?
 (def value-as-type
   {'uchar 'as-signed-char
    'ui8   'as-signed-char
@@ -38,32 +39,35 @@
    'bool  'as-boolean-int
    })
 
+;deprecated?
 (defn get-data-from-datatype [index [type-name member-name]]
   (let [value-as-type-fn (value-as-type type-name)]
     (if value-as-type-fn
       [member-name `(~(value-as-type type-name) (nth ~'obj ~index))]
-      [member-name `(nth ~'obj ~index)]
-      )
-    )
-  )
+      [member-name `(nth ~'obj ~index)])))
 
+(defn- duplicate-member-name-as-keyword-and-symbol [in]
+  (let [[member-name _] (eval in)] [member-name (symbol (name member-name))]))
 
-(defmacro define-serialize-into [type-name members]
+(defmacro serialize-into-with-vector [type-name members]
   `(defmethod mem/serialize-into ~(keyword "raylib-clj.core" (name type-name))
      [~'obj ~'_ ~'segment ~'session]
-     (mem/serialize-into
-      ~(->> members (map-indexed get-data-from-datatype) (into (hash-map)))
-      (layout/with-c-layout
-        [::mem/struct ~(eval members)])
-      ~'segment
-      ~'session)))
+     (let [~'serializing-map
+           (if (vector? ~'obj)
+             (let [~(->> members (map (comp symbol name first eval)) (vec)) ~'obj]
+               ~(->> members (map duplicate-member-name-as-keyword-and-symbol) (into (hash-map))))
+             ~'obj)]
+         (mem/serialize-into
+       ~'serializing-map
+       (layout/with-c-layout
+         [::mem/struct ~(eval members)])
+       ~'segment
+       ~'session))))
 
 (defmacro define-datatype! [type-name members]
-  `(do
-     (mem/defalias ~(keyword "raylib-clj.core" (name type-name))
-      (layout/with-c-layout
-        [::mem/struct ~members]))
-     (define-serialize-into ~type-name ~members)))
+  `(mem/defalias ~(keyword "raylib-clj.core" (name type-name))
+    (layout/with-c-layout
+      [::mem/struct ~members])))
 
 (mem/defalias ::bool [::mem/struct [[:value ::mem/byte]]])
 
@@ -84,6 +88,10 @@
 (define-datatype! :vec3 [(f32 :x) (f32 :y) (f32 :z)])
 (define-datatype! :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
 
+(serialize-into-with-vector :vec2 [(f32 :x) (f32 :y)])
+(serialize-into-with-vector :vec3 [(f32 :x) (f32 :y) (f32 :z)])
+(serialize-into-with-vector :vec4 [(f32 :x) (f32 :y) (f32 :z) (f32 :w)])
+
 ;alias quaternion as vec4?
 
 (define-datatype! :mat4
@@ -92,32 +100,18 @@
    (f32 :m2)(f32 :m6)(f32 :m10)(f32 :m14)
    (f32 :m3)(f32 :m7)(f32 :m11)(f32 :m15)])
 
+(serialize-into-with-vector
+ :mat4
+ [(f32 :m0)(f32 :m4)(f32 :m8) (f32 :m12)
+  (f32 :m1)(f32 :m5)(f32 :m9) (f32 :m13)
+  (f32 :m2)(f32 :m6)(f32 :m10)(f32 :m14)
+  (f32 :m3)(f32 :m7)(f32 :m11)(f32 :m15)])
+
 (define-datatype! :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
-
-
-(defmethod mem/serialize-into ::color
-  [[r g b a] _ segment session]
-  (mem/serialize-into
-   {:r (as-signed-char r)
-    :g (as-signed-char g)
-    :b (as-signed-char b)
-    :a (as-signed-char a)}
-   (layout/with-c-layout
-     [::mem/struct [[:r ::mem/byte] [:g ::mem/byte] [:b ::mem/byte] [:a ::mem/byte]]])
-   segment
-   session))
-
-(defmethod mem/serialize-into :raylib-clj.core/vec2
-  [value _ segment session]
-  (mem/serialize-into
-   {:x (nth value 0)
-    :y (nth value 1)}
-   (layout/with-c-layout
-     [:coffi.mem/struct [[:x :coffi.mem/float] [:y :coffi.mem/float]]])
-   segment
-   session))
+(serialize-into-with-vector :color [(uchar :r) (uchar :g) (uchar :b) (uchar :a)])
 
 (define-datatype! :rectangle [(f32 :x) (f32 :y) (f32 :width) (f32 :height)])
+(serialize-into-with-vector :rectangle [(f32 :x) (f32 :y) (f32 :width) (f32 :height)])
 
 (define-datatype! :image
   [(pointer :data) (i32 :width) (i32 :height) (i32 :mipmaps) (i32 :format)])
@@ -319,10 +313,14 @@
 (def DARKBROWN  [ 76, 63, 47, 255       ])
 
 (def WHITE      [ 255, 255, 255, 255    ])
-(def BLACK      [ 0, 0, 0, 255          ])
+;(def BLACK      [ 0, 0, 0, 255          ])
+(def BLACK      {:r 0 :g 0 :b 0 :a 255})
+
 (def BLANK      [ 0, 0, 0, 0            ])
 (def MAGENTA    [ 255, 0, 255, 255      ])
-(def RAYWHITE   [ 245, 245, 245, 255    ])
+
+;(def RAYWHITE   [ 245, 245, 245, 255    ])
+(def RAYWHITE    {:r 245 :g 245 :b 245 :a 255})
 
 ;typedef enum {
 (defconst FLAG_VSYNC_HINT               0x00000040)
@@ -4189,6 +4187,7 @@
   (do
 
     (init-window 800 450 "raylib-clj [core] example - basic window")
+    (clear-window-state FLAG_VSYNC_HINT)
     (set-target-fps 240)
     (clear-window-state FLAG_VSYNC_HINT)
     (while (not (window-should-close?))
@@ -4202,7 +4201,7 @@
         (begin-drawing)
         (clear-background RAYWHITE)
         (draw-text "Congrats! You created your first raylib window!" 190 200 20 BLACK)
-        (draw-text "And you did it from clojure!" (int (+ 190 (rand 5))) 240 20 BLACK)
+        (draw-text "And you did it from clojure!" (int (+ 190 (rand 5))) 240 20 DARKBLUE)
         (draw-text (str "fps: " average-fps ) 190 380 20 BLACK)
         (end-drawing)
         )
