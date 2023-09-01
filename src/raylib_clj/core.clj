@@ -1608,24 +1608,6 @@
 
 
 (coffi.ffi/defcfn
-  file-exists?
-  "[fileName] -> bool"
-  FileExists
-  [:coffi.mem/c-string]
-  ::bool)
-(coffi.ffi/defcfn
-  unload-directory-files
-  "[files] -> void"
-  UnloadDirectoryFiles
-  [:raylib-clj.core/file-path-list]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
-  load-dropped-files
-  "[] -> file-path-list"
-  LoadDroppedFiles
-  []
-  :raylib-clj.core/file-path-list)
-(coffi.ffi/defcfn
   change-directory
   "[dir] -> bool"
   ChangeDirectory
@@ -1637,12 +1619,6 @@
   GetDirectoryPath
   [:coffi.mem/c-string]
   :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  get-file-length
-  "[fileName] -> int"
-  GetFileLength
-  [:coffi.mem/c-string]
-  :coffi.mem/int)
 (coffi.ffi/defcfn
   get-prev-directory-path
   "[dirPath] -> string"
@@ -1656,113 +1632,17 @@
   [:coffi.mem/c-string]
   ::bool)
 (coffi.ffi/defcfn
-  path-file?
-  "[path] -> bool"
-  IsPathFile
-  [:coffi.mem/c-string]
-  ::bool)
-(coffi.ffi/defcfn
-  save-file-data
-  "[fileName data bytesToWrite] -> bool"
-  SaveFileData
-  [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
-  ::bool)
-(coffi.ffi/defcfn
-  get-file-extension
-  "[fileName] -> string"
-  GetFileExtension
-  [:coffi.mem/c-string]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  get-file-name
-  "[filePath] -> string"
-  GetFileName
-  [:coffi.mem/c-string]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  get-file-mod-time
-  "[fileName] -> long"
-  GetFileModTime
-  [:coffi.mem/c-string]
-  :coffi.mem/long)
-(coffi.ffi/defcfn
   get-working-directory
   "[] -> string"
   GetWorkingDirectory
   []
   :coffi.mem/c-string)
 (coffi.ffi/defcfn
-  load-directory-files
-  "[dirPath] -> file-path-list"
-  LoadDirectoryFiles
-  [:coffi.mem/c-string]
-  :raylib-clj.core/file-path-list)
-(coffi.ffi/defcfn
-  save-file-text
-  "[fileName text] -> bool"
-  SaveFileText
-  [:coffi.mem/c-string :coffi.mem/c-string]
-  ::bool)
-(coffi.ffi/defcfn
-  unload-dropped-files
-  "[files] -> void"
-  UnloadDroppedFiles
-  [:raylib-clj.core/file-path-list]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
-  load-file-text
-  "[fileName] -> string"
-  LoadFileText
-  [:coffi.mem/c-string]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  unload-file-data
-  "[data] -> void"
-  UnloadFileData
-  [:coffi.mem/pointer]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
-  get-file-name-without-ext
-  "[filePath] -> string"
-  GetFileNameWithoutExt
-  [:coffi.mem/c-string]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  file-dropped?
-  "[] -> bool"
-  IsFileDropped
-  []
-  ::bool)
-(coffi.ffi/defcfn
-  load-file-data
-  "[fileName bytesRead] -> pointer"
-  LoadFileData
-  [:coffi.mem/pointer :coffi.mem/c-string]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  load-directory-files-ex
-  "[basePath filter scanSubdirs] -> file-path-list"
-  LoadDirectoryFilesEx
-  [:coffi.mem/c-string :coffi.mem/c-string ::bool]
-  :raylib-clj.core/file-path-list)
-(coffi.ffi/defcfn
   export-data-as-code
   "[data size fileName] -> bool"
   ExportDataAsCode
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/c-string]
   ::bool)
-(coffi.ffi/defcfn
-  file-extension?
-  "[fileName ext] -> bool"
-  IsFileExtension
-  [:coffi.mem/c-string :coffi.mem/c-string]
-  ::bool)
-(coffi.ffi/defcfn
-  unload-file-text
-  "[text] -> void"
-  UnloadFileText
-  [:coffi.mem/pointer]
-  :coffi.mem/void)
 (coffi.ffi/defcfn
   get-application-directory
   "[] -> string"
@@ -4251,10 +4131,6 @@
 (comment
 ;TODO: what are those types?
 ;    :SetTraceLogCallback {:rettype :void :argtypes [TraceLogCallback callback]}
-;    :SetLoadFileDataCallback {:rettype :void :argtypes [LoadFileDataCallback callback]}
-;    :SetSaveFileDataCallback {:rettype :void :argtypes [SaveFileDataCallback callback]}
-;    :SetLoadFileTextCallback {:rettype :void :argtypes [LoadFileTextCallback callback]}
-;    :SetSaveFileTextCallback {:rettype :void :argtypes [SaveFileTextCallback callback]}
 ;TODO: what to do here?
 ;:TextFormat {:rettype :pointer :argtypes [[text :pointer] ...]}
 ;TODO: how to handle callback?
