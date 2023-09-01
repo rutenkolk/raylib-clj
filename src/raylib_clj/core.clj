@@ -915,10 +915,16 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   set-window-icons
-  "[images count] -> void"
+  "[images] -> void"
   SetWindowIcons
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [images]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count images)
+          arr (mem/serialize images [::mem/array ::image cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr))))
 (coffi.ffi/defcfn
   set-window-focused
   "[] -> void"
@@ -1385,16 +1391,58 @@
    :coffi.mem/int]
   :raylib-clj.core/font)
 
+(def- shader-uniform-vec-type
+  {[true 2] SHADER_UNIFORM_IVEC2
+   [true 3] SHADER_UNIFORM_IVEC3
+   [true 4] SHADER_UNIFORM_IVEC4
 
+   [false 2] SHADER_UNIFORM_VEC2
+   [false 3] SHADER_UNIFORM_VEC3
+   [false 4] SHADER_UNIFORM_VEC4
+   })
+
+(def- shader-uniform-type-mem-layout
+  {SHADER_UNIFORM_INT   ::mem/int
+   SHADER_UNIFORM_IVEC2 [::mem/array ::mem/int 2]
+   SHADER_UNIFORM_IVEC3 [::mem/array ::mem/int 3]
+   SHADER_UNIFORM_IVEC4 [::mem/array ::mem/int 4]
+
+   SHADER_UNIFORM_FLOAT ::mem/float
+   SHADER_UNIFORM_VEC2  [::mem/array ::mem/float 2]
+   SHADER_UNIFORM_VEC3  [::mem/array ::mem/float 3]
+   SHADER_UNIFORM_VEC4  [::mem/array ::mem/float 4]
+
+   SHADER_UNIFORM_SAMPLER2D ::mem/int})
 (coffi.ffi/defcfn
-  set-shader-value
-  "[shader locIndex value uniformType] -> void"
+  set-shader-value-manual
+  "[shader loc-index value uniformType] -> void"
   SetShaderValue
   [:raylib-clj.core/shader
    :coffi.mem/int
    :coffi.mem/pointer
    :coffi.mem/int]
   :coffi.mem/void)
+;TODO: how does raylib do the uniform variables?
+(coffi.ffi/defcfn
+  set-shader-value
+  "[shader int any] -> void"
+  SetShaderValue
+  [:raylib-clj.core/shader
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int]
+  :coffi.mem/void
+  native-fn [shader locIndex value]
+  (with-open [session (mem/stack-session)]
+    (let [uniform-type (cond
+                         (vector? value) (shader-uniform-vec-type [(integer? (first value)) (count value)])
+                         (integer? value) SHADER_UNIFORM_INT
+                         (float? value)   SHADER_UNIFORM_FLOAT
+                         :else            SHADER_UNIFORM_SAMPLER2D)
+          mem-layout (shader-uniform-type-mem-layout uniform-type)
+          value-segment (mem/serialize value mem-layout session)
+          value-ptr (mem/address-of value-segment)]
+      (native-fn shader locIndex value-ptr uniform-type))))
 (coffi.ffi/defcfn
   shader-ready?
   "[shader] -> bool"
