@@ -1652,32 +1652,6 @@
 
 
 (coffi.ffi/defcfn
-  compress-data
-  "[data dataSize compDataSize] -> pointer"
-  CompressData
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  decompress-data
-  "[compData compDataSize dataSize] -> pointer"
-  DecompressData
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  encode-data-base-64
-  "[data dataSize outputSize] -> string"
-  EncodeDataBase64
-  [:coffi.mem/pointer :coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  decode-data-base-64
-  "[data outputSize] -> pointer"
-  DecodeDataBase64
-  [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/pointer)
-
-
-(coffi.ffi/defcfn
   get-mouse-wheel-move
   "[] -> float"
   GetMouseWheelMove
