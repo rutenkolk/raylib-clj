@@ -1556,12 +1556,6 @@
   [:coffi.mem/int]
   :coffi.mem/void)
 (coffi.ffi/defcfn
-  set-random-seed
-  "[seed] -> void"
-  SetRandomSeed
-  [:coffi.mem/int]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
   open-url
   "[url] -> void"
   OpenURL
@@ -1579,12 +1573,6 @@
   MemFree
   [:coffi.mem/pointer]
   :coffi.mem/void)
-(coffi.ffi/defcfn
-  get-random-value
-  "[min max] -> int"
-  GetRandomValue
-  [:coffi.mem/int :coffi.mem/int]
-  :coffi.mem/int)
 (coffi.ffi/defcfn get-fps "[] -> int" GetFPS [] :coffi.mem/int)
 (coffi.ffi/defcfn
   set-trace-log-level
