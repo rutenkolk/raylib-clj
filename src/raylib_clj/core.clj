@@ -759,8 +759,7 @@
       new-typename new-typename
       (vector? old) (recur (second old))
       :else (keyword "raylib-clj.core" (name old))
-     ))
-  )
+     )))
 
 (defn arg-decl->arg-name [old]
   (if (vector? old) (str (name (first old)))))
@@ -1414,7 +1413,7 @@
 
    SHADER_UNIFORM_SAMPLER2D ::mem/int})
 (coffi.ffi/defcfn
-  set-shader-value-manual
+  set-shader-value
   "[shader loc-index value uniformType] -> void"
   SetShaderValue
   [:raylib-clj.core/shader
@@ -1424,7 +1423,7 @@
   :coffi.mem/void)
 ;TODO: how does raylib do the uniform variables?
 (coffi.ffi/defcfn
-  set-shader-value
+  set-shader-value-convenience
   "[shader int any] -> void"
   SetShaderValue
   [:raylib-clj.core/shader
@@ -1893,23 +1892,36 @@
   []
   :coffi.mem/float)
 
+(def- camera-3d-size (mem/size-of ::camera-3d))
 
 (coffi.ffi/defcfn
   update-camera
-  "[camera-3d mode] -> void"
+  "[camera-3d mode] -> camera-3d"
   UpdateCamera
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [camera-3d mode]
+  (with-open [session (mem/stack-session)]
+    (let [arr (mem/serialize camera-3d ::camera-3d session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr mode)
+      (mem/deserialize (mem/as-segment ptr camera-3d-size session) ::camera-3d))))
+
 (coffi.ffi/defcfn
   update-camera-pro
-  "[camera-3d movement rotation zoom] -> void"
+  "[camera-3d movement rotation zoom] -> camera-3d"
   UpdateCameraPro
   [:coffi.mem/pointer
    :raylib-clj.core/vec3
    :raylib-clj.core/vec3
    :coffi.mem/float]
-  :coffi.mem/void)
-
+  :coffi.mem/void
+  native-fn [camera-3d movement rotation zoom]
+  (with-open [session (mem/stack-session)]
+    (let [arr (mem/serialize camera-3d ::camera-3d session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr movement rotation zoom)
+      (mem/deserialize (mem/as-segment ptr camera-3d-size session) ::camera-3d))))
 
 (coffi.ffi/defcfn
   check-collision-point-triangle
@@ -1932,14 +1944,22 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-lines
-  "[startPos1 endPos1 startPos2 endPos2 collisionPoint] -> bool"
+  "[startPos1 endPos1 startPos2 endPos2] -> collisionPoint"
   CheckCollisionLines
   [:raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :coffi.mem/pointer]
-  ::bool)
+  ::bool
+  native-fn [startPos1 endPos1 startPos2 endPos2]
+  (with-open [session (mem/stack-session)]
+    (let [arr (mem/alloc-instance ::vec2 session)
+          ptr (mem/address-of arr)]
+      (if (native-fn startPos1 endPos1 startPos2 endPos2 ptr)
+        (mem/deserialize arr ::vec2)
+        nil))))
+
 (coffi.ffi/defcfn
   set-shapes-texture
   "[texture source] -> void"
@@ -1992,10 +2012,16 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-line-b-spline
-  "[points pointCount thick color] -> void"
+  "[points thick color] -> void"
   DrawLineBSpline
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points thick color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt thick color))))
 (coffi.ffi/defcfn
   draw-pixel-v
   "[position color] -> void"
@@ -2058,10 +2084,16 @@
   ::bool)
 (coffi.ffi/defcfn
   draw-triangle-fan
-  "[points pointCount color] -> void"
+  "[points color] -> void"
   DrawTriangleFan
   [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt color))))
 (coffi.ffi/defcfn
   check-collision-point-rec
   "[point rec] -> bool"
@@ -2092,10 +2124,16 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   check-collision-point-poly
-  "[point points pointCount] -> bool"
+  "[point points] -> bool"
   CheckCollisionPointPoly
   [:raylib-clj.core/vec2 [:coffi.mem/pointer :raylib-clj.core/vec2] :coffi.mem/int]
-  ::bool)
+  ::bool
+  native-fn [point points]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn point ptr cnt))))
 (coffi.ffi/defcfn
   draw-ellipse-lines
   "[centerX centerY radiusH radiusV color] -> void"
@@ -2121,7 +2159,13 @@
   "[points pointCount color] -> void"
   DrawTriangleStrip
   [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt color))))
 (coffi.ffi/defcfn
   draw-rectangle-lines-ex
   "[rec lineThick color] -> void"
@@ -2159,10 +2203,17 @@
   ::bool)
 (coffi.ffi/defcfn
   draw-line-strip
-  "[points pointCount color] -> void"
+  "[points color] -> void"
   DrawLineStrip
   [[:coffi.mem/pointer :raylib-clj.core/point] :coffi.mem/int :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt color)))
+  )
 (coffi.ffi/defcfn
   draw-circle
   "[centerX centerY radius color] -> void"
@@ -2212,10 +2263,16 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-line-catmull-rom
-  "[points pointCount thick color] -> void"
+  "[points thick color] -> void"
   DrawLineCatmullRom
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/float :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points thick color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt thick color))))
 (coffi.ffi/defcfn
   draw-line-bezier
   "[startPos endPos thick color] -> void"
@@ -3233,10 +3290,16 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-triangle-strip-3-d
-  "[points pointCount color] -> void"
+  "[points color] -> void"
   DrawTriangleStrip3D
   [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [points color]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count points)
+          arr (mem/serialize points [::mem/array ::vec2 cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt color))))
 (coffi.ffi/defcfn
   draw-plane
   "[centerPos size color] -> void"
@@ -3580,9 +3643,6 @@
   DrawBoundingBox
   [:raylib-clj.core/bounding-box :raylib-clj.core/color]
   :coffi.mem/void)
-
-
-
 (coffi.ffi/defcfn
   get-ray-collision-triangle
   "[ray p1 p2 p3] -> ray-collision"
