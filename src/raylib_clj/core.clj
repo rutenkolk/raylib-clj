@@ -1274,10 +1274,16 @@
   :raylib-clj.core/font)
 (coffi.ffi/defcfn
   unload-font-data
-  "[chars glyphCount] -> void"
+  "[glyp-infos] -> void"
   UnloadFontData
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [chars]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count chars)
+          arr (mem/serialize chars [::mem/array ::glyph-info cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt))))
 (coffi.ffi/defcfn
   load-font
   "[fileName] -> font"
@@ -1326,7 +1332,7 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-text-codepoints
-  "[font codepoints count position fontSize spacing tint] -> void"
+  "[font ints vec2 float float float] -> void"
   DrawTextCodepoints
   [:raylib-clj.core/font
    :coffi.mem/pointer
@@ -1335,7 +1341,13 @@
    :coffi.mem/float
    :coffi.mem/float
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [font codepoints position fontSize spacing tint]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count codepoints)
+          arr (mem/serialize codepoints [::mem/int] session)
+          ptr (mem/address-of arr)]
+      (native-fn font ptr cnt position fontSize spacing tint))))
 (coffi.ffi/defcfn
   draw-text-ex
   "[font text position fontSize spacing tint] -> void"
@@ -1357,9 +1369,10 @@
    :coffi.mem/float
    :raylib-clj.core/color]
   :coffi.mem/void)
+
 (coffi.ffi/defcfn
-  gen-image-font-atlas
-  "[chars recs glyphCount fontSize padding packMethod] -> image"
+  gen-image-font-atlas-raw
+  "[glyph-infos fontSize padding packMethod] -> image"
   GenImageFontAtlas
   [:coffi.mem/pointer
    :coffi.mem/pointer
@@ -1367,7 +1380,43 @@
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int]
-  :raylib-clj.core/image)
+  :raylib-clj.core/image
+  native-fn [chars fontSize padding packMethod]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count chars)
+          chars-arr (mem/serialize chars [::mem/array ::glyph-info cnt] session)
+          chars-ptr (mem/address-of chars-arr)
+          rec-ptr (mem/alloc-instance ::mem/pointer session)
+          rec-ptr-ptr (mem/address-of rec-ptr)
+          image (native-fn chars-ptr rec-ptr-ptr cnt fontSize padding packMethod)
+          rec-ptr-cpy (mem/deserialize rec-ptr ::mem/pointer)]
+      {:image image
+       :native-recs-ptr rec-ptr-cpy})))
+(coffi.ffi/defcfn
+  gen-image-font-atlas
+  "[glyph-infos fontSize padding packMethod] -> image"
+  GenImageFontAtlas
+  [:coffi.mem/pointer
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/int]
+  :raylib-clj.core/image
+  native-fn [chars fontSize padding packMethod]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count chars)
+          chars-arr (mem/serialize chars [::mem/array ::glyph-info cnt] session)
+          chars-ptr (mem/address-of chars-arr)
+          rec-ptr (mem/alloc-instance ::mem/pointer session)
+          rec-ptr-ptr (mem/address-of rec-ptr)
+          image (native-fn chars-ptr rec-ptr-ptr cnt fontSize padding packMethod)
+          recs (mem/deserialize (mem/as-segment rec-ptr (* (mem/size-of ::rectangle) cnt) session) [::mem/array ::rectangle cnt])
+          rec-ptr-cpy (mem/deserialize rec-ptr ::mem/pointer)
+          ]
+      {:image image
+       :recs recs
+       :native-recs-ptr rec-ptr-cpy})))
 (coffi.ffi/defcfn
   draw-text
   "[text posX posY fontSize color] -> void"
@@ -4137,9 +4186,10 @@
   (do
 
     (init-window 800 450 "raylib-clj [core] example - basic window")
-    (clear-window-state FLAG_VSYNC_HINT)
+    (set-window-state FLAG_VSYNC_HINT)
+    ;(clear-window-state FLAG_VSYNC_HINT)
     (set-target-fps 240)
-    (clear-window-state FLAG_VSYNC_HINT)
+    ;(clear-window-state FLAG_VSYNC_HINT)
     (while (not (window-should-close?))
       (let [[last-time acc] @state
             newtime (System/nanoTime)
