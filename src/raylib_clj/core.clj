@@ -1429,7 +1429,7 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   load-font-from-memory
-  "[fileType fileData dataSize fontSize fontChars glyphCount] -> font"
+  "[string pointer int int ints] -> font"
   LoadFontFromMemory
   [:coffi.mem/c-string
    :coffi.mem/pointer
@@ -1437,8 +1437,13 @@
    :coffi.mem/int
    :coffi.mem/pointer
    :coffi.mem/int]
-  :raylib-clj.core/font)
-
+  :raylib-clj.core/font
+  native-fn [fileType fileData dataSize fontSize fontChars]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count fontChars)
+          arr (mem/serialize fontChars [::mem/array ::mem/int cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn fileType fileData dataSize fontSize ptr cnt))))
 (def- shader-uniform-vec-type
   {[true 2] SHADER_UNIFORM_IVEC2
    [true 3] SHADER_UNIFORM_IVEC3
