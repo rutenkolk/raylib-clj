@@ -3823,10 +3823,17 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   gen-mesh-tangents
-  "[mesh] -> void"
+  "[mesh] -> mesh"
   GenMeshTangents
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [mesh]
+  (with-open [session (mem/stack-session)]
+    (let [seg (mem/serialize mesh ::mesh session)
+          ptr (mem/address-of seg)
+          _ (native-fn ptr)]
+      (mem/deserialize seg ::mesh)))
+  )
 (coffi.ffi/defcfn
   unload-mesh
   "[mesh] -> void"
@@ -3835,16 +3842,23 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   draw-mesh-instanced
-  "[mesh material transforms instances] -> void"
+  "[mesh material transforms] -> void"
   DrawMeshInstanced
   [:raylib-clj.core/mesh
    :raylib-clj.core/material
    :coffi.mem/pointer
    :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [mesh material transforms]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count transforms)
+          seg (mem/serialize transforms [::mem/array ::mat4 cnt] session)
+          ptr (mem/address-of seg)]
+      (native-fn mesh material ptr cnt)))
+  )
 (coffi.ffi/defcfn
   update-mesh-buffer
-  "[mesh index data dataSize offset] -> void"
+  "[mesh index data dataSize offset] -> mesh"
   UpdateMeshBuffer
   [:raylib-clj.core/mesh
    :coffi.mem/int
@@ -3863,7 +3877,13 @@
   "[mesh dynamic] -> void"
   UploadMesh
   [:coffi.mem/pointer ::bool]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [mesh dynamic]
+  (with-open [session (mem/stack-session)]
+    (let [seg (mem/serialize mesh ::mesh session)
+          ptr (mem/address-of seg)]
+      (native-fn ptr dynamic)))
+  )
 (coffi.ffi/defcfn
   model-ready?
   "[model] -> bool"
@@ -4017,7 +4037,14 @@
   "[animations count] -> void"
   UnloadModelAnimations
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [animations]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count animations)
+          seg (mem/serialize animations [::mem/array ::model-animation cnt] session)
+          ptr (mem/address-of seg)]
+      (native-fn ptr cnt)))
+  )
 (coffi.ffi/defcfn
   get-ray-collision-mesh
   "[ray mesh transform] -> ray-collision"
@@ -4026,10 +4053,17 @@
   :raylib-clj.core/ray-collision)
 (coffi.ffi/defcfn
   set-material-texture
-  "[material mapType texture] -> void"
+  "[material mapType texture] -> material"
   SetMaterialTexture
   [:coffi.mem/pointer :coffi.mem/int :raylib-clj.core/texture]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [material mapType texture]
+  (with-open [session (mem/stack-session)]
+    (let [seg (mem/serialize material ::material session)
+          ptr (mem/address-of seg)
+          _ (native-fn ptr mapType texture)]
+      (mem/deserialize seg ::material)))
+  )
 (coffi.ffi/defcfn
   get-ray-collision-quad
   "[ray p1 p2 p3 p4] -> ray-collision"
@@ -4051,13 +4085,28 @@
   "[model meshId materialId] -> void"
   SetModelMeshMaterial
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [model meshId materialId]
+  (with-open [session (mem/stack-session)]
+    (let [seg (mem/serialize model ::model session)
+          ptr (mem/address-of seg)
+          _ (native-fn ptr meshId materialId)]
+      (mem/deserialize seg ::model)))
+  )
 (coffi.ffi/defcfn
   load-model-animations
-  "[fileName animCount] -> pointer"
+  "[fileName] -> animations"
   LoadModelAnimations
   [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/pointer)
+  :coffi.mem/pointer
+  native-fn [fileName]
+  (with-open [session (mem/stack-session)]
+    (let [anim-count-seg (mem/alloc-instance ::mem/int session)
+          anim-cnt-ptr (mem/address-of anim-count-seg)
+          animations-ptr (native-fn fileName anim-cnt-ptr)
+          anim-count (mem/deserialize anim-count-seg ::mem/int)]
+      (mem/deserialize animations-ptr [::mem/array ::model-animation anim-count])))
+  )
 (coffi.ffi/defcfn
   load-material-default
   "[] -> material"
