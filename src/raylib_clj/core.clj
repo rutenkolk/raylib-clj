@@ -3030,24 +3030,38 @@
   )
 (coffi.ffi/defcfn
   image-draw-circle
-  "[image centerX centerY radius color] -> void"
+  "[image centerX centerY radius color] -> image"
   ImageDrawCircle
   [:coffi.mem/pointer
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image centerX centerY radius color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr centerX centerY radius color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-circle-lines
-  "[image centerX centerY radius color] -> void"
+  "[image centerX centerY radius color] -> image"
   ImageDrawCircleLines
   [:coffi.mem/pointer
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image centerX centerY radius color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr centerX centerY radius color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-text-ex
   "[image font text position fontSize spacing tint] -> void"
@@ -3059,34 +3073,62 @@
    :coffi.mem/float
    :coffi.mem/float
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image font text position fontSize spacing tint]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr font text position fontSize spacing tint)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-line-v
-  "[image start end color] -> void"
+  "[image start end color] -> image"
   ImageDrawLineV
   [:coffi.mem/pointer
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image start end color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr start end color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-circle-v
-  "[image center radius color] -> void"
+  "[image center radius color] -> image"
   ImageDrawCircleV
   [:coffi.mem/pointer
    :raylib-clj.core/vec2
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image center radius color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr center radius color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-pixel
-  "[image posX posY color] -> void"
+  "[image posX posY color] -> image"
   ImageDrawPixel
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image posX posY color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr posX posY color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-line
-  "[image startPosX startPosY endPosX endPosY color] -> void"
+  "[image startPosX startPosY endPosX endPosY color] -> image"
   ImageDrawLine
   [:coffi.mem/pointer
    :coffi.mem/int
@@ -3094,59 +3136,108 @@
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image startPosX startPosY endPosX endPosY color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr startPosX startPosY endPosX endPosY color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw
-  "[image src srcRec dstRec tint] -> void"
+  "[image src srcRec dstRec tint] -> image"
   ImageDraw
   [:coffi.mem/pointer
    :raylib-clj.core/image
    :raylib-clj.core/rectangle
    :raylib-clj.core/rectangle
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image src srcRec dstRec tint]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr src srcRec dstRec tint)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-clear-background
-  "[image color] -> void"
+  "[image color] -> image"
   ImageClearBackground
   [:coffi.mem/pointer :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-rectangle-v
-  "[image position size color] -> void"
+  "[image position size color] -> image"
   ImageDrawRectangleV
   [:coffi.mem/pointer
    :raylib-clj.core/vec2
    :raylib-clj.core/vec2
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image position size color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr position size color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-rectangle-rec
-  "[image rec color] -> void"
+  "[image rec color] -> image"
   ImageDrawRectangleRec
   [:coffi.mem/pointer :raylib-clj.core/rectangle :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image rec color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr rec color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-circle-lines-v
-  "[image center radius color] -> void"
+  "[image center radius color] -> image"
   ImageDrawCircleLinesV
   [:coffi.mem/pointer
    :raylib-clj.core/vec2
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image center radius color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr center radius color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-rectangle-lines
-  "[image rec thick color] -> void"
+  "[image rec thick color] -> image"
   ImageDrawRectangleLines
   [:coffi.mem/pointer
    :raylib-clj.core/rectangle
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image rec thick color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr rec thick color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-text
-  "[image text posX posY fontSize color] -> void"
+  "[image text posX posY fontSize color] -> image"
   ImageDrawText
   [:coffi.mem/pointer
    :coffi.mem/c-string
@@ -3154,10 +3245,17 @@
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image text posX posY fontSize color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr text posX posY fontSize color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-rectangle
-  "[image posX posY width height color] -> void"
+  "[image posX posY width height color] -> image"
   ImageDrawRectangle
   [:coffi.mem/pointer
    :coffi.mem/int
@@ -3165,7 +3263,14 @@
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image posX posY width height color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr posX posY width height color)]
+      (mem/deserialize segment ::image)))
+  )
 
 
 
