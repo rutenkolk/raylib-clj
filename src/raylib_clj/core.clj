@@ -1256,8 +1256,8 @@
   [:raylib-clj.core/font :coffi.mem/c-string]
   :coffi.mem/byte)
 (coffi.ffi/defcfn
-  load-font-data
-  "[fileData dataSize fontSize fontChars glyphCount type] -> point"
+  load-font-data-raw
+  "[bytes int ints int] -> pointer to glyph-info"
   LoadFontData
   [:coffi.mem/pointer
    :coffi.mem/int
@@ -1265,7 +1265,39 @@
    :coffi.mem/pointer
    :coffi.mem/int
    :coffi.mem/int]
-  [:coffi.mem/pointer :raylib-clj.core/glyph-info])
+  [:coffi.mem/pointer :raylib-clj.core/glyph-info]
+  native-fn [fileData fontSize fontChars type]
+  (with-open [session (mem/stack-session)]
+    (let [file-data-size (count fileData)
+          font-chars-size (count fontChars)
+          file-data-arr (mem/serialize fileData [::mem/array ::mem/byte file-data-size] session)
+          font-chars-arr (mem/serialize fileData [::mem/array ::mem/int font-chars-size] session)
+          file-data-ptr (mem/address-of file-data-arr)
+          font-chars-ptr (mem/address-of font-chars-arr)
+          glyph-info-ptr (native-fn file-data-ptr file-data-size fontSize font-chars-ptr font-chars-size type)]
+      glyph-info-ptr)))
+(coffi.ffi/defcfn
+  load-font-data
+  "[bytes int ints int] -> glyph-info"
+  LoadFontData
+  [:coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int
+   :coffi.mem/pointer
+   :coffi.mem/int
+   :coffi.mem/int]
+  [:coffi.mem/pointer :raylib-clj.core/glyph-info]
+  native-fn [fileData fontSize fontChars type]
+  (with-open [session (mem/stack-session)]
+    (let [file-data-size (count fileData)
+          font-chars-size (count fontChars)
+          file-data-arr (mem/serialize fileData [::mem/array ::mem/byte file-data-size] session)
+          font-chars-arr (mem/serialize fileData [::mem/array ::mem/int font-chars-size] session)
+          file-data-ptr (mem/address-of file-data-arr)
+          font-chars-ptr (mem/address-of font-chars-arr)
+          glyph-info-ptr (native-fn file-data-ptr file-data-size fontSize font-chars-ptr font-chars-size type)
+          glyph-info (mem/deserialize (mem/as-segment glyph-info-ptr (mem/size-of ::glyph-info) session) ::glyph-info)]
+      glyph-info)))
 (coffi.ffi/defcfn
   get-font-default
   "[] -> font"
@@ -1317,13 +1349,19 @@
   :raylib-clj.core/font)
 (coffi.ffi/defcfn
   load-font-ex
-  "[fileName fontSize fontChars glyphCount] -> font"
+  "[string int pointer int] -> font"
   LoadFontEx
   [:coffi.mem/c-string
    :coffi.mem/int
    :coffi.mem/pointer
    :coffi.mem/int]
-  :raylib-clj.core/font)
+  :raylib-clj.core/font
+  native-fn [fileName fontSize fontChars]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count fontChars)
+          arr (mem/serialize fontChars [::mem/array ::mem/int cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn fileName fontSize ptr cnt))))
 (coffi.ffi/defcfn
   unload-font
   "[font] -> void"
@@ -1692,10 +1730,16 @@
   :coffi.mem/c-string)
 (coffi.ffi/defcfn
   export-data-as-code
-  "[data size fileName] -> bool"
+  "[bytes string] -> bool"
   ExportDataAsCode
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/c-string]
-  ::bool)
+  ::bool
+  native-fn [data fileName]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count data)
+          arr (mem/serialize data [::mem/array ::mem/byte cnt] session)
+          ptr (mem/address-of arr)]
+      (native-fn ptr cnt fileName))))
 (coffi.ffi/defcfn
   get-application-directory
   "[] -> string"
@@ -2440,13 +2484,18 @@
   [:raylib-clj.core/vec2 :raylib-clj.core/vec2 :raylib-clj.core/color]
   :coffi.mem/void)
 
-
 (coffi.ffi/defcfn
   image-color-grayscale
   "[image] -> void"
   ImageColorGrayscale
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   export-image
   "[image fileName] -> bool"
@@ -2467,16 +2516,28 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   image-blur-gaussian
-  "[image blurSize] -> void"
+  "[image int] -> image"
   ImageBlurGaussian
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image blurSize]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr blurSize)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   image-format
-  "[image newFormat] -> void"
+  "[image int] -> void"
   ImageFormat
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image newFormat]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr newFormat)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   image-mipmaps
   "[image] -> void"
@@ -2517,10 +2578,16 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-resize
-  "[image newWidth newHeight] -> void"
+  "[image newWidth newHeight] -> image"
   ImageResize
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image newWidth newHeight]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr newWidth newHeight)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   image-ready?
   "[image] -> bool"
@@ -2529,14 +2596,20 @@
   ::bool)
 (coffi.ffi/defcfn
   image-dither
-  "[image rBpp gBpp bBpp aBpp] -> void"
+  "[image rBpp gBpp bBpp aBpp] -> image"
   ImageDither
   [:coffi.mem/pointer
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int
    :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image rBpp gBpp bBpp aBpp]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr rBpp gBpp bBpp aBpp)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   load-image-palette
   "[image maxPaletteSize colorCount] -> pointer"
@@ -2545,10 +2618,17 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   image-to-pot
-  "[image fill] -> void"
+  "[image fill] -> image"
   ImageToPOT
   [:coffi.mem/pointer :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image fill]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr fill)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-from-image
   "[image rec] -> image"
@@ -2565,13 +2645,26 @@
    :coffi.mem/int
    :coffi.mem/int
    :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image newWidth newHeight offsetX offsetY fill]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr newWidth newHeight offsetX offsetY fill)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   load-image-from-memory
   "[fileType fileData dataSize] -> image"
   LoadImageFromMemory
   [:coffi.mem/c-string :coffi.mem/pointer :coffi.mem/int]
-  :raylib-clj.core/image)
+  :raylib-clj.core/image
+  native-fn [fileType fileData]
+  (with-open [session (mem/stack-session)]
+    (let [cnt (count fileData)
+          segment (mem/serialize fileData [::mem/array ::mem/byte cnt] session)
+          ptr (mem/address-of segment)]
+      (native-fn fileType ptr cnt))))
 (coffi.ffi/defcfn
   get-image-color
   "[image x y] -> color"
@@ -2592,10 +2685,17 @@
   :coffi.mem/void)
 (coffi.ffi/defcfn
   image-rotate
-  "[image degrees] -> void"
+  "[image degrees] -> image"
   ImageRotate
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image degrees]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr degrees)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-text-ex
   "[font text fontSize spacing tint] -> image"
@@ -2608,22 +2708,42 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-flip-vertical
-  "[image] -> void"
+  "[image] -> image"
   ImageFlipVertical
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-color-tint
-  "[image color] -> void"
+  "[image color] -> image"
   ImageColorTint
   [:coffi.mem/pointer :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-alpha-mask
-  "[image alphaMask] -> void"
+  "[image image] -> image"
   ImageAlphaMask
   [:coffi.mem/pointer :raylib-clj.core/image]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image alphaMask]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr image)]
+      (mem/deserialize segment ::image))))
 (coffi.ffi/defcfn
   gen-image-text
   "[width height text] -> image"
@@ -2635,7 +2755,14 @@
   "[fileName frames] -> image"
   LoadImageAnim
   [:coffi.mem/c-string :coffi.mem/pointer]
-  :raylib-clj.core/image)
+  :raylib-clj.core/image
+  native-fn [fileName]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/alloc-instance ::mem/int session)
+          ptr (mem/address-of segment)
+          image (native-fn fileName ptr)
+          frames (mem/deserialize segment ::mem/int)]
+      {:image image :frames frames})))
 (coffi.ffi/defcfn
   load-image-raw
   "[fileName width height format headerSize] -> image"
@@ -2654,16 +2781,30 @@
   :coffi.mem/pointer)
 (coffi.ffi/defcfn
   image-color-replace
-  "[image color replace] -> void"
+  "[image color replace] -> image"
   ImageColorReplace
   [:coffi.mem/pointer :raylib-clj.core/color :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image color replace]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr color replace)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-crop
-  "[image crop] -> void"
+  "[image crop] -> image"
   ImageCrop
   [:coffi.mem/pointer :raylib-clj.core/rectangle]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image crop]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr crop)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   get-image-alpha-border
   "[image threshold] -> rectangle"
@@ -2684,16 +2825,30 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-color-brightness
-  "[image brightness] -> void"
+  "[image brightness] -> image"
   ImageColorBrightness
   [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image brightness]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr brightness)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-rotate-cw
-  "[image] -> void"
+  "[image] -> image"
   ImageRotateCW
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image brightness]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr brightness)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   load-image-from-texture
   "[texture] -> image"
@@ -2702,10 +2857,17 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-resize-nn
-  "[image newWidth newHeight] -> void"
+  "[image newWidth newHeight] -> image"
   ImageResizeNN
   [:coffi.mem/pointer :coffi.mem/int :coffi.mem/int]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image newWidth newHeight]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr newWidth newHeight)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   gen-image-color
   "[width height color] -> image"
@@ -2717,7 +2879,14 @@
   "[image] -> void"
   ImageRotateCCW
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   gen-image-gradient-square
   "[width height density inner outer] -> image"
@@ -2730,10 +2899,17 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-color-contrast
-  "[image contrast] -> void"
+  "[image contrast] -> image"
   ImageColorContrast
   [:coffi.mem/pointer :coffi.mem/float]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image contrast]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr contrast)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   gen-image-checked
   "[width height checksX checksY col1 col2] -> image"
@@ -2747,16 +2923,30 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-color-invert
-  "[image] -> void"
+  "[image] -> image"
   ImageColorInvert
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-alpha-premultiply
-  "[image] -> void"
+  "[image] -> image"
   ImageAlphaPremultiply
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   gen-image-perlin-noise
   "[width height offsetX offsetY scale] -> image"
@@ -2772,13 +2962,27 @@
   "[image threshold] -> void"
   ImageAlphaCrop
   [:coffi.mem/pointer :coffi.mem/float]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image threshold]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr threshold)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-flip-horizontal
   "[image] -> void"
   ImageFlipHorizontal
   [:coffi.mem/pointer]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   load-image-from-screen
   "[] -> image"
@@ -2787,10 +2991,17 @@
   :raylib-clj.core/image)
 (coffi.ffi/defcfn
   image-alpha-clear
-  "[image color threshold] -> void"
+  "[image color threshold] -> image"
   ImageAlphaClear
   [:coffi.mem/pointer :raylib-clj.core/color :coffi.mem/float]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image color threshold]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr color threshold)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-text
   "[text fontSize color] -> image"
@@ -2801,16 +3012,22 @@
   load-image
   "[fileName] -> image"
   LoadImage
-  [:coffi.mem/pointer]
+  [:coffi.mem/c-string]
   :raylib-clj.core/image)
-
 
 (coffi.ffi/defcfn
   image-draw-pixel-v
-  "[image position color] -> void"
+  "[image position color] -> image"
   ImageDrawPixelV
   [:coffi.mem/pointer :raylib-clj.core/vec2 :raylib-clj.core/color]
-  :coffi.mem/void)
+  :coffi.mem/void
+  native-fn [image position color]
+  (with-open [session (mem/stack-session)]
+    (let [segment (mem/serialize image ::image session)
+          ptr (mem/address-of segment)
+          _ (native-fn ptr position color)]
+      (mem/deserialize segment ::image)))
+  )
 (coffi.ffi/defcfn
   image-draw-circle
   "[image centerX centerY radius color] -> void"
@@ -4191,8 +4408,8 @@
   (do
 
     (init-window 800 450 "raylib-clj [core] example - basic window")
-    (set-window-state FLAG_VSYNC_HINT)
-    ;(clear-window-state FLAG_VSYNC_HINT)
+    ;(set-window-state FLAG_VSYNC_HINT)
+    (clear-window-state FLAG_VSYNC_HINT)
     (set-target-fps 240)
     ;(clear-window-state FLAG_VSYNC_HINT)
     (while (not (window-should-close?))
