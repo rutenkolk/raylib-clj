@@ -3502,41 +3502,17 @@
 
 
 (coffi.ffi/defcfn
-  load-utf-8
-  "[codepoints length] -> pointer"
-  LoadUTF8
-  [:coffi.mem/pointer :coffi.mem/int]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
-  get-codepoint-next
-  "[text codepointSize] -> int"
-  GetCodepointNext
-  [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
   get-glyph-info
   "[font codepoint] -> glyph-info"
   GetGlyphInfo
   [:raylib-clj.core/font :coffi.mem/int]
   :raylib-clj.core/glyph-info)
 (coffi.ffi/defcfn
-  load-codepoints
-  "[text count] -> pointer"
-  LoadCodepoints
-  [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/pointer)
-(coffi.ffi/defcfn
   get-glyph-atlas-rec
   "[font codepoint] -> rectangle"
   GetGlyphAtlasRec
   [:raylib-clj.core/font :coffi.mem/int]
   :raylib-clj.core/rectangle)
-(coffi.ffi/defcfn
-  get-codepoint
-  "[text codepointSize] -> int"
-  GetCodepoint
-  [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/int)
 (coffi.ffi/defcfn
   measure-text
   "[text fontSize] -> int"
@@ -3556,48 +3532,11 @@
   [:raylib-clj.core/font :coffi.mem/c-string :coffi.mem/float :coffi.mem/float]
   :raylib-clj.core/vec2)
 (coffi.ffi/defcfn
-  unload-utf-8
-  "[text] -> void"
-  UnloadUTF8
-  [:coffi.mem/pointer]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
-  get-codepoint-count
-  "[text] -> int"
-  GetCodepointCount
-  [:coffi.mem/c-string]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
   set-text-line-spacing
   "[spacing] -> void"
   SetTextLineSpacing
   [:coffi.mem/int]
   :coffi.mem/void)
-(coffi.ffi/defcfn
-  get-codepoint-previous
-  "[text codepointSize] -> int"
-  GetCodepointPrevious
-  [:coffi.mem/c-string :coffi.mem/pointer]
-  :coffi.mem/int)
-(coffi.ffi/defcfn
-  codepoint-to-utf-8
-  "[codepoint utf8Size] -> string"
-  CodepointToUTF8
-  [:coffi.mem/int :coffi.mem/pointer]
-  :coffi.mem/c-string)
-(coffi.ffi/defcfn
-  unload-codepoints
-  "[codepoints] -> void"
-  UnloadCodepoints
-  [:coffi.mem/pointer]
-  :coffi.mem/void)
-(coffi.ffi/defcfn
-  text-to-integer
-  "[text] -> int"
-  TextToInteger
-  [:coffi.mem/c-string]
-  :coffi.mem/int)
-
 
 (coffi.ffi/defcfn
   draw-circle-3-d
