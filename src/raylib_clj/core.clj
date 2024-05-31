@@ -4105,8 +4105,7 @@
           anim-cnt-ptr (mem/address-of anim-count-seg)
           animations-ptr (native-fn fileName anim-cnt-ptr)
           anim-count (mem/deserialize anim-count-seg ::mem/int)]
-      (mem/deserialize animations-ptr [::mem/array ::model-animation anim-count])))
-  )
+      (mem/deserialize animations-ptr [::mem/array ::model-animation anim-count]))))
 (coffi.ffi/defcfn
   load-material-default
   "[] -> material"
