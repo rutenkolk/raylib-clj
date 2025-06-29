@@ -8,11 +8,11 @@
    [clj-http.client :as client]
    ))
 
-(def lib-coord 'raylib-clj)
+(def lib-coord 'wiredaemon/raylib-clj)
 (def version (format "0.1.%s" (b/git-count-revs nil)))
 
 (def resource-dirs ["resources/"])
-(def source-dirs ["src/clj/"])
+(def source-dirs ["src/"])
 
 (def target-dir "target/")
 (def class-dir (str target-dir "classes/"))
