@@ -2,8 +2,8 @@
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
         insn/insn {:mvn/version "0.5.4"}
         cheshire/cheshire {:mvn/version "5.13.0"}
-        org.suskalo/coffi {:mvn/version "0.6.438"}
-        wiredaemon/coffimaker {:mvn/version "0.1.54"}
+        org.suskalo/coffi {:mvn/version "1.0.634"}
+        wiredaemon/coffimaker {:mvn/version "0.1.55"}
         org.clojure/core.async {:mvn/version "1.8.741"}
         }
 
