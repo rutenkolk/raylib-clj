@@ -147,10 +147,7 @@
   (do
 
     (init-window 800 450 "raylib-clj [core] example - basic window")
-    ;(set-window-state FLAG_VSYNC_HINT)
     (clear-window-state FLAG_VSYNC_HINT)
-    ;(set-target-fps 240)
-    ;(clear-window-state FLAG_VSYNC_HINT)
     (while (not (window-should-close?))
       (let [[last-time acc] @state
             newtime (System/nanoTime)
@@ -224,42 +221,6 @@
           (rl/DrawTexture texture 300 300 rl/WHITE)
           (rl/EndDrawing))))
     (rl/CloseWindow))
-
-  (macroexpand-1
-   '(coffi.mem/defstruct
- Mesh
- [vertexCount
-  :coffi.mem/int
-  triangleCount
-  :coffi.mem/int
-  vertices
-  [:coffi.mem/pointer :coffi.mem/float]
-  texcoords
-  [:coffi.mem/pointer :coffi.mem/float]
-  texcoords2
-  [:coffi.mem/pointer :coffi.mem/float]
-  normals
-  [:coffi.mem/pointer :coffi.mem/float]
-  tangents
-  [:coffi.mem/pointer :coffi.mem/float]
-  colors
-  :coffi.mem/c-string
-  indices
-  [:coffi.mem/pointer :coffi.mem/short]
-  animVertices
-  [:coffi.mem/pointer :coffi.mem/float]
-  animNormals
-  [:coffi.mem/pointer :coffi.mem/float]
-  boneIds
-  :coffi.mem/c-string
-  boneWeights
-  [:coffi.mem/pointer :coffi.mem/float]
-  vaoId
-  :coffi.mem/int
-  vboId
-  [:coffi.mem/pointer :coffi.mem/int]])
-
-   )
 
   )
 
