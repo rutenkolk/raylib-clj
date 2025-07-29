@@ -1,6 +1,5 @@
 (ns
  raylib
- ^{:line 98, :column 7}
  (:require
   [clojure.java.io :as io]
   [clojure.string :as s]
@@ -10,15 +9,10 @@
   [coffi.ffi :as ffi]
   [coffi.mem :as mem]
   [coffi.layout :as layout]
-  [coffimaker.core :as cm]
   [coffimaker.runtime :as runtime])
- ^{:line 109, :column 7}
  (:import
-  ^{:line 110, :column 8}
   (clojure.lang IDeref IFn IMeta IObj IReference)
-  ^{:line 112, :column 8}
   (java.lang.invoke MethodHandle MethodHandles MethodType)
-  ^{:line 116, :column 8}
   (java.lang.foreign
    Linker
    Linker$Option
@@ -37,7 +31,6 @@
    ValueLayout$OfChar
    ValueLayout$OfFloat
    ValueLayout$OfDouble)
-  ^{:line 134, :column 8}
   (java.nio ByteOrder)))
 
 (set! clojure.core/*warn-on-reflection* true)
