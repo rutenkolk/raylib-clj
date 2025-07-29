@@ -1,4 +1,4 @@
-(ns raylib-clj.core
+(ns generate
   (:gen-class)
   (:require
    [clojure.java.io :as io]
