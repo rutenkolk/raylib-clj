@@ -3,14 +3,16 @@
         insn/insn {:mvn/version "0.5.4"}
         cheshire/cheshire {:mvn/version "5.13.0"}
         org.suskalo/coffi {:mvn/version "1.0.634"}
-        wiredaemon/coffimaker {:mvn/version "0.1.55"}
+        wiredaemon/coffimaker.runtime {:mvn/version "0.1.3"}
+        wiredaemon/coffimaker {:mvn/version "0.1.69"}
         org.clojure/core.async {:mvn/version "1.8.741"}
         }
 
  :aliases
  {:dev {:extra-paths ["."]
         :extra-deps {io.github.clojure/tools.build {:git/tag "v0.3.0" :git/sha "e418fc9"}
-                     nodisassemble/nodisassemble {:mvn/version "0.1.3"}}
+                     nodisassemble/nodisassemble {:mvn/version "0.1.3"}
+                     }
         :jvm-opts ["--enable-native-access=ALL-UNNAMED" "--enable-preview"]}
   :test {:extra-paths ["test/clj"] ;NOTE: no tests available at this time
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}

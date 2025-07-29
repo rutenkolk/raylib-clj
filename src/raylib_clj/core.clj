@@ -10,10 +10,10 @@
    [coffi.ffi :as ffi]
    [coffi.mem :as mem]
    [coffi.layout :as layout]
+   [coffimaker.runtime :as runtime]
    [coffimaker.core :as cm]
    [raylib :as rl]
-   [clojure.string :as str]
-   )
+   [clojure.string :as str])
   (:import
    (clojure.lang
     IDeref IFn IMeta IObj IReference)
@@ -39,8 +39,7 @@
     ValueLayout$OfChar
     ValueLayout$OfFloat
     ValueLayout$OfDouble)
-   (java.nio ByteOrder))
-  )
+   (java.nio ByteOrder)))
 
 
 (defn generate-raylib-header-info []
@@ -128,14 +127,15 @@
 
 (defn generate-raylib-file []
   (ffi/load-library "raylib.dll")
-  (->>
-   (generate-raylib-header-info)
-   (cm/add-generation-info fns-with-pointer-arguments)
-   (cm/generate-from-header-info)
-   (cm/generate-coffi-file 'raylib)
-   (map #(with-out-str (pprint/pprint %)))
-   (s/join (println-str))
-   (spit "src/raylib.clj")))
+  (binding [*print-meta* true]
+    (->>
+     (generate-raylib-header-info)
+     (cm/add-generation-info fns-with-pointer-arguments)
+     (cm/generate-from-header-info)
+     (cm/generate-coffi-file 'raylib)
+     (map #(with-out-str (pprint/pprint %)))
+     (s/join (println-str))
+     (spit "src/raylib.clj"))))
 
 
 (comment
@@ -181,20 +181,31 @@
     (rl/InitWindow 1200 800 "raylib-clj [core] example - basic window")
     (rl/SetTargetFPS 10000)
     (let [albedo1 (rl/LoadImage "albedo1.png")
+          _ (println "1")
           albedo1 (rl/ImageFormat albedo1 rl/PIXELFORMAT_UNCOMPRESSED_GRAYSCALE)
+          _ (println "2")
           texture (rl/LoadTextureFromImage albedo1)
+          _ (println "3")
           {:keys [return-value return-value-ptr]} (rl/LoadFileData "test.txt")
+          _ (println "4")
           mystr (String. (byte-array return-value))
+          _ (println "5")
           _ (rl/UnloadFileData return-value-ptr)
+          _ (println "6")
           points (map (partial apply rl/->Vector2)
                       [[100 200]
                        [300 200]
                        [150 100]
                        [150 300]])
 
-          {:keys [collisionPoint]} (apply rl/CheckCollisionLines points)]
+          {:keys [collisionPoint]} (apply rl/CheckCollisionLines points)
+          _ (println "7")
+          ]
       (rl/SetWindowIcon albedo1)
+
+      (println "8")
       (while (not (rl/WindowShouldClose))
+        (println "9")
         (let [{:keys [last-time acc f filedata]} @state
               newtime (System/nanoTime)
               diff (- newtime last-time)
@@ -214,8 +225,43 @@
           (rl/EndDrawing))))
     (rl/CloseWindow))
 
-  )
+  (macroexpand-1
+   '(coffi.mem/defstruct
+ Mesh
+ [vertexCount
+  :coffi.mem/int
+  triangleCount
+  :coffi.mem/int
+  vertices
+  [:coffi.mem/pointer :coffi.mem/float]
+  texcoords
+  [:coffi.mem/pointer :coffi.mem/float]
+  texcoords2
+  [:coffi.mem/pointer :coffi.mem/float]
+  normals
+  [:coffi.mem/pointer :coffi.mem/float]
+  tangents
+  [:coffi.mem/pointer :coffi.mem/float]
+  colors
+  :coffi.mem/c-string
+  indices
+  [:coffi.mem/pointer :coffi.mem/short]
+  animVertices
+  [:coffi.mem/pointer :coffi.mem/float]
+  animNormals
+  [:coffi.mem/pointer :coffi.mem/float]
+  boneIds
+  :coffi.mem/c-string
+  boneWeights
+  [:coffi.mem/pointer :coffi.mem/float]
+  vaoId
+  :coffi.mem/int
+  vboId
+  [:coffi.mem/pointer :coffi.mem/int]])
 
+   )
+
+  )
 
 (defn -main
   "I don't do a whole lot ... yet."
